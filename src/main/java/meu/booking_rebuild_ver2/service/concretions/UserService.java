@@ -1,0 +1,34 @@
+package meu.booking_rebuild_ver2.service.concretions;
+
+import meu.booking_rebuild_ver2.model.User;
+import meu.booking_rebuild_ver2.repository.UserRepository;
+import meu.booking_rebuild_ver2.service.abstractions.IUserService;
+import meu.booking_rebuild_ver2.service.impl.UserDetailsImplement;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserService implements IUserService {
+    public static final String USERID = "USER_ID";
+    public static final String USER_EMAIL = "USER_EMAIL";
+    private final ModelMapper modelMapper;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public UserService() {
+        this.modelMapper = new ModelMapper();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) {
+        User user = userRepository.findUserByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Not found"));
+
+        return new UserDetailsImplement(user);
+    }
+}
+//}

@@ -1,0 +1,25 @@
+frontend:
+  root:
+    url: http://localhost:4200/
+server:
+  port: 5050
+  error:
+    include-stacktrace: never
+  JWT:
+    KEY: eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4c
+    EXP: 86400000
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+
+    url: jdbc:postgresql://localhost:5432/Db_Booking_v2
+    password: 123456789
+    username: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
