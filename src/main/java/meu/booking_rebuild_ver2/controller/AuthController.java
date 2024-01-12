@@ -21,6 +21,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,16 +38,21 @@ import javax.validation.Valid;
 public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
-    @Autowired
-    private  UserRepository userRepository;
-    @Autowired
-    private  BCryptPasswordEncoder passwordEncoder;
 
-    private  ModelMapper modelMapper;
+    private final UserRepository userRepository;
 
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    private final ModelMapper modelMapper;
 
     @Autowired
     private JwtUtils jwtUtils;
+    @Autowired
+    public AuthController(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.modelMapper = new ModelMapper();
+    }
 
     @PostMapping(path = "/register")
     public GenericResponse addNewUser(@RequestBody @Valid User user) {
@@ -84,6 +91,8 @@ public class AuthController {
                     roles);
             return response;
         } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+            ex.printStackTrace();
             throw new BadRequestException(ex.getMessage());
         }
 

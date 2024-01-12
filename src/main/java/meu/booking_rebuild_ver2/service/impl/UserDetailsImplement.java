@@ -8,11 +8,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serial;
 import java.util.Collection;
 import java.util.Collections;
 @AllArgsConstructor
 @Data
 public class UserDetailsImplement implements UserDetails {
+    @Serial
     private static final long serialVersionUID = -1352733651057286866L;
 
     private User user;
@@ -40,6 +42,7 @@ public class UserDetailsImplement implements UserDetails {
     @Override
     @JsonIgnore
     public String getUsername() {
+        System.out.println(user.getEmail());
         return user.getEmail();
     }
 

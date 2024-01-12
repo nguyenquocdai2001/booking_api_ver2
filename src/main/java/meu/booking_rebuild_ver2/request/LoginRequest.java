@@ -1,5 +1,7 @@
 package meu.booking_rebuild_ver2.request;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +10,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 @NoArgsConstructor
 @Data
+@Builder
+@AllArgsConstructor
 public class LoginRequest {
     @NotBlank
     private String password;

@@ -44,6 +44,9 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Instant createdAt;
     @Enumerated(EnumType.STRING)
+    private AuthProvider authProvider = AuthProvider.LOCAL ;
+
+    @Enumerated(EnumType.STRING)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private UserRole userRole ;
     public String getUserRole() {

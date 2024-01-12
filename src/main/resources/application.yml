@@ -13,6 +13,7 @@ logging:
     org:
       hibernate:
         SQL: debug
+
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -23,3 +24,19 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+
+  servlet:
+    session:
+      cookie:
+        http-only: true
+        max-age: 86400000s #3hours
+        name: WD_SESSION
+    encoding:
+      charset: UTF-8
+      force: true
+  session:
+    store-type: redis
+    redis:
+      cleanup-cron: 0 0 * * * *
+  jackson:
+    date-format: "yyyy-MM-dd HH:mm:ss"
