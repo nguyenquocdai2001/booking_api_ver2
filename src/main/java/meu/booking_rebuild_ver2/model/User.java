@@ -13,13 +13,13 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "user_table")
+@Table(name = "admin")
 @Data
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private int id;
+    private UUID id;
     @Column(nullable = false, length = 100)
     @Size(max = 100)
     @Pattern(regexp = "^[ a-zA-Z0-9_.'\\-]+?", message = "Invalid characters in name")
@@ -29,7 +29,7 @@ public class User {
     @Email
     @Pattern(regexp = "(^[0-9A-Za-z][\\w.\\-]+@gmail.com)", message = "Invalid email!")
     @NotBlank
-    private String email;
+    private String username;
     @Column(length = 100)
     @Size(min = 8)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

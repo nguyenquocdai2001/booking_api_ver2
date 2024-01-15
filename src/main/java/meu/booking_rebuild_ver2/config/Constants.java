@@ -22,4 +22,14 @@ public class Constants {
     public static final String MESSAGE_CANNOT_EDIT_REVIEW = "Could not edit review : ";
 
     public static final String MESSAGE_CAN_NOT_SAVE_OBJECTIVE = "Could not save new objectives";
+
+    public static final String MESSAGE_STATUS_ADD_SUCCESS = "Adding a status successfully!";
+
+    public static final String MESSAGE_STATUS_FIND_ALL_SUCCESS = "Find all status successfully!";
+
+    public static final String MESSAGE_STATUS_FIND_STATUS_SUCCESS = "Find status successfully!";
+
+    public static final String MESSAGE_STATUS_FIND_STATUS_FAILED = "Status Null";
+
+    public static final String MESSAGE_STATUS_UPDATE_STATUS_SUCCESS = "Updating a status successfully!";
 }

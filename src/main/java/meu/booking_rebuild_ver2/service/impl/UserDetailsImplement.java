@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.io.Serial;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.UUID;
+
 @AllArgsConstructor
 @Data
 public class UserDetailsImplement implements UserDetails {
@@ -22,7 +24,7 @@ public class UserDetailsImplement implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(new SimpleGrantedAuthority(user.getUserRole()));
     }
-    public Integer getId() {
+    public UUID getId() {
         return user.getId();
     }
 
@@ -31,7 +33,7 @@ public class UserDetailsImplement implements UserDetails {
     }
 
     public String getEmail() {
-        return user.getEmail();
+        return user.getUsername();
     }
     @Override
     @JsonIgnore
@@ -42,8 +44,8 @@ public class UserDetailsImplement implements UserDetails {
     @Override
     @JsonIgnore
     public String getUsername() {
-        System.out.println(user.getEmail());
-        return user.getEmail();
+        System.out.println(user.getUsername());
+        return user.getUsername();
     }
 
     @Override

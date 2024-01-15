@@ -34,10 +34,10 @@ public class UserService implements IUserService {
     }
     @Override
     public UserDetails loadUserByUsername(String username) {
-        User user = userRepository.findUserByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Not found"));
+        User user = userRepository.findUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Not found"));
         HttpSession session = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
                 .getRequest().getSession();
-        session.setAttribute(USER_EMAIL, user.getEmail());
+        session.setAttribute(USER_EMAIL, user.getUsername());
         return new UserDetailsImplement(user);
     }
 }

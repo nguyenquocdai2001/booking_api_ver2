@@ -2,12 +2,14 @@ package meu.booking_rebuild_ver2.response;
 
 import lombok.Data;
 import  java.util.List;
+import java.util.UUID;
+
 @Data
 public class LoginResponse {
     private String message;
     private Boolean success;
     private String token;
-    private Integer id;
+    private UUID id;
     private String username;
     private String email;
     private List<String> roles;
@@ -19,7 +21,7 @@ public class LoginResponse {
 
     }
 
-    public LoginResponse(String message, String token, Integer id, String username,
+    public LoginResponse(String message, String token, UUID id, String username,
                          String email, List<String> roles) {
         this.message = message;
         this.success = true;
