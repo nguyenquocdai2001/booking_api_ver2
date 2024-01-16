@@ -32,4 +32,18 @@ public class Constants {
     public static final String MESSAGE_STATUS_FIND_STATUS_FAILED = "Status Null";
 
     public static final String MESSAGE_STATUS_UPDATE_STATUS_SUCCESS = "Updating a status successfully!";
+
+    public static final String MESSAGE_BUS_TYPES_ADD_SUCCESS = "Adding a bus type successfully!";
+
+    public static final String MESSAGE_BUS_TYPES_FIND_ALL_SUCCESS = "Find all bus types successfully!";
+
+    public static final String MESSAGE_BUS_TYPES_FIND_ALL_FAILED = "Find all bus types failed!";
+
+    public static final String MESSAGE_BUS_TYPE_FIND_SUCCESS = "Find bus type successfully!";
+
+    public static final String MESSAGE_BUS_TYPE_FIND_FAILED = "Find bus type failed!";
+
+    public static final String MESSAGE_FIND_BUS_TYPE_FAILED = "Bus type Null";
+
+    public static final String MESSAGE_BUS_TYPES_UPDATE_SUCCESS = "Updating a bus type successfully!";
 }

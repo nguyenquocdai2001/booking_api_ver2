@@ -52,7 +52,9 @@ public class SecurityConfig {
         http.cors().and().csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/status/**","demo/**").permitAll()
+                        .requestMatchers("/busTypes/**","demo/**").permitAll()
+                        .requestMatchers("/time/**").permitAll()
+                        .requestMatchers("/status/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**")
                         .permitAll()
                         .anyRequest().authenticated());
