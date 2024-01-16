@@ -101,4 +101,19 @@ public class StatusController {
             throw new BadRequestException(ex.getMessage());
         }
     }
+
+    @DeleteMapping(path = "deleteStatus")
+    public StatusResponse deleteStatus(@RequestBody @Valid Status status){
+        try {
+            if(statusRepository.findStatusById(status.getId()) == null){
+                StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_FIND_STATUS_FAILED, false);
+                return response;
+            }
+            statusRepository.deleteById(status.getId());
+            StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_DELETE_STATUS_SUCCESS, true, status);
+            return response;
+        }catch (Exception ex){
+            throw new BadRequestException(ex.getMessage());
+        }
+    }
 }

@@ -139,4 +139,18 @@ public class BusTypesController {
         }
     }
 
+    @DeleteMapping(path = "deleteBusTypes")
+    public BusTypesResponse deleteBusTypes(@RequestBody @Valid BusTypes busTypes){
+        try {
+            if(busTypesRepository.findById(busTypes.getId()) == null){
+                BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_STATUS_FIND_STATUS_FAILED, false);
+                return response;
+            }
+            busTypesRepository.deleteById(busTypes.getId());
+            BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_STATUS_DELETE_STATUS_SUCCESS, true, busTypes);
+            return response;
+        }catch (Exception ex){
+            throw new BadRequestException(ex.getMessage());
+        }
+    }
 }

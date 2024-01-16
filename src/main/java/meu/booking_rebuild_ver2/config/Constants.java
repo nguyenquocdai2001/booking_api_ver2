@@ -33,6 +33,8 @@ public class Constants {
 
     public static final String MESSAGE_STATUS_UPDATE_STATUS_SUCCESS = "Updating a status successfully!";
 
+    public static final String MESSAGE_STATUS_DELETE_STATUS_SUCCESS = "Deleting a status successfully!";
+
     public static final String MESSAGE_BUS_TYPES_ADD_SUCCESS = "Adding a bus type successfully!";
 
     public static final String MESSAGE_BUS_TYPES_FIND_ALL_SUCCESS = "Find all bus types successfully!";
