@@ -54,4 +54,34 @@ public class JwtUtils {
         }
         return false;
     }
+    public String createToken(String email, String role){
+        Date now = new Date();
+        Date expiryTime = new Date(now.getTime() + expirationTime);
+        return Jwts
+                .builder()
+                .setSubject(email)
+                .setExpiration(expiryTime)
+                .claim("role", role)
+                .setIssuedAt(now)
+                .signWith(key())
+                .compact();
+
+    }
+    public void validateToken(String token) throws Exception {
+        if(token.startsWith("Bearer ")){
+            token = token.substring(7);
+        }
+        try{
+            Jwts.parserBuilder()
+                    .setSigningKey(key())
+                    .build()
+                    .parseClaimsJws(token);
+        }
+        catch (ExpiredJwtException e){
+            throw new Exception("Expired token") ;
+        }
+        catch(JwtException | IllegalArgumentException e){
+            throw new Exception("Token is not valid") ;
+        }
+    }
 }
