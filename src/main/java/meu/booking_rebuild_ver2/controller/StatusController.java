@@ -102,8 +102,8 @@ public class StatusController {
         }
     }
 
-    @DeleteMapping(path = "deleteStatus")
-    public StatusResponse deleteStatus(@RequestBody @Valid Status status){
+    @DeleteMapping(path = "deleteStatusById")
+    public StatusResponse deleteStatusById(@RequestBody @Valid Status status){
         try {
             if(statusRepository.findStatusById(status.getId()) == null){
                 StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_FIND_STATUS_FAILED, false);
