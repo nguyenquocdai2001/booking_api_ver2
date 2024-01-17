@@ -44,7 +44,7 @@ public class UserService implements IUserService {
 
     @Override
     public LoginResponse loginHandle(String username, String password) {
-        Optional<User> model =  userRepository.findUserByEmail(username);
+        Optional<User> model =  userRepository.findUserByUsername(username);
         if (passwordEncoder.matches(password, model.get().getPassword())) {
             String jwt = jwtUtils.createToken(username, model.get().getUserRole());
             LoginResponse response = new LoginResponse(
@@ -53,7 +53,7 @@ public class UserService implements IUserService {
                     model.get().getId(),
                     model.get().getFullname(),
 
-                    model.get().getEmail(),
+                    model.get().getUsername(),
                     Collections.singletonList(model.get().getUserRole()));
             return response;
         }
@@ -64,10 +64,10 @@ public class UserService implements IUserService {
 
     @Override
     public UserDetails loadUserByUsername(String username)  throws UsernameNotFoundException  {
-        User user = userRepository.findUserByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Not found"));
+        User user = userRepository.findUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Not found"));
         HttpSession session = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
                 .getRequest().getSession();
-        session.setAttribute(USER_EMAIL, user.getEmail());
+        session.setAttribute(USER_EMAIL, user.getUsername());
         return new UserDetailsImplement(user);
     }
 

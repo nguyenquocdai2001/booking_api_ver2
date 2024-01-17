@@ -30,7 +30,7 @@ public class User implements Serializable {
     @Email
     @Pattern(regexp = "(^[0-9A-Za-z][\\w.\\-]+@gmail.com)", message = "Invalid email!")
     @NotBlank
-    private String email;
+    private String username;
     @Column(length = 100)
     @Size(min = 8)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
