@@ -18,7 +18,6 @@ import java.util.UUID;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
     @Column(nullable = false, length = 100)
     @Size(max = 100)

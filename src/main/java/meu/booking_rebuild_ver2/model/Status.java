@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import meu.booking_rebuild_ver2.model.ConfigRecord;
 
 import java.util.UUID;
 
