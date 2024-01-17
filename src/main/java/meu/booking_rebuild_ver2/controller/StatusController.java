@@ -23,17 +23,6 @@ public class StatusController {
         this.statusRepository = statusRepository;
     }
 
-    @PutMapping (path = "/addStatus")
-    public StatusResponse addStatusPutMapping(@RequestBody @Valid Status status){
-        try {
-            status.setFlag(true);
-            statusRepository.save(status);
-            StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_ADD_SUCCESS, true, status);
-            return response;
-        }catch (Exception ex){
-            throw new BadRequestException(ex.getMessage());
-        }
-    }
 
     @PostMapping (path = "/addStatus")
     public StatusResponse addStatusPostMapping(@RequestBody @Valid Status status){
@@ -58,8 +47,8 @@ public class StatusController {
         }
     }
 
-    @PostMapping(path = "getAllStatusByFlag")
-    public StatusResponse getAllStatusByFlag(@RequestBody @Valid Boolean flag){
+    @GetMapping(path = "getAllStatusByFlag")
+    public StatusResponse getAllStatusByFlag(Boolean flag){
         try {
             List<Status> statusList = statusRepository.findAllByFlag(flag);
             StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_FIND_ALL_SUCCESS, true, statusList);
@@ -69,8 +58,8 @@ public class StatusController {
         }
     }
 
-    @PostMapping(path = "getStatusById")
-    public StatusResponse getStatusById(@RequestBody @Valid UUID id){
+    @GetMapping(path = "getStatusById")
+    public StatusResponse getStatusById(UUID id){
         try {
             if(statusRepository.findStatusById(id) == null){
                 StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_FIND_STATUS_FAILED, false);
