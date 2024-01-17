@@ -1,5 +1,6 @@
 package meu.booking_rebuild_ver2.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -19,7 +20,6 @@ import java.util.UUID;
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
     @Column(nullable = false, length = 100)
     @Size(max = 100)
@@ -42,13 +42,13 @@ public class User implements Serializable {
     private String confirmPass;
     @CreationTimestamp
     @Column(nullable = false)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Instant createdAt;
     @Enumerated(EnumType.STRING)
     private AuthProvider authProvider = AuthProvider.LOCAL ;
 
     @Enumerated(EnumType.STRING)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonIgnore
     private UserRole userRole ;
     public String getUserRole() {
         return String.valueOf(userRole);

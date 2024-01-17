@@ -16,4 +16,5 @@ public interface StatusRepository extends JpaRepository<Status, UUID> {
 
     @Override
     List<Status> findAll();
+
 }
