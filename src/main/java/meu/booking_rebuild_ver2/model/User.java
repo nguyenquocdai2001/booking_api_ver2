@@ -10,13 +10,14 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
 
 @Entity
 @Table(name = "admin")
 @Data
-public class User {
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

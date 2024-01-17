@@ -3,6 +3,7 @@ package meu.booking_rebuild_ver2.service.impl;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import meu.booking_rebuild_ver2.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,7 +17,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @Data
 public class UserDetailsImplement implements UserDetails {
-    @Serial
     private static final long serialVersionUID = -1352733651057286866L;
 
     private User user;
@@ -32,9 +32,11 @@ public class UserDetailsImplement implements UserDetails {
         return user.getFullname();
     }
 
+
     public String getEmail() {
         return user.getUsername();
     }
+
     @Override
     @JsonIgnore
     public String getPassword() {
@@ -44,7 +46,6 @@ public class UserDetailsImplement implements UserDetails {
     @Override
     @JsonIgnore
     public String getUsername() {
-        System.out.println(user.getUsername());
         return user.getUsername();
     }
 

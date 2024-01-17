@@ -24,6 +24,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        order_updates: true
+
 
   servlet:
     session:
