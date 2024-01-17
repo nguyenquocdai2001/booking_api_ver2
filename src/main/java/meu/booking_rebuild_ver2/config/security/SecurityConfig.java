@@ -57,7 +57,12 @@ public class SecurityConfig {
         http.cors().and().csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/status/**").permitAll()
+                        .requestMatchers("/status/**").hasAnyRole("ADMIN")
+                        .requestMatchers("/busTypes/**").hasAnyRole("ADMIN")
+                        .requestMatchers("/busSeat/**").hasAnyRole("ADMIN")
+                        .requestMatchers("/routes/**").hasAnyRole("ADMIN")
+                        .requestMatchers("/time/**").hasAnyRole("ADMIN")
+                        .requestMatchers("/routeTime/**").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**")
                         .permitAll()
                         .anyRequest().authenticated());

@@ -11,7 +11,7 @@ public class LoginResponse {
     private String token;
     private UUID id;
     private String username;
-    private String email;
+    private String fullname;
     private List<String> roles;
 
     public LoginResponse(String message, Boolean success) {
@@ -22,13 +22,13 @@ public class LoginResponse {
     }
 
     public LoginResponse(String message, String token, UUID id, String username,
-                         String email, List<String> roles) {
+                         String fullname, List<String> roles) {
         this.message = message;
         this.success = true;
         this.token = token;
         this.id = id;
         this.username = username;
-        this.email = email;
+        this.fullname = fullname;
         this.roles = roles;
     }
 
