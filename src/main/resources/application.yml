@@ -18,12 +18,16 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
 
-    url: jdbc:postgresql://27.74.255.96:5433/meu_booking_engine_v2
-    password: NSzo4uDp
+    url: jdbc:postgresql://localhost:5432/Db_Booking_v2
+    password: 123456789
     username: postgres
   jpa:
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        order_updates: true
+
 
   servlet:
     session:

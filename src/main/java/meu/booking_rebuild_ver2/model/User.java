@@ -9,13 +9,14 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
 
 @Entity
 @Table(name = "admin")
 @Data
-public class User {
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -29,7 +30,7 @@ public class User {
     @Email
     @Pattern(regexp = "(^[0-9A-Za-z][\\w.\\-]+@gmail.com)", message = "Invalid email!")
     @NotBlank
-    private String username;
+    private String email;
     @Column(length = 100)
     @Size(min = 8)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
