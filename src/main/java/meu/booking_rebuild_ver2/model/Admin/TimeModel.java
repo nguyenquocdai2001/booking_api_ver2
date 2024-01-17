@@ -1,3 +1,4 @@
+
 package meu.booking_rebuild_ver2.model.Admin;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -39,3 +40,5 @@ public class TimeModel {
     @JsonIgnore
     private ZonedDateTime updatedAt = ZonedDateTime.now();
 }
+
+

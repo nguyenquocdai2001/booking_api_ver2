@@ -1,3 +1,4 @@
+
 package meu.booking_rebuild_ver2.repository.Admin;
 
 import meu.booking_rebuild_ver2.model.Admin.TimeModel;
@@ -21,3 +22,4 @@ public interface TimeRepository extends JpaRepository<TimeModel, UUID> {
     @Query(value = "SELECT T FROM TimeModel T WHERE T.status.id = :statusId")
     List<TimeModel> getTimeByStatus(@Param("statusId") UUID statusId);
 }
+

@@ -14,8 +14,8 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Status {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
     private String status;
     private boolean flag;
 }

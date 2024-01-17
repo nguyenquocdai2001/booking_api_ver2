@@ -1,3 +1,4 @@
+
 package meu.booking_rebuild_ver2.response.Admin;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -40,3 +41,4 @@ public class TimeResponse {
         this.success = success;
     }
 }
+

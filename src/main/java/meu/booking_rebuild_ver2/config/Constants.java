@@ -33,6 +33,7 @@ public class Constants {
 
     public static final String MESSAGE_STATUS_UPDATE_STATUS_SUCCESS = "Updating a status successfully!";
 
+
     //dqdat
     public static final String MESSAGE_STATUS_ADD_TIME_SUCCESS = "Adding a time successfully!";
     public static final String MESSAGE_STATUS_GET_ALL_TIME_SUCCESS = "Getting all times successfully!";
@@ -50,5 +51,36 @@ public class Constants {
     public static final String MESSAGE_ROUTES_TIME_FIND_SUCCESS = "Find route time successfully!";
     public static final String MESSAGE_UPDATE_ROUTES_TIME_SUCCESS = "Updating route time successfully!";
 
+
+
+    public static final String MESSAGE_STATUS_DELETE_STATUS_SUCCESS = "Deleting a status successfully!";
+
+    public static final String MESSAGE_BUS_TYPES_ADD_SUCCESS = "Adding a bus type successfully!";
+
+    public static final String MESSAGE_BUS_TYPES_FIND_ALL_SUCCESS = "Find all bus types successfully!";
+
+    public static final String MESSAGE_BUS_TYPES_FIND_ALL_FAILED = "Find all bus types failed!";
+
+    public static final String MESSAGE_BUS_TYPE_FIND_SUCCESS = "Find bus type successfully!";
+
+    public static final String MESSAGE_BUS_TYPE_FIND_FAILED = "Find bus type failed!";
+
+    public static final String MESSAGE_FIND_BUS_TYPE_FAILED = "Bus type Null";
+
+    public static final String MESSAGE_BUS_TYPES_UPDATE_SUCCESS = "Updating a bus type successfully!";
+
+    public static final String MESSAGE_DELETE_BUS_TYPE_SUCCESS = "Deleting a bus type successfully!";
+
+    public static final String MESSAGE_BUS_SEAT_ADD_SUCCESS = "Adding a bus seat successfully!";
+
+    public static final String MESSAGE_BUS_SEATS_FIND_ALL_SUCCESS = "Find all bus seats successfully!";
+
+    public static final String MESSAGE_BUS_SEAT_FIND_SUCCESS = "Find bus seat successfully!";
+
+    public static final String MESSAGE_BUS_SEAT_FIND_FAILED = "Find bus seat failed!";
+
+    public static final String MESSAGE_BUS_SEAT_UPDATE_SUCCESS = "Updating a bus seat successfully!";
+
+    public static final String MESSAGE_DELETE_BUS_SEAT_SUCCESS = "Deleting a bus seat successfully!";
 
 }

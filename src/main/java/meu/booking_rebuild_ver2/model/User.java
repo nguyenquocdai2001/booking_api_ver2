@@ -1,5 +1,6 @@
 package meu.booking_rebuild_ver2.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -40,13 +41,13 @@ public class User {
     private String confirmPass;
     @CreationTimestamp
     @Column(nullable = false)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Instant createdAt;
     @Enumerated(EnumType.STRING)
     private AuthProvider authProvider = AuthProvider.LOCAL ;
 
     @Enumerated(EnumType.STRING)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonIgnore
     private UserRole userRole ;
     public String getUserRole() {
         return String.valueOf(userRole);
