@@ -36,17 +36,6 @@ public class BusTypesController {
         }
     }
 
-    @PutMapping(path = "/addBusTypes")
-    public BusTypesResponse addBusTypesPutMapping(@RequestBody @Valid BusTypes busTypes){
-        try {
-            busTypesRepository.save(busTypes);
-            BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPES_ADD_SUCCESS, true, busTypes);
-            return response;
-        }catch (Exception ex){
-            throw new BadRequestException(ex.getMessage());
-        }
-    }
-
     @GetMapping(path = "getAllBusTypes")
     public BusTypesResponse getAllBusTypes(){
         try {
@@ -58,7 +47,7 @@ public class BusTypesController {
         }
     }
 
-    @PostMapping(path = "getAllBusTypesByNumberOfSeat")
+    @GetMapping(path = "getAllBusTypesByNumberOfSeat")
     public BusTypesResponse getAllBusTypesByNumberOfSeat(int numberOfSeat){
         try {
             if(!busTypesRepository.findALlByNumberOfSeat(numberOfSeat).isEmpty()){
@@ -73,7 +62,7 @@ public class BusTypesController {
         }
     }
 
-    @PostMapping(path = "getAllBusTypesByStatus")
+    @GetMapping(path = "getAllBusTypesByStatus")
     public BusTypesResponse getAllBusTypesByStatus(Status status){
         try {
             if(!busTypesRepository.findAllByStatus(status).isEmpty()){
@@ -88,7 +77,7 @@ public class BusTypesController {
         }
     }
 
-    @PostMapping(path = "getBusTypesById")
+    @GetMapping(path = "getBusTypesById")
     public BusTypesResponse getBusTypesById(UUID id){
         try {
             if(busTypesRepository.findById(id).isPresent()){
@@ -103,7 +92,7 @@ public class BusTypesController {
         }
     }
 
-    @PostMapping(path = "getBusTypesByLicensePlate")
+    @GetMapping(path = "getBusTypesByLicensePlate")
     public BusTypesResponse getBusTypesByLicensePlate(String licensePlate){
         try {
             if(!(busTypesRepository.findByLicensePlate(licensePlate) == null)){
