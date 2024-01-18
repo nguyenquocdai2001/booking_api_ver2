@@ -5,7 +5,10 @@ import meu.booking_rebuild_ver2.exception.BadRequestException;
 import meu.booking_rebuild_ver2.model.Status;
 import meu.booking_rebuild_ver2.repository.StatusRepository;
 import meu.booking_rebuild_ver2.response.StatusResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -37,11 +40,11 @@ public class StatusController {
     }
 
     @GetMapping(path = "getAllStatus")
-    public StatusResponse getAllStatus(){
+    public ResponseEntity<StatusResponse> getAllStatus(){
         try {
             List<Status> statusList = statusRepository.findAll();
             StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_FIND_ALL_SUCCESS, true, statusList);
-            return response;
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (Exception ex){
             throw new BadRequestException(ex.getMessage());
         }
@@ -100,9 +103,15 @@ public class StatusController {
             }
             statusRepository.deleteById(status.getId());
             StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_DELETE_STATUS_SUCCESS, true, status);
+
             return response;
         }catch (Exception ex){
             throw new BadRequestException(ex.getMessage());
         }
+    }
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<StatusResponse> handleAccessDeniedException(AccessDeniedException ex) {
+        StatusResponse response = new StatusResponse("Access Denied (403 Forbidden)", false);
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
 }
