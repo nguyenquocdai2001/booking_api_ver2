@@ -40,7 +40,7 @@ public class TimeController {
    /* addNewTime
    * start
    *  */
-    @PostMapping
+    @PostMapping("/addTime")
     public TimeResponse addTime(@RequestBody TimeModel model){
         log.debug("Inside addTime function()", model);
      try {
@@ -72,7 +72,7 @@ public class TimeController {
     /* getAllTime
      * start
      *  */
-    @GetMapping
+    @GetMapping("/getAllTime")
     public TimeResponse getAllTimeModels() {
         log.debug("Inside getAllTimeModels");
         try {
@@ -91,7 +91,7 @@ public class TimeController {
     /* getTimeById
      * start
      *  */
-    @GetMapping("/id")
+    @GetMapping("/getTimeById")
     public TimeResponse getTimeModelById(@RequestParam UUID id) {
 
         log.debug("Inside getTimeModelByID");
@@ -112,7 +112,7 @@ public class TimeController {
     /* updateTimeById
      * start
      *  */
-    @PutMapping
+    @PutMapping("/updateTime")
     public TimeResponse updateTimeModelById(@RequestBody TimeModel timeModel) {
         log.debug("Inside updateTimeModelById");
         try {
@@ -142,7 +142,7 @@ public class TimeController {
     /* getAllTimeByStatusID
      * start
      *  */
-    @GetMapping("/status")
+    @GetMapping("/getAllTimeByStatus")
     public TimeResponse getAllTimeModelsByStatus(@RequestParam UUID statusId) {
         log.debug("Inside getAllTimeModelsByStatus");
         try {
@@ -161,7 +161,7 @@ public class TimeController {
     * deleteByid
     *
     * */
-    @DeleteMapping
+    @DeleteMapping("deleteTimeById")
     public TimeResponse deleteTimeModel(@RequestParam UUID id) {
         log.debug("Inside deleteTimeModel");
         try {

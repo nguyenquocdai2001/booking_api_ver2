@@ -36,17 +36,6 @@ public class BusSeatController {
         }
     }
 
-    @PutMapping(path = "/addBusSeat")
-    public BusSeatResponse addBusSeatPutMapping(@RequestBody @Valid BusSeat busSeat){
-        try {
-            busSeatRepository.save(busSeat);
-            BusSeatResponse response = new BusSeatResponse(Constants.MESSAGE_BUS_SEAT_ADD_SUCCESS, true, busSeat);
-            return response;
-        }catch (Exception ex){
-            throw new BadRequestException(ex.getMessage());
-        }
-    }
-
     @GetMapping(path = "getAllBusSeats")
     public BusSeatResponse getAllBusSeats(){
         try {
@@ -58,7 +47,7 @@ public class BusSeatController {
         }
     }
 
-    @PostMapping(path = "getBusSeatById")
+    @GetMapping(path = "getBusSeatById")
     public BusSeatResponse getBusSeatById(UUID id){
         try {
             if(busSeatRepository.findById(id).isPresent()){
@@ -73,7 +62,7 @@ public class BusSeatController {
         }
     }
 
-    @PostMapping(path = "getAllByIsAvailable")
+    @GetMapping(path = "getAllByIsAvailable")
     public BusSeatResponse getAllByIsAvailable(Boolean isAvailable){
         try {
             if(!(busSeatRepository.findAllByIsAvailable(isAvailable).isEmpty())){
@@ -88,7 +77,7 @@ public class BusSeatController {
         }
     }
 
-    @PostMapping(path = "getAllByIdBusTypes")
+    @GetMapping(path = "getAllByIdBusTypes")
     public BusSeatResponse getAllByIdBusTypes(BusTypes busType){
         try {
             if(!(busSeatRepository.findAllByIdBusTypes(busType).isEmpty())){

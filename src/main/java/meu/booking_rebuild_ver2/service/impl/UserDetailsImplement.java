@@ -34,7 +34,7 @@ public class UserDetailsImplement implements UserDetails {
 
 
     public String getEmail() {
-        return user.getEmail();
+        return user.getUsername();
     }
 
     @Override
@@ -46,7 +46,7 @@ public class UserDetailsImplement implements UserDetails {
     @Override
     @JsonIgnore
     public String getUsername() {
-        return user.getEmail();
+        return user.getUsername();
     }
 
     @Override
