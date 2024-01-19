@@ -27,7 +27,7 @@ public class RoutesController {
     RoutesTimeRepository routesTimeRepo;
 
 
-    @PostMapping
+    @PostMapping("/addRoutes")
     public RoutesResponse addRoutes(@RequestBody RoutesModel model){
         log.debug("Inside addRoutes function()", model);
      try {
@@ -39,7 +39,7 @@ public class RoutesController {
          throw new BadRequestException(e.getMessage());
      }
     }
-    @GetMapping
+    @GetMapping("/getAllRoutes")
     public RoutesResponse getAllRoutesModels() {
         log.debug("Inside getAllRoutesModels");
         try {
@@ -51,7 +51,7 @@ public class RoutesController {
         }
     }
 
-    @GetMapping("/id")
+    @GetMapping("/getRoutesById")
     public RoutesResponse getRoutesModelById(@RequestParam UUID id) {
 
         log.debug("Inside getRoutesModelByID");
@@ -65,7 +65,7 @@ public class RoutesController {
         }
     }
 
-    @PutMapping
+    @PutMapping("updateRoutesById")
     public RoutesResponse updateRoutesModelById(@RequestBody RoutesModel routesModel) {
         log.debug("Inside updateRoutesModelById");
         try {
@@ -85,7 +85,7 @@ public class RoutesController {
         }
     }
 
-    @GetMapping("/status")
+    @GetMapping("/getAllRoutesByStatus")
     public RoutesResponse getAllRoutesModelsByStatus(@RequestParam UUID statusId) {
         log.debug("Inside getAllRoutesModelsByStatus");
         try {
@@ -97,7 +97,7 @@ public class RoutesController {
         }
     }
 
-    @DeleteMapping
+    @DeleteMapping("/deleteRoutesById")
     public RoutesResponse deleteRoutesModel(@RequestParam UUID id) {
         log.debug("Inside deleteRoutesModel");
         try {
