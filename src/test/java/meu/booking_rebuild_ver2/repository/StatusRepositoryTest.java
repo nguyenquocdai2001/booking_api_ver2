@@ -11,6 +11,7 @@ import org.springframework.test.context.TestPropertySource;
 
 
 import java.util.List;
+import java.util.Optional;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -32,9 +33,8 @@ public class StatusRepositoryTest {
         Status statusSaved = statusRepository.save(status);
 
         //Assert
-        Assertions.assertThat(statusSaved.getId()).isNotNull();
         Assertions.assertThat(statusSaved).isNotNull();
-
+        Assertions.assertThat(statusSaved.getStatus()).isEqualTo("Enable");
     }
 
     @Test
@@ -48,9 +48,71 @@ public class StatusRepositoryTest {
 
         List<Status> statusListTest = statusRepository.findAll();
 
-
         //Assert
         Assertions.assertThat(statusListTest).isNotNull();
+    }
+
+    @Test
+    public void statusRepository_findById_ReturnStatus(){
+        //Arrange
+        Status status = Status.builder().status("Enable").flag(true).build();
+
+        Status statusSaved = statusRepository.save(status);
+
+        Status statusTest = statusRepository.findStatusById(statusSaved.getId());
+
+        //Assert
+        Assertions.assertThat(statusTest).isNotNull();
+
+    }
+
+    @Test
+    public void statusRepository_findAllByFlag_ReturnListStatus(){
+        //Arrange
+        Status status = Status.builder().status("Enable").flag(true).build();
+        Status status2 = Status.builder().status("Diable").flag(false).build();
+        Status status3 = Status.builder().status("Enable3").flag(true).build();
+
+        statusRepository.save(status);
+        statusRepository.save(status2);
+        statusRepository.save(status3);
+
+        List<Status> statusTest = statusRepository.findAllByFlag(true);
+        List<Status> statusTest1 = statusRepository.findAllByFlag(false);
+
+        //Assert
+        Assertions.assertThat(statusTest).isNotNull();
+        Assertions.assertThat(statusTest1).isNotNull();
+    }
+
+    @Test
+    public void StatusRepository_UpdateStatus_ReturnStatusNotNull(){
+        Status status = Status.builder().status("Enable").flag(true).build();
+
+        statusRepository.save(status);
+
+        Status statusSaved = statusRepository.findById(status.getId()).get();
+        statusSaved.setStatus("Enable updated");
+        statusSaved.setFlag(false);
+
+        Status statusUpdated = statusRepository.save(statusSaved);
+
+        //Assert
+        Assertions.assertThat(statusUpdated.getStatus()).isNotNull();
+        Assertions.assertThat(statusUpdated.isFlag()).isFalse();
+    }
+
+    @Test
+    public void StatusRepository_DeleteStatus_ReturnStatusIsEmpty(){
+        Status status = Status.builder().status("Enable").flag(true).build();
+
+        statusRepository.save(status);
+
+        statusRepository.deleteById(status.getId());
+        Optional<Status> statusReturn = statusRepository.findById(status.getId());
+
+        //Assert
+        Assertions.assertThat(statusReturn).isEmpty();
 
     }
 }

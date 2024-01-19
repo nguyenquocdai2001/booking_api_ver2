@@ -5,6 +5,8 @@ import meu.booking_rebuild_ver2.exception.BadRequestException;
 import meu.booking_rebuild_ver2.model.Status;
 import meu.booking_rebuild_ver2.repository.StatusRepository;
 import meu.booking_rebuild_ver2.response.StatusResponse;
+import meu.booking_rebuild_ver2.service.concretions.StatusService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,12 +28,14 @@ public class StatusController {
         this.statusRepository = statusRepository;
     }
 
+    @Autowired
+    private StatusService statusService;
+
 
     @PostMapping (path = "/addStatus")
     public StatusResponse addStatusPostMapping(@RequestBody @Valid Status status){
         try {
-            status.setFlag(true);
-            statusRepository.save(status);
+            statusService.createStatus(status);
             StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_ADD_SUCCESS, true, status);
             return response;
         }catch (Exception ex){
@@ -42,7 +46,7 @@ public class StatusController {
     @GetMapping(path = "getAllStatus")
     public ResponseEntity<StatusResponse> getAllStatus(){
         try {
-            List<Status> statusList = statusRepository.findAll();
+            List<Status> statusList = statusService.getAll();
             StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_FIND_ALL_SUCCESS, true, statusList);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (Exception ex){
@@ -53,7 +57,7 @@ public class StatusController {
     @GetMapping(path = "getAllStatusByFlag")
     public StatusResponse getAllStatusByFlag(Boolean flag){
         try {
-            List<Status> statusList = statusRepository.findAllByFlag(flag);
+            List<Status> statusList = statusService.getAllByFlag(flag);
             StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_FIND_ALL_SUCCESS, true, statusList);
             return response;
         }catch (Exception ex){
@@ -64,11 +68,11 @@ public class StatusController {
     @GetMapping(path = "getStatusById")
     public StatusResponse getStatusById(UUID id){
         try {
-            if(statusRepository.findStatusById(id) == null){
+            if(statusService.getStatusById(id).isEmpty()){
                 StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_FIND_STATUS_FAILED, false);
                 return response;
             }
-            Status status = statusRepository.findStatusById(id);
+            Status status = statusService.getStatusById(id).get();
             StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_FIND_STATUS_SUCCESS, true, status);
             return response;
         }catch (Exception ex){
@@ -79,15 +83,12 @@ public class StatusController {
     @PostMapping(path = "updateStatus")
     public StatusResponse updateStatus(@RequestBody @Valid Status status){
         try {
-            if(statusRepository.findStatusById(status.getId()) == null){
+            if(statusService.getStatusById(status.getId()).isEmpty()){
                 StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_FIND_STATUS_FAILED, false);
                 return response;
             }
-            Status updatedStatus = statusRepository.findStatusById(status.getId());
-            updatedStatus.setStatus(status.getStatus());
-            updatedStatus.setFlag(status.isFlag());
-            statusRepository.save(updatedStatus);
-            StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_UPDATE_STATUS_SUCCESS, true, updatedStatus);
+            statusService.updateStatus(status);
+            StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_UPDATE_STATUS_SUCCESS, true, status);
             return response;
         }catch (Exception ex){
             throw new BadRequestException(ex.getMessage());
@@ -95,23 +96,18 @@ public class StatusController {
     }
 
     @DeleteMapping(path = "deleteStatusById")
-    public StatusResponse deleteStatusById(@RequestBody @Valid Status status){
+    public StatusResponse deleteStatusById(UUID idStatus){
         try {
-            if(statusRepository.findStatusById(status.getId()) == null){
+            if(statusService.getStatusById(idStatus).isEmpty()){
                 StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_FIND_STATUS_FAILED, false);
                 return response;
             }
-            statusRepository.deleteById(status.getId());
-            StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_DELETE_STATUS_SUCCESS, true, status);
+            statusService.deleteStatusById(idStatus);
+            StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_DELETE_STATUS_SUCCESS, true);
 
             return response;
         }catch (Exception ex){
             throw new BadRequestException(ex.getMessage());
         }
-    }
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<StatusResponse> handleAccessDeniedException(AccessDeniedException ex) {
-        StatusResponse response = new StatusResponse("Access Denied (403 Forbidden)", false);
-        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
 }

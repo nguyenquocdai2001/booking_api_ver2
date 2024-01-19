@@ -9,6 +9,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.nio.file.AccessDeniedException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Data
@@ -22,6 +23,7 @@ public class StatusResponse extends ResponseEntityExceptionHandler {
 
     private Status status;
 
+
     public StatusResponse(String message, Boolean success) {
         this.message = message;
         this.success = success;
@@ -32,6 +34,7 @@ public class StatusResponse extends ResponseEntityExceptionHandler {
         this.success = success;
         this.statusList = statusList;
     }
+
 
     public StatusResponse(String message, Boolean success, Status status) {
         this.message = message;

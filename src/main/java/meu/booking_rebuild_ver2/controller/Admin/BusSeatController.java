@@ -5,9 +5,7 @@ import meu.booking_rebuild_ver2.exception.BadRequestException;
 import meu.booking_rebuild_ver2.model.Admin.BusSeat;
 import meu.booking_rebuild_ver2.model.Admin.BusTypes;
 import meu.booking_rebuild_ver2.repository.Admin.BusSeatRepository;
-import meu.booking_rebuild_ver2.repository.Admin.BusTypesRepository;
 import meu.booking_rebuild_ver2.response.Admin.BusSeatResponse;
-import meu.booking_rebuild_ver2.response.Admin.BusTypesResponse;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
