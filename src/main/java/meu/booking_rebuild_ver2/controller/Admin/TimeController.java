@@ -10,6 +10,7 @@ import meu.booking_rebuild_ver2.model.Admin.TimeModel;
 import meu.booking_rebuild_ver2.repository.Admin.RoutesTimeRepository;
 import meu.booking_rebuild_ver2.repository.Admin.TimeRepository;
 import meu.booking_rebuild_ver2.response.Admin.TimeResponse;
+import meu.booking_rebuild_ver2.service.concretions.TimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.MediaType;
@@ -32,34 +33,16 @@ import java.util.UUID;
 @RequestMapping(path = "/time",  produces = MediaType.APPLICATION_JSON_VALUE)
 public class TimeController {
     @Autowired
-    TimeRepository timeRepo;
-    @Autowired
-    RoutesTimeRepository routesTimeRepo;
-
+    TimeService timeService;
 
    /* addNewTime
    * start
    *  */
     @PostMapping("/addTime")
     public TimeResponse addTime(@RequestBody TimeModel model){
-        log.debug("Inside addTime function()", model);
+        log.debug("Inside addTime function()");
      try {
-        /* checkTimeInput start*/
-         TimeResponse response;
-         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-         LocalDate currentDate = LocalDate.now();
-         LocalDate specificDateStart = LocalDate.parse(model.getStartDate(),formatter);
-         LocalDate specificDateEnd = LocalDate.parse(model.getEndDate(),formatter);
-         if(currentDate.isAfter(specificDateStart) || currentDate.isAfter(specificDateEnd) || specificDateStart.isAfter(specificDateEnd)){
-             response  = new TimeResponse("The invalid day",false, model);
-         }
-         /* checkTimeInput end*/
-         else {
-             model.setCreatedAt(ZonedDateTime.now());
-             timeRepo.save(model);
-             response = new TimeResponse(Constants.MESSAGE_STATUS_ADD_TIME_SUCCESS, true, model);
-         }
-         return response;
+         return timeService.createTime(model);
      }catch(Exception e){
          throw new BadRequestException(e.getMessage());
      }
@@ -76,9 +59,8 @@ public class TimeController {
     public TimeResponse getAllTimeModels() {
         log.debug("Inside getAllTimeModels");
         try {
-          List<TimeModel> list = timeRepo.findAll();
-            TimeResponse response = new TimeResponse(Constants.MESSAGE_STATUS_GET_ALL_TIME_SUCCESS, true, list);
-            return response;
+            List<TimeModel> list = timeService.getAllTime();
+            return new TimeResponse(Constants.MESSAGE_STATUS_GET_ALL_TIME_SUCCESS, true, list);
         }catch (Exception e){
             throw new BadRequestException(e.getMessage());
         }
@@ -93,13 +75,16 @@ public class TimeController {
      *  */
     @GetMapping("/getTimeById")
     public TimeResponse getTimeModelById(@RequestParam UUID id) {
-
         log.debug("Inside getTimeModelByID");
         try {
-            TimeModel model = timeRepo.findTimeModelById(id);
-            TimeResponse response = new TimeResponse(Constants.MESSAGE_TIME_FIND_SUCCESS, true,model);
+            TimeResponse response;
+                TimeModel model = timeService.findByID(id);
+                if(model!= null) {
+                    response = new TimeResponse(Constants.MESSAGE_TIME_FIND_SUCCESS, true, model);
+                    return response;
+                }
+            response = new TimeResponse(Constants.MESSAGE_SOMETHING_WENT_WRONG, false);
             return response;
-
         }catch (Exception e){
             throw new BadRequestException(e.getMessage());
         }
@@ -116,20 +101,13 @@ public class TimeController {
     public TimeResponse updateTimeModelById(@RequestBody TimeModel timeModel) {
         log.debug("Inside updateTimeModelById");
         try {
-            TimeModel updateModel = timeRepo.findTimeModelById(timeModel.getId());
-            updateModel.setStartTime(timeModel.getStartTime());
-            updateModel.setEndTime(timeModel.getEndTime());
-            updateModel.setStartDate(timeModel.getStartDate());
-            updateModel.setEndDate(timeModel.getEndDate());
-            updateModel.setStatus(timeModel.getStatus());
-            updateModel.setCreatedAt(timeModel.getCreatedAt());
-            updateModel.setUpdatedAt(ZonedDateTime.now());
-            updateModel.setIdUserConfig(timeModel.getIdUserConfig());
-            timeRepo.save(updateModel);
-            /*thiếu userConfig*/
-            TimeResponse response = new TimeResponse(Constants.MESSAGE_UPDATE_TIME_SUCCESS, true,updateModel);
+            TimeResponse response;
+            if(timeModel.getId() != null) {
+                 response = timeService.updateTime(timeModel);
+                return response;
+            }
+            response = new TimeResponse("Something went wrong", false);
             return response;
-
         }catch (Exception e){
             throw new BadRequestException(e.getMessage());
         }
@@ -146,9 +124,13 @@ public class TimeController {
     public TimeResponse getAllTimeModelsByStatus(@RequestParam UUID statusId) {
         log.debug("Inside getAllTimeModelsByStatus");
         try {
-            List<TimeModel> list = timeRepo.getTimeByStatus(statusId);
-            TimeResponse response = new TimeResponse(Constants.MESSAGE_STATUS_GET_ALL_TIME_SUCCESS, true, list);
-            return response;
+            List<TimeModel> list = timeService.getTimeByStatus(statusId);
+            TimeResponse response;
+            if(!list.isEmpty()){
+                response = new TimeResponse(Constants.MESSAGE_STATUS_GET_ALL_TIME_SUCCESS, true, list);
+                return response;
+            }
+            return new TimeResponse("Status not found", false);
         }catch (Exception e){
             throw new BadRequestException(e.getMessage());
         }
@@ -165,18 +147,7 @@ public class TimeController {
     public TimeResponse deleteTimeModel(@RequestParam UUID id) {
         log.debug("Inside deleteTimeModel");
         try {
-            TimeResponse response;
-            if(!timeRepo.existsById(id)){
-                response = new TimeResponse("Invalid ID",true );
-            }else if(!routesTimeRepo.getRoutesTimeByTime(id).isEmpty()){
-                //check if routes_time data contain id
-                response = new TimeResponse("Route Time still has ID, can't delete",true );
-            }
-            else{
-                timeRepo.deleteById(id);
-                response = new TimeResponse("Delete Time Success",true );
-            }
-            return response;
+            return timeService.deleteById(id);
         }catch (Exception e){
             throw new BadRequestException(e.getMessage());
         }

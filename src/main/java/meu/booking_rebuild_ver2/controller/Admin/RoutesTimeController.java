@@ -39,7 +39,7 @@ public class RoutesTimeController {
      *  */
     @PostMapping("/addRoutesTime")
     public RoutesTimeResponse addRoutesTime(@RequestBody RoutesTimeModel model){
-        log.debug("Inside addRoutesTime function()", model);
+        log.debug("Inside addRoutesTime function()");
      try {
          RoutesTimeResponse response;
          //check ID_Time & ID_routes
@@ -61,12 +61,9 @@ public class RoutesTimeController {
 
     //check ID_Time & ID_routes start
     private boolean checkIdTimeAndRoute(RoutesTimeModel model){
-        if(timeRepository.existsById(model.getIdTime().getId())
+        return timeRepository.existsById(model.getIdTime().getId())
                 && routesRepo.existsById(model.getIdRoutes().getId())
-                && statusRepo.existsById(model.getStatus().getId())){
-            return true;
-        }
-        return false;
+                && statusRepo.existsById(model.getStatus().getId());
     }
     //check ID_Time & ID_routes end
 
@@ -78,8 +75,7 @@ public class RoutesTimeController {
         log.debug("Inside getAllRoutesTimeModels");
         try {
           List<RoutesTimeModel> list = routesTimeRepo.findAll();
-            RoutesTimeResponse response = new RoutesTimeResponse(Constants.MESSAGE_STATUS_GET_ALL_ROUTES_TIME_SUCCESS, true, list);
-            return response;
+            return new RoutesTimeResponse(Constants.MESSAGE_STATUS_GET_ALL_ROUTES_TIME_SUCCESS, true, list);
         }catch (Exception e){
             throw new BadRequestException(e.getMessage());
         }
@@ -97,8 +93,7 @@ public class RoutesTimeController {
         log.debug("Inside getRoutesTimeModelByID");
         try {
             RoutesTimeModel model = routesTimeRepo.findRoutesTimeModelById(id);
-            RoutesTimeResponse response = new RoutesTimeResponse(Constants.MESSAGE_ROUTES_TIME_FIND_SUCCESS, true,model);
-            return response;
+            return new RoutesTimeResponse(Constants.MESSAGE_ROUTES_TIME_FIND_SUCCESS, true,model);
 
         }catch (Exception e){
             throw new BadRequestException(e.getMessage());
@@ -150,8 +145,7 @@ public class RoutesTimeController {
         log.debug("Inside getAllRoutesTimeModelsByStatus");
         try {
             List<RoutesTimeModel> list = routesTimeRepo.getRoutesTimeByStatus(statusId);
-            RoutesTimeResponse response = new RoutesTimeResponse(Constants.MESSAGE_STATUS_GET_ALL_ROUTES_TIME_SUCCESS, true, list);
-            return response;
+            return new RoutesTimeResponse(Constants.MESSAGE_STATUS_GET_ALL_ROUTES_TIME_SUCCESS, true, list);
         }catch (Exception e){
             throw new BadRequestException(e.getMessage());
         }

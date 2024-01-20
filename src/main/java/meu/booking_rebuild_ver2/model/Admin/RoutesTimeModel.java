@@ -2,7 +2,9 @@ package meu.booking_rebuild_ver2.model.Admin;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import meu.booking_rebuild_ver2.model.Status;
 import meu.booking_rebuild_ver2.model.User;
 
@@ -11,6 +13,8 @@ import java.util.UUID;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "routes_time")
 public class RoutesTimeModel {
     @Id

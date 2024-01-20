@@ -39,7 +39,7 @@ public class Constants {
     public static final String MESSAGE_STATUS_GET_ALL_TIME_SUCCESS = "Getting all times successfully!";
     public static final String MESSAGE_TIME_FIND_SUCCESS = "Find time successfully!";
     public static final String MESSAGE_UPDATE_TIME_SUCCESS = "Updating time successfully!";
-
+    public static final String MESSAGE_SOMETHING_WENT_WRONG = "Something went wrong!";
 
     public static final String MESSAGE_STATUS_ADD_ROUTES_SUCCESS = "Adding routes successfully!";
     public static final String MESSAGE_STATUS_GET_ALL_ROUTES_SUCCESS = "Getting all routes successfully!";
