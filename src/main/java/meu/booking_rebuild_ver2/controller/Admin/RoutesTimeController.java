@@ -37,7 +37,7 @@ public class RoutesTimeController {
     /* addRoutesTime
      * start
      *  */
-    @PostMapping
+    @PostMapping("/addRoutesTime")
     public RoutesTimeResponse addRoutesTime(@RequestBody RoutesTimeModel model){
         log.debug("Inside addRoutesTime function()", model);
      try {
@@ -73,7 +73,7 @@ public class RoutesTimeController {
     /* getAllRoutesTimeModels
      * start
      *  */
-    @GetMapping
+    @GetMapping("/getAllRoutesTime")
     public RoutesTimeResponse getAllRoutesTimeModels() {
         log.debug("Inside getAllRoutesTimeModels");
         try {
@@ -91,7 +91,7 @@ public class RoutesTimeController {
     /* getRoutesTimeModelById
      * start
      *  */
-    @GetMapping("/id")
+    @GetMapping("/getRoutesTimeById")
     public RoutesTimeResponse getRoutesTimeModelById(@RequestParam UUID id) {
 
         log.debug("Inside getRoutesTimeModelByID");
@@ -111,7 +111,7 @@ public class RoutesTimeController {
     /* updateRoutesTimeModelById
      * start
      *  */
-    @PutMapping
+    @PutMapping("/updateRoutesTimeById")
     public RoutesTimeResponse updateRoutesTimeModelById(@RequestBody RoutesTimeModel routesTimeModel) {
         log.debug("Inside updateRoutesTimeModelById");
         try {
@@ -145,7 +145,7 @@ public class RoutesTimeController {
     /* getAllRoutesTimeModelsByStatus
      * start
      *  */
-    @GetMapping("/status")
+    @GetMapping("/getAllRoutesTimeByStatus")
     public RoutesTimeResponse getAllRoutesTimeModelsByStatus(@RequestParam UUID statusId) {
         log.debug("Inside getAllRoutesTimeModelsByStatus");
         try {
@@ -161,7 +161,7 @@ public class RoutesTimeController {
      *  */
 
 //    get routes time by time start
-    @GetMapping("/time")
+    @GetMapping("/getRoutesTimeByTime")
     public RoutesTimeResponse getRoutesTimeByTime(@RequestParam UUID timeId){
         log.debug("Inside getRoutesTimeByTime");
         try{
@@ -181,7 +181,7 @@ public class RoutesTimeController {
     //    get routes time by time end
 
     //    get routes time by routes start
-    @GetMapping("/routes")
+    @GetMapping("/getRoutesTimeByRoutes")
     public RoutesTimeResponse getRoutesTimeByRoutes(@RequestParam UUID timeId){
         log.debug("Inside getRoutesTimeByTime");
         try{
@@ -205,7 +205,7 @@ public class RoutesTimeController {
      * deleteByid
      *
      * */
-    @DeleteMapping
+    @DeleteMapping("/deleteRoutesTimeById")
     public RoutesTimeResponse deleteRoutesTimeModel(@RequestParam UUID id) {
         log.debug("Inside deleteRoutesTimeModel");
         try {
