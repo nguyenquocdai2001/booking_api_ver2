@@ -12,6 +12,9 @@ import meu.booking_rebuild_ver2.service.abstractions.IUserService;
 import meu.booking_rebuild_ver2.service.concretions.UserService;
 import meu.booking_rebuild_ver2.service.impl.UserDetailsImplement;
 import meu.booking_rebuild_ver2.service.utils.JwtUtils;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.ObjectError;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -26,6 +29,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,14 +66,9 @@ public class AuthController {
     }
 
     @PostMapping(path = "/register")
-    public GenericResponse addNewUser(@RequestBody @Valid User user) {
+    public ResponseEntity<GenericResponse> addNewUser(@RequestBody @Valid User user) {
         try {
-            if (!user.getPassword().equals(user.getConfirmPass()))
-                throw new BadRequestException(Constants.MESSAGE_INVALID_MATCH_PASSWORD);
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            userRepository.save(user);
-            GenericResponse response = new GenericResponse(Constants.MESSAGE_REGISTER_WELCOME);
-            return response;
+            return userService.registerHandle(user);
         } catch (Exception ex) {
             throw new BadRequestException(ex.getMessage());
         }

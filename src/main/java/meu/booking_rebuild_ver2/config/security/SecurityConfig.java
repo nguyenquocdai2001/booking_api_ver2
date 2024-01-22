@@ -55,18 +55,36 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors().and().csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/status/**").hasAnyRole("ADMIN")
-                        .requestMatchers("/busTypes/**").hasAnyRole("ADMIN")
-                        .requestMatchers("/busSeat/**").hasAnyRole("ADMIN")
-                        .requestMatchers("/routes/**").hasAnyRole("ADMIN")
-                        .requestMatchers("/time/**").hasAnyRole("ADMIN")
-                        .requestMatchers("/routeTime/**").hasAnyRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**")
+                        .requestMatchers("/auth/**", "/demo/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,
+                                "/busTypes/**" ,
+                                "/busSeat/**",
+                                "/routes/**",
+                                "/time/**",
+                                "/routeTime/**" )
+                        .hasAnyRole("SUPER_ADMIN","ADMIN")
+                        .requestMatchers(HttpMethod.GET,
+                                "/busTypes/**" ,
+                                "/busSeat/**",
+                                "/routes/**",
+                                "/time/**",
+                                "/routeTime/**" )
+                        .hasAnyRole("SUPER_ADMIN","ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,
+                                "/busTypes/**" ,
+                                "/busSeat/**",
+                                "/routes/**",
+                                "/time/**",
+                                "/routeTime/**" )
+                        .hasAnyRole("SUPER_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**")
                         .permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling().authenticationEntryPoint((request, response, e) -> {
-                    ErrorResponse errorResponse = new ErrorResponse("Access Denied (403 Forbidden)", HttpStatus.FORBIDDEN.value());
+                    ErrorResponse errorResponse = new ErrorResponse("Access Denied (403 Forbidden) ",
+                            HttpStatus.FORBIDDEN.value());
                     response.setContentType("application/json;charset=UTF-8");
                     response.setStatus(HttpStatus.FORBIDDEN.value());
                     response.getWriter().write(new ObjectMapper().writeValueAsString(errorResponse));
