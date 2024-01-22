@@ -1,5 +1,6 @@
 package meu.booking_rebuild_ver2.exception;
 
+import meu.booking_rebuild_ver2.response.GenericResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,5 +15,10 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException ex) {
         return new ResponseEntity<>("Access Denied (403 Forbidden)", HttpStatus.FORBIDDEN);
+    }
+    @ExceptionHandler(GenericResponseExceptionHandler.class)
+    public ResponseEntity<GenericResponse> handleGenericResponseException(GenericResponseExceptionHandler e){
+        GenericResponse response = new GenericResponse(e.getMessage(), false);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

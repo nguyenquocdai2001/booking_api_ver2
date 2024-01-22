@@ -1,6 +1,8 @@
 package meu.booking_rebuild_ver2.config;
 
 public class Constants {
+
+
     private Constants() {
     }
 
@@ -82,5 +84,10 @@ public class Constants {
     public static final String MESSAGE_BUS_SEAT_UPDATE_SUCCESS = "Updating a bus seat successfully!";
 
     public static final String MESSAGE_DELETE_BUS_SEAT_SUCCESS = "Deleting a bus seat successfully!";
-
+    public static final String MESSAGE_ADD_LOYALTY_SUCCESS = "Added a new loyalty successfully!";
+    public static final String MESSAGE_ADD_RANK_FAILED = "The rank has been exit";
+    public static final String MESSAGE_ADD_DISCOUNT_FAILED = "The discount has been exit";
+    public static final String MESSAGE_UPDATE_LOYALTY_SUCCESS = "The loyalty has been updated successfully";
+    public static final String MESSAGE_DELETED_SUCCESS = "Deleted successfully";
+    public static final String MESSAGE_GET_NOT_FOUND = "NOT FOUND";
 }
