@@ -83,4 +83,11 @@ public class Constants {
 
     public static final String MESSAGE_DELETE_BUS_SEAT_SUCCESS = "Deleting a bus seat successfully!";
 
+
+    //dqdat BS-10
+    public static final String MESSAGE_STATUS_ADD_PRICE_SUCCESS = "Adding a price successfully!";
+    public static final String MESSAGE_STATUS_GET_ALL_PRICE_SUCCESS = "Getting all prices successfully!";
+    public static final String MESSAGE_PRICE_FIND_SUCCESS = "Find prices successfully!";
+    public static final String MESSAGE_UPDATE_PRICE_SUCCESS = "Updating price successfully!";
+
 }
