@@ -9,5 +9,8 @@ public class NotFoundException extends Exception {
     public NotFoundException() {
         super(Constants.MESSAGE_GET_NOT_FOUND);
     }
+    public NotFoundException(String message) {
+        super(Constants.MESSAGE_GET_NOT_FOUND + message);
+    }
 
 }
