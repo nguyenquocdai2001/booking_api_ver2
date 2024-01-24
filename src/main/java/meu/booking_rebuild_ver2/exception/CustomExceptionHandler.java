@@ -1,7 +1,9 @@
 package meu.booking_rebuild_ver2.exception;
 
 import meu.booking_rebuild_ver2.config.Constants;
+import meu.booking_rebuild_ver2.exception.config.ApiError;
 import meu.booking_rebuild_ver2.response.GenericResponse;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -23,8 +25,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<GenericResponse> handleNotFoundException(){
-        GenericResponse response = new GenericResponse(Constants.MESSAGE_GET_NOT_FOUND, false);
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    public ResponseEntity<Object> handleNotFoundException(){
+        ApiError response = new ApiError(HttpStatus.NOT_FOUND, new GenericResponse(Constants.MESSAGE_GET_NOT_FOUND, false) , false);
+        return buildResponseEntity(response);
+    }
+    private ResponseEntity<Object> buildResponseEntity(ApiError apiError) {
+        logger.error("error" + apiError.getMessage());
+        return new ResponseEntity<>(apiError.getMessage(), new HttpHeaders(), apiError.getStatus());
     }
 }
