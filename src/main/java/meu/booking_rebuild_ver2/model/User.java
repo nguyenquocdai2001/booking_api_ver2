@@ -3,7 +3,11 @@ package meu.booking_rebuild_ver2.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import meu.booking_rebuild_ver2.config.Constants;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.validation.constraints.Email;
@@ -17,9 +21,14 @@ import java.util.UUID;
 @Entity
 @Table(name = "admin")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+
     private UUID id;
     @Column(nullable = false, length = 100)
     @Size(max = 100)
@@ -28,7 +37,7 @@ public class User implements Serializable {
     private String fullname;
     @Column(nullable = false, unique = true)
     @Email
-    @Pattern(regexp = "(^[0-9A-Za-z][\\w.\\-]+@gmail.com)", message = "Invalid email!")
+    @Pattern(regexp = "(^[0-9A-Za-z][\\w.\\-]+@[\\w]+\\.[\\w]\\S+\\w)$", message = Constants.MESSAGE_INVALID_USERNAME)
     @NotBlank
     private String username;
     @Column(length = 100)
@@ -44,12 +53,11 @@ public class User implements Serializable {
     @Column(nullable = false)
     private Instant createdAt;
     @Enumerated(EnumType.STRING)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private AuthProvider authProvider = AuthProvider.LOCAL ;
-
     @Enumerated(EnumType.STRING)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @JsonIgnore
-    private UserRole userRole ;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private UserRole userRole = UserRole.ROLE_SUPER_ADMIN ;
     public String getUserRole() {
         return String.valueOf(userRole);
     }

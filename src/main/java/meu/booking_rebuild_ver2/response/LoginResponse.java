@@ -1,9 +1,7 @@
 package meu.booking_rebuild_ver2.response;
-
 import lombok.Data;
 import  java.util.List;
 import java.util.UUID;
-
 @Data
 public class LoginResponse {
     private String message;
