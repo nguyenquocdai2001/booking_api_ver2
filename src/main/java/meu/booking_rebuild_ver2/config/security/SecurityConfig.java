@@ -1,28 +1,27 @@
 package meu.booking_rebuild_ver2.config.security;
 
-import meu.booking_rebuild_ver2.service.impl.UserDetailsImplement;
-import meu.booking_rebuild_ver2.service.utils.JwtUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
-import meu.booking_rebuild_ver2.config.security.AuthTokenFilter;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -56,6 +55,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors().and().csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+<<<<<<< HEAD
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/status/**").hasAnyRole("ADMIN")
                         .requestMatchers("/busTypes/**").hasAnyRole("ADMIN")
@@ -65,11 +65,67 @@ public class SecurityConfig {
                         .requestMatchers("/routeTime/**").hasAnyRole("ADMIN")
                         .requestMatchers("/price/**").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**")
+=======
+                        .requestMatchers("/auth/**", "/demo/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,
+                                "/busTypes/**" ,
+                                "/busSeat/**",
+                                "/routes/**",
+                                "/time/**",
+                                "/loyalty",
+                                "/routeTime/**" )
+                        .hasAnyRole("SUPER_ADMIN","ADMIN")
+                        .requestMatchers(HttpMethod.GET,
+                                "/busTypes/**" ,
+                                "/busSeat/**",
+                                "/routes/**",
+                                "/time/**",
+                                "/loyalty",
+                                "/routeTime/**" )
+                        .hasAnyRole("SUPER_ADMIN","ADMIN")
+                        .requestMatchers(HttpMethod.PUT,
+                                "/loyalty/**" )
+                        .hasAnyRole("SUPER_ADMIN","ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,
+                                "/busTypes/**" ,
+                                "/busSeat/**",
+                                "/routes/**",
+                                "/time/**",
+                                "/loyalty",
+                                "/routeTime/**" )
+                        .hasAnyRole("SUPER_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**")
+>>>>>>> 67f004cdb08ad1598ef9c898ee24131e780534ed
                         .permitAll()
-                        .anyRequest().authenticated());
+                        .anyRequest().authenticated())
+                .exceptionHandling().authenticationEntryPoint((request, response, e) -> {
+                    ErrorResponse errorResponse = new ErrorResponse("Access Denied (403 Forbidden) ",
+                            HttpStatus.FORBIDDEN.value());
+                    response.setContentType("application/json;charset=UTF-8");
+                    response.setStatus(HttpStatus.FORBIDDEN.value());
+                    response.getWriter().write(new ObjectMapper().writeValueAsString(errorResponse));
+                });
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         http.sessionManagement(s -> s.maximumSessions(2));
         return http.build();
     }
+    private static class ErrorResponse {
+        private String message;
+        private int status;
 
+        public ErrorResponse(String message, int status) {
+            this.message = message;
+            this.status = status;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public int getStatus() {
+            return status;
+        }
+    }
 }
