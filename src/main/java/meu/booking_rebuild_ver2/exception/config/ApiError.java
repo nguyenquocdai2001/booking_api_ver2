@@ -11,11 +11,9 @@ public class ApiError {
 
     private HttpStatus status;
     private GenericResponse message;
-    private boolean success;
 
-    public ApiError(final HttpStatus status, final GenericResponse message, final boolean success) {
+    public ApiError(final HttpStatus status, final GenericResponse message) {
         this.status = status;
         this.message = message;
-        this.success = success;
     }
 }

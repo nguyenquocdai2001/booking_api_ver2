@@ -26,11 +26,11 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     }
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> handleNotFoundException(){
-        ApiError response = new ApiError(HttpStatus.NOT_FOUND, new GenericResponse(Constants.MESSAGE_GET_NOT_FOUND, false) , false);
+        ApiError response = new ApiError(HttpStatus.NOT_FOUND, new GenericResponse(Constants.MESSAGE_GET_NOT_FOUND, false) );
         return buildResponseEntity(response);
     }
     private ResponseEntity<Object> buildResponseEntity(ApiError apiError) {
-        logger.error("error" + apiError.getMessage());
+        logger.error("error" + apiError.getMessage().getMessage());
         return new ResponseEntity<>(apiError.getMessage(), new HttpHeaders(), apiError.getStatus());
     }
 }
