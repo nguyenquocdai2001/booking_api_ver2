@@ -1,5 +1,6 @@
 package meu.booking_rebuild_ver2.controller.Admin;
 
+import meu.booking_rebuild_ver2.exception.NotFoundException;
 import meu.booking_rebuild_ver2.model.Admin.Loyalty;
 import meu.booking_rebuild_ver2.request.LoyaltyRequest;
 import meu.booking_rebuild_ver2.response.GenericResponse;
@@ -14,7 +15,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 /*
- * author: Minh Tam
+ * author: Nguyen Minh Tam
  * ticket: BS-2
  * */
 @RestController
@@ -38,15 +39,31 @@ public class LoyaltyController {
         return  loyaltyService.getAllLoyalty();
     }
     @GetMapping(path = "getLoyaltyByRank")
-    public Optional<Loyalty> getLoyalty(@RequestBody LoyaltyRequest request){
+    /*
+     * The function to get the detail of rank. With the rank is input from user
+     */
+    public Optional<Loyalty> getLoyalty(@RequestBody LoyaltyRequest request) throws NotFoundException {
         return  loyaltyService.getLoyaltyByRank(request.getRank());
     }
+    /*
+     * The function used to get the rank with price will be the norm according to loyalty_spent
+     */
+    @GetMapping(path = "getLoyaltyByPrice")
+    public Optional<Loyalty> getLoyaltyByPrice(@RequestParam double price){
+        return loyaltyService.getLoyaltyByPrice(price);
+    }
+    /*
+     * The function to update the loyalty from id and dto
+     */
     @PutMapping(path = "updateLoyalty")
-    public GenericResponse updateLoyalty(@RequestParam UUID id, @RequestBody LoyaltyRequest request){
+    public GenericResponse updateLoyalty(@RequestParam UUID id, @RequestBody LoyaltyRequest request) throws NotFoundException {
         return loyaltyService.updateLoyalty(id, request);
     }
+    /*
+     * The function to delete the loyalty form id
+     */
     @DeleteMapping(path = "deleteLoyalty")
-    public GenericResponse deleteLoyalty(@RequestParam UUID id){
+    public GenericResponse deleteLoyalty(@RequestParam UUID id) throws NotFoundException {
         return loyaltyService.deleteLoyalty(id);
     }
 }

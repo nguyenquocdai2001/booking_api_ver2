@@ -10,19 +10,11 @@ public class ApiError {
 
     private HttpStatus status;
     private String message;
-    private List<String> errors;
+    private boolean success;
 
-    public ApiError(final HttpStatus status, final String message, final List<String> errors) {
+    public ApiError(final HttpStatus status, final String message, final boolean success) {
         this.status = status;
         this.message = message;
-        this.errors = errors;
+        this.success = success;
     }
-
-    public ApiError(final HttpStatus status, final String message, final String error) {
-        super();
-        this.status = status;
-        this.message = message;
-        errors = Arrays.asList(error);
-    }
-
 }

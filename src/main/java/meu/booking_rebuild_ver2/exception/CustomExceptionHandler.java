@@ -1,5 +1,6 @@
 package meu.booking_rebuild_ver2.exception;
 
+import meu.booking_rebuild_ver2.config.Constants;
 import meu.booking_rebuild_ver2.response.GenericResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,5 +21,10 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<GenericResponse> handleGenericResponseException(GenericResponseExceptionHandler e){
         GenericResponse response = new GenericResponse(e.getMessage(), false);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<GenericResponse> handleNotFoundException(){
+        GenericResponse response = new GenericResponse(Constants.MESSAGE_GET_NOT_FOUND, false);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 }

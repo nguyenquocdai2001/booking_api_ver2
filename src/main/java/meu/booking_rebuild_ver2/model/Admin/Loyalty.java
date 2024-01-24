@@ -31,9 +31,13 @@ public class Loyalty {
     @JsonProperty(access = JsonProperty.Access.READ_WRITE)
     @Column(nullable = false)
     @NotNull
-    private int discount;
-
-    public Loyalty(String rank) {
+    private int discount ;
+    @JsonProperty(access = JsonProperty.Access.READ_WRITE)
+    @Column(nullable = false)
+    @NotNull
+//    @OrderBy("'loyalty_spent' ASC")
+    private double loyalty_spent ;
+    public  Loyalty(String rank) {
         this.rank = rank;
     }
 

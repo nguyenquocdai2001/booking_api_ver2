@@ -33,12 +33,14 @@ public class LoyaltyRepositoryTest {
                 .id(UUID.randomUUID())
                 .rank("gold")
                 .discount(20)
+                .loyalty_spent(5.500)
                 .build();
         Loyalty loyaltySaved = loyaltyRepository.save(loyalty);
         Loyalty loyalty1 = Loyalty.builder()
                 .id(UUID.randomUUID())
                 .rank("bronze")
                 .discount(5)
+                .loyalty_spent(3.500)
                 .build();
         Loyalty loyalty1Saved = loyaltyRepository.save(loyalty1);
         Loyalty loyalty2 = Loyalty.builder()
@@ -51,6 +53,7 @@ public class LoyaltyRepositoryTest {
                 .id(UUID.randomUUID())
                 .rank("diamond")
                 .discount(50)
+                .loyalty_spent(6.500)
                 .build();
         Loyalty loyalty3Saved = loyaltyRepository.save(loyalty3);
         assertThat(loyaltySaved).isNotNull();
@@ -85,10 +88,10 @@ public class LoyaltyRepositoryTest {
     }
     @Test
     public void LoyalRepository_GetAll_ReturnListOrderedAscByDiscount(){
-        Loyalty loyalty1 = new Loyalty(UUID.randomUUID(),"gold", 20);
-        Loyalty loyalty2 = new Loyalty(UUID.randomUUID(),"bronze", 5);
-        Loyalty loyalty3 = new Loyalty(UUID.randomUUID(),"platinum", 30);
-        Loyalty loyalty4 = new Loyalty(UUID.randomUUID(),"diamond", 10);
+        Loyalty loyalty1 = new Loyalty(UUID.randomUUID(),"gold", 20, 3.500);
+        Loyalty loyalty2 = new Loyalty(UUID.randomUUID(),"bronze", 5, 4.500);
+        Loyalty loyalty3 = new Loyalty(UUID.randomUUID(),"platinum", 30, 5.500);
+        Loyalty loyalty4 = new Loyalty(UUID.randomUUID(),"diamond", 10, 6.500);
         Iterable<Loyalty> loyalties = loyaltyRepository.findAll();
         List<Loyalty> sortedList = StreamSupport.stream(loyalties.spliterator(), false)
                 .collect(Collectors.toList());

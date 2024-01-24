@@ -12,7 +12,7 @@ import lombok.Setter;
 public class LoyaltyRequest {
     private String rank;
     private int discount;
-
+    private double loyalty_spent;
     public LoyaltyRequest(int discount) {
         this.discount = discount;
     }
