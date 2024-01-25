@@ -2,6 +2,7 @@ package meu.booking_rebuild_ver2.model.Admin;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import meu.booking_rebuild_ver2.model.Status;
@@ -12,6 +13,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "bus_types")
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class BusTypes {
@@ -26,7 +28,7 @@ public class BusTypes {
     @ManyToOne
     @JoinColumn(name = "status")
     private Status status;
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "id_user_config")
     private User idUserConfig;
 
