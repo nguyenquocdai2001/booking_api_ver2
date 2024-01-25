@@ -1,4 +1,4 @@
-package meu.booking_rebuild_ver2.service.concretions;
+package meu.booking_rebuild_ver2.service.concretions.Admin;
 
 import meu.booking_rebuild_ver2.config.Constants;
 import meu.booking_rebuild_ver2.model.Admin.TimeModel;
@@ -34,7 +34,6 @@ public class TimeService implements ITimeService {
         }
         /* checkTimeInput end*/
         if(statusRepository.existsById(timeModel.getStatus().getId())){
-            timeModel.setCreatedAt(ZonedDateTime.now());
             timeRepository.save(timeModel);
             response = new TimeResponse(Constants.MESSAGE_STATUS_ADD_TIME_SUCCESS, true, timeModel);
             return response;
@@ -61,7 +60,6 @@ public class TimeService implements ITimeService {
             updateModel.setStartDate(timeModel.getStartDate());
             updateModel.setEndDate(timeModel.getEndDate());
             updateModel.setStatus(timeModel.getStatus());
-            updateModel.setCreatedAt(timeModel.getCreatedAt());
             updateModel.setUpdatedAt(ZonedDateTime.now());
             updateModel.setIdUserConfig(timeModel.getIdUserConfig());
             timeRepository.save(updateModel);
