@@ -54,6 +54,7 @@ public class UserServiceTest {
     void getSessionUserId(){
         when(httpSession.getAttribute(UserService.USERID )).thenReturn(1);
         assertEquals(1, userService.getSessionUserId(httpSession));
+        System.out.println(httpSession);
     }
     @Test
     void loginHandle_Success(){

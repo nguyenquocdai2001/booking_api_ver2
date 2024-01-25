@@ -50,6 +50,7 @@ public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+
     private final UserRepository userRepository;
 
     private final BCryptPasswordEncoder passwordEncoder;

@@ -110,7 +110,7 @@ public class PriceController {
     /* getAllPriceByStatusID
      * start
      *  */
-    @GetMapping("/getAllPriceByStatus")
+    @GetMapping("/getByStatus")
     public PriceResponse getAllPriceModelsByStatus(@RequestParam UUID statusId) {
         log.debug("Inside getAllPriceModelsByStatus");
         try {
@@ -146,7 +146,7 @@ public class PriceController {
     /* getAllPriceByBusTypeID
      * start
      *  */
-    @GetMapping("/getAllPriceByStatus")
+    @GetMapping("/getByBusType")
     public PriceResponse getAllPriceModelsByBusType(@RequestParam UUID busTypeId) {
         log.debug("Inside getAllPriceModelsByStatus");
         try {
@@ -168,7 +168,7 @@ public class PriceController {
     /* getAllPriceModelsByRoutesTimeID
      * start
      *  */
-    @GetMapping("/getAllPriceByStatus")
+    @GetMapping("/getByRoutesTime")
     public PriceResponse getAllPriceModelsByRoutesTime(@RequestParam UUID routesTimeId) {
         log.debug("Inside getAllPriceModelsByStatus");
         try {

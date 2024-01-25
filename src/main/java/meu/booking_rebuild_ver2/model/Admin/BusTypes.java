@@ -2,6 +2,7 @@ package meu.booking_rebuild_ver2.model.Admin;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import meu.booking_rebuild_ver2.model.Status;
@@ -11,6 +12,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "bus_types")
+@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

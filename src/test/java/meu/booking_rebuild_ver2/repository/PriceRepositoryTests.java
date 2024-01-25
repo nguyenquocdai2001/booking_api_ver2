@@ -1,8 +1,8 @@
 package meu.booking_rebuild_ver2.repository;
 
-import meu.booking_rebuild_ver2.model.Admin.RoutesModel;
+import meu.booking_rebuild_ver2.model.Admin.TimeModel;
 import meu.booking_rebuild_ver2.model.Status;
-import meu.booking_rebuild_ver2.repository.Admin.RoutesRepository;
+import meu.booking_rebuild_ver2.repository.Admin.TimeRepository;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.data.Index;
 import org.junit.jupiter.api.Test;
@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
 
+import java.sql.Time;
 import java.util.List;
 
 @DataJpaTest
@@ -24,152 +25,170 @@ import java.util.List;
 public class PriceRepositoryTests {
 
     @Autowired
-    private RoutesRepository routesRepo;
+    private TimeRepository timeRepo;
 
     @Autowired
     private StatusRepository statusRepo;
     @Test
-    public void routesRepo_AddAndFindByID_ReturnRoutes(){
+    public void timeRepo_AddAndFindByID_ReturnTime(){
         Status status = Status.builder().status("Enable").flag(true).build();
         Status statusSaved = statusRepo.save(status);
 
 
-        RoutesModel routes = RoutesModel.builder()
-                .departurePoint("test3")
-                .destinationPoint("test3")
+        TimeModel time = TimeModel.builder()
+                .startTime(Time.valueOf("04:30:00"))
+                .endTime(Time.valueOf("04:30:00"))
+                .startDate("19-01-2024")
+                .endDate("23-01-2024")
                 .status(statusSaved).build();
 
-        RoutesModel routesModelSaved = routesRepo.save(routes);
+        TimeModel timeModelSaved = timeRepo.save(time);
 
-        Assertions.assertThat(routesModelSaved).isNotNull();
-        Assertions.assertThat(routesRepo.findRoutesModelById(routesModelSaved.getId()).getDeparturePoint()).isEqualTo("test3");
-        Assertions.assertThat(routesRepo.findRoutesModelById(routesModelSaved.getId()).getDestinationPoint()).isEqualTo("test3");
+        Assertions.assertThat(timeModelSaved).isNotNull();
+        Assertions.assertThat(timeRepo.findTimeModelById(timeModelSaved.getId()).getStartDate()).isEqualTo("19-01-2024");
     }
 
     @Test
-    public void routesRepo_Update_ReturnRoutes(){
+    public void timeRepo_Update_ReturnTime(){
         Status status = Status.builder().status("Enable").flag(true).build();
         Status statusSaved = statusRepo.save(status);
 
-        RoutesModel routes = RoutesModel.builder()
-                .departurePoint("test3")
-                .destinationPoint("test3")
+        TimeModel time = TimeModel.builder()
+                .startTime(Time.valueOf("04:30:00"))
+                .endTime(Time.valueOf("04:30:00"))
+                .startDate("19-01-2024")
+                .endDate("23-01-2024")
                 .status(statusSaved).build();
-                routesRepo.save(routes);
+                timeRepo.save(time);
 
         Status status1 = Status.builder().status("Disable").flag(true).build();
         Status statusSaved1 = statusRepo.save(status1);
 
-        RoutesModel routesUpdate = routesRepo.findRoutesModelById(routes.getId());
-            routesUpdate.setDestinationPoint("test4");
-            routesUpdate.setDeparturePoint("test5");
-            routesUpdate.setStatus(statusSaved1);
-        RoutesModel routesModelUpdateSaved = routesRepo.save(routesUpdate);
+        TimeModel timeUpdate = timeRepo.findTimeModelById(time.getId());
+            timeUpdate.setStartTime(Time.valueOf("05:30:00"));
+            timeUpdate.setEndTime(Time.valueOf("05:30:00"));
+            timeUpdate.setStartDate("20-01-2024");
+            timeUpdate.setEndDate("23-01-2024");
+            timeUpdate.setStatus(statusSaved1);
+        TimeModel timeModelUpdateSaved = timeRepo.save(timeUpdate);
 
-        Assertions.assertThat(routesModelUpdateSaved.getDestinationPoint()).isNotNull();
-        Assertions.assertThat(routesModelUpdateSaved.getDeparturePoint()).isNotNull();
-        Assertions.assertThat(routesModelUpdateSaved.getStatus()).isNotNull();
-        Assertions.assertThat(routesModelUpdateSaved.getDestinationPoint()).isEqualTo("test4");
-        Assertions.assertThat(routesModelUpdateSaved.getDeparturePoint()).isEqualTo("test5");
-
-        Assertions.assertThat(routesModelUpdateSaved.getStatus().getStatus()).isEqualTo("Disable");
+        Assertions.assertThat(timeModelUpdateSaved.getStartTime()).isNotNull();
+        Assertions.assertThat(timeModelUpdateSaved.getEndTime()).isNotNull();
+        Assertions.assertThat(timeModelUpdateSaved.getStartDate()).isNotNull();
+        Assertions.assertThat(timeModelUpdateSaved.getEndDate()).isNotNull();
+        Assertions.assertThat(timeModelUpdateSaved.getStatus()).isNotNull();
+        Assertions.assertThat(timeModelUpdateSaved.getStartTime()).isEqualTo(Time.valueOf("05:30:00"));
+        Assertions.assertThat(timeModelUpdateSaved.getEndTime()).isEqualTo(Time.valueOf("05:30:00"));
+        Assertions.assertThat(timeModelUpdateSaved.getStartDate()).isEqualTo("20-01-2024");
+        Assertions.assertThat(timeModelUpdateSaved.getEndDate()).isEqualTo("23-01-2024");
+        Assertions.assertThat(timeModelUpdateSaved.getStatus().getStatus()).isEqualTo("Disable");
     }
     @Test
-    public void routesRepo_GetAll_ReturnRoutes(){
+    public void timeRepo_GetAll_ReturnTime(){
         Status status = Status.builder().status("Enable").flag(true).build();
         Status statusSaved = statusRepo.save(status);
 
-        RoutesModel routes = RoutesModel.builder()
-                .departurePoint("test3")
-                .destinationPoint("test3")
+        TimeModel time = TimeModel.builder()
+                .startTime(Time.valueOf("04:30:00"))
+                .endTime(Time.valueOf("04:30:00"))
+                .startDate("19-01-2024")
+                .endDate("23-01-2024")
                 .status(statusSaved).build();
 
-        RoutesModel routes1 = RoutesModel.builder()
-                .departurePoint("test4")
-                .destinationPoint("test4")
+        TimeModel time1 = TimeModel.builder()
+                .startTime(Time.valueOf("04:30:00"))
+                .endTime(Time.valueOf("04:30:00"))
+                .startDate("20-01-2024")
+                .endDate("23-01-2024")
                 .status(statusSaved).build();
-         routesRepo.save(routes);
-         routesRepo.save(routes1);
-        List<RoutesModel> list  = routesRepo.findAll();
-        Assertions.assertThat(list).contains(routes, Index.atIndex(0));
-        Assertions.assertThat(list.get(0).getDeparturePoint()).isEqualTo("test3");
-        Assertions.assertThat(list.get(0).getDestinationPoint()).isEqualTo("test3");
+         timeRepo.save(time);
+         timeRepo.save(time1);
+        List<TimeModel> list  = timeRepo.findAll();
+        Assertions.assertThat(list).contains(time, Index.atIndex(0));
+        Assertions.assertThat(list.get(0).getStartDate()).isEqualTo("19-01-2024");
 
-        Assertions.assertThat(list).contains(routes1, Index.atIndex(1));
-        Assertions.assertThat(list.get(1).getDeparturePoint()).isEqualTo("test4");
-        Assertions.assertThat(list.get(1).getDestinationPoint()).isEqualTo("test4");
+        Assertions.assertThat(list).contains(time1, Index.atIndex(1));
+        Assertions.assertThat(list.get(1).getStartDate()).isEqualTo("20-01-2024");
+
     }
     @Test
-    public void routesRepo_GetByStatus_ReturnListRoutes(){
+    public void timeRepo_GetByStatus_ReturnListTime(){
         Status status = Status.builder().status("Enable").flag(true).build();
         Status statusSaved = statusRepo.save(status);
 
         Status status1 = Status.builder().status("Disable").flag(true).build();
         Status statusSaved1 = statusRepo.save(status1);
 
-        RoutesModel routes = RoutesModel.builder()
-                .departurePoint("test3")
-                .destinationPoint("test3")
+        TimeModel time = TimeModel.builder()
+                .startTime(Time.valueOf("04:30:00"))
+                .endTime(Time.valueOf("04:30:00"))
+                .startDate("19-01-2024")
+                .endDate("23-01-2024")
                 .status(statusSaved).build();
 
-        RoutesModel routes1 = RoutesModel.builder()
-                .departurePoint("test4")
-                .destinationPoint("test4")
+        TimeModel time1 = TimeModel.builder()
+                .startTime(Time.valueOf("04:30:00"))
+                .endTime(Time.valueOf("04:30:00"))
+                .startDate("20-01-2024")
+                .endDate("23-01-2024")
                 .status(statusSaved).build();
 
-        RoutesModel routes2 = RoutesModel.builder()
-                .departurePoint("test5")
-                .destinationPoint("test5")
+        TimeModel time2 = TimeModel.builder()
+                .startTime(Time.valueOf("04:30:00"))
+                .endTime(Time.valueOf("04:30:00"))
+                .startDate("22-01-2024")
+                .endDate("23-01-2024")
                 .status(statusSaved1).build();
 
-        routesRepo.save(routes);
-        routesRepo.save(routes1);
-        routesRepo.save(routes2);
+        timeRepo.save(time);
+        timeRepo.save(time1);
+        timeRepo.save(time2);
 
-        List<RoutesModel> list  = routesRepo.getRoutesByStatus(statusSaved.getId());
+        List<TimeModel> list  = timeRepo.getTimeByStatus(statusSaved.getId());
 
-        List<RoutesModel> list1  = routesRepo.getRoutesByStatus(statusSaved1.getId());
+        List<TimeModel> list1  = timeRepo.getTimeByStatus(statusSaved1.getId());
 
         Assertions.assertThat(list).size().isEqualTo(2);
-        Assertions.assertThat(list).contains(routes, Index.atIndex(0));
-        Assertions.assertThat(list.get(0).getDeparturePoint()).isEqualTo("test3");
-        Assertions.assertThat(list.get(0).getDestinationPoint()).isEqualTo("test3");
+        Assertions.assertThat(list).contains(time, Index.atIndex(0));
+        Assertions.assertThat(list.get(0).getStartDate()).isEqualTo("19-01-2024");
 
-        Assertions.assertThat(list).contains(routes1, Index.atIndex(1));
-        Assertions.assertThat(list.get(1).getDeparturePoint()).isEqualTo("test4");
-        Assertions.assertThat(list.get(1).getDestinationPoint()).isEqualTo("test4");
+        Assertions.assertThat(list).contains(time1, Index.atIndex(1));
+        Assertions.assertThat(list.get(1).getStartDate()).isEqualTo("20-01-2024");
 
         Assertions.assertThat(list1).size().isEqualTo(1);
-        Assertions.assertThat(list1).contains(routes2, Index.atIndex(0));
-        Assertions.assertThat(list1.get(0).getDeparturePoint()).isEqualTo("test5");
-        Assertions.assertThat(list1.get(0).getDestinationPoint()).isEqualTo("test5");
+        Assertions.assertThat(list1).contains(time2, Index.atIndex(0));
+        Assertions.assertThat(list1.get(0).getStartDate()).isEqualTo("22-01-2024");
 
     }
 
     @Test
-    public void routesRepo_DeleteByID_ReturnRoutes(){
+    public void timeRepo_DeleteByID_ReturnTime(){
         Status status = Status.builder().status("Enable").flag(true).build();
         Status statusSaved = statusRepo.save(status);
 
-        RoutesModel routes = RoutesModel.builder()
-                .departurePoint("test3")
-                .destinationPoint("test3")
+        TimeModel time = TimeModel.builder()
+                .startTime(Time.valueOf("04:30:00"))
+                .endTime(Time.valueOf("04:30:00"))
+                .startDate("19-01-2024")
+                .endDate("23-01-2024")
                 .status(statusSaved).build();
 
-        RoutesModel routes1 = RoutesModel.builder()
-                .departurePoint("test4")
-                .destinationPoint("test4")
+        TimeModel time1 = TimeModel.builder()
+                .startTime(Time.valueOf("04:30:00"))
+                .endTime(Time.valueOf("04:30:00"))
+                .startDate("20-01-2024")
+                .endDate("23-01-2024")
                 .status(statusSaved).build();
 
-        RoutesModel routesSave   = routesRepo.save(routes);
-        RoutesModel routesSave1  = routesRepo.save(routes1);
+        TimeModel timeSave   = timeRepo.save(time);
+        TimeModel timeSave1  = timeRepo.save(time1);
 
-        routesRepo.deleteById(routesSave.getId());
-        List<RoutesModel> list  = routesRepo.findAll();
+        timeRepo.deleteById(timeSave.getId());
+        List<TimeModel> list  = timeRepo.findAll();
 
         Assertions.assertThat(list).size().isEqualTo(1);
-        Assertions.assertThat(list).contains(routesSave1, Index.atIndex(0));
-        Assertions.assertThat(list.get(0).getDestinationPoint()).isEqualTo("test4");
+        Assertions.assertThat(list).contains(timeSave1, Index.atIndex(0));
+        Assertions.assertThat(list.get(0).getStartDate()).isEqualTo("20-01-2024");
 
     }
 }

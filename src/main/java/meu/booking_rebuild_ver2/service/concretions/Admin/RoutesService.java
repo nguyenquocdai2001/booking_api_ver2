@@ -1,7 +1,10 @@
 package meu.booking_rebuild_ver2.service.concretions.Admin;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import meu.booking_rebuild_ver2.config.Constants;
 import meu.booking_rebuild_ver2.model.Admin.RoutesModel;
+import meu.booking_rebuild_ver2.model.User;
 import meu.booking_rebuild_ver2.repository.Admin.RoutesRepository;
 import meu.booking_rebuild_ver2.repository.Admin.RoutesTimeRepository;
 import meu.booking_rebuild_ver2.repository.StatusRepository;
@@ -9,6 +12,7 @@ import meu.booking_rebuild_ver2.response.Admin.RoutesResponse;
 import meu.booking_rebuild_ver2.service.abstractions.Admin.IRoutesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CookieValue;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -23,11 +27,15 @@ public class RoutesService implements IRoutesService{
 
     @Autowired
     RoutesRepository routesRepo;
+    HttpServletRequest request;
+
+    User userID;
 
     @Override
     public RoutesResponse createRoutes(RoutesModel routesModel) {
         if(statusRepository.existsById(routesModel.getStatus().getId())) {
-//            routesModel.setIdUserConfig();
+            getSession();
+            routesModel.setIdUserConfig(userID);
             routesRepo.save(routesModel);
             return new RoutesResponse(Constants.MESSAGE_STATUS_ADD_ROUTES_SUCCESS, true , routesModel);
         }
@@ -84,5 +92,16 @@ public class RoutesService implements IRoutesService{
     public List<RoutesModel> getRoutesByStatus(UUID id) {
 
         return routesRepo.getRoutesByStatus(id);
+    }
+    public void getSession(){
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("JSESSIONID")) {
+                    userID.setId(UUID.fromString(cookie.getAttribute("JSESSIONID")));
+                }
+            }
+        }
     }
 }

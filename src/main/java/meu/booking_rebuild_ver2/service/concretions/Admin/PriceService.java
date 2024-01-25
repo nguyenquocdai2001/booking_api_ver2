@@ -55,7 +55,7 @@ public class PriceService implements IPriceService {
             updateModel.setUpdatedAt(ZonedDateTime.now());
             updateModel.setIdUserConfig(priceModel.getIdUserConfig());
             priceRepository.save(updateModel);
-            response = new PriceResponse(Constants.MESSAGE_UPDATE_TIME_SUCCESS, true, updateModel);
+            response = new PriceResponse(Constants.MESSAGE_UPDATE_PRICE_SUCCESS, true, updateModel);
             return response;
         }
         response = new PriceResponse("ID not found", false);
