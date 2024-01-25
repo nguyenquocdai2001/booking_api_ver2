@@ -40,7 +40,7 @@ public class LoyaltyService implements ILoyaltyService {
         Optional<Loyalty> loylalty = loyaltyRepository.findByRank(request.getRank().toLowerCase());
         if (loylalty.isEmpty() && getLoyaltyByDiscount(request.getDiscount()).isEmpty()) {
             try {
-                Loyalty loyalty = new Loyalty(request.getId(), request.getRank().toLowerCase(), request.getDiscount(), request.getLoyalty_spent());
+                Loyalty loyalty = new Loyalty(request.getId(), request.getRank().toLowerCase(), request.getDiscount(), request.getLoyaltySpent());
                 loyaltyRepository.save(loyalty);
                 GenericResponse response = new GenericResponse(Constants.MESSAGE_ADD_LOYALTY_SUCCESS);
                 System.out.print(request);
@@ -72,7 +72,7 @@ public class LoyaltyService implements ILoyaltyService {
             if (model.isEmpty())  throw new NotFoundException();
             Loyalty loyaltyModel = model.get();
             loyaltyModel.setDiscount(request.getDiscount());
-            loyaltyModel.setLoyalty_spent(request.getLoyalty_spent());
+            loyaltyModel.setLoyaltySpent(request.getLoyalty_spent());
             loyaltyModel.setRank(request.getRank().toLowerCase());
             loyaltyRepository.save(loyaltyModel);
             return new GenericResponse(Constants.MESSAGE_UPDATE_LOYALTY_SUCCESS);
