@@ -8,6 +8,8 @@ import meu.booking_rebuild_ver2.repository.Admin.BusTypesRepository;
 import meu.booking_rebuild_ver2.repository.Admin.TimeRepository;
 import meu.booking_rebuild_ver2.response.Admin.BusTypesResponse;
 import meu.booking_rebuild_ver2.response.StatusResponse;
+import meu.booking_rebuild_ver2.service.concretions.Admin.BusTypesService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +22,8 @@ import java.util.UUID;
 @RequestMapping(path = "/busTypes", produces = MediaType.APPLICATION_JSON_VALUE)
 public class BusTypesController {
     private final BusTypesRepository busTypesRepository;
+    @Autowired
+    private BusTypesService busTypesService;
 
     public BusTypesController(BusTypesRepository busTypesRepository) {
         this.busTypesRepository = busTypesRepository;
@@ -27,119 +31,41 @@ public class BusTypesController {
 
     @PostMapping(path = "/addBusTypes")
     public BusTypesResponse addBusTypesPostMapping(@RequestBody @Valid BusTypes busTypes){
-        try {
-            busTypesRepository.save(busTypes);
-            BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPES_ADD_SUCCESS, true, busTypes);
-            return response;
-        }catch (Exception ex){
-            throw new BadRequestException(ex.getMessage());
-        }
+        return busTypesService.createBusType(busTypes);
     }
 
     @GetMapping(path = "getAllBusTypes")
     public BusTypesResponse getAllBusTypes(){
-        try {
-            List<BusTypes> busTypesList = busTypesRepository.findAll();
-            BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPES_FIND_ALL_SUCCESS, true, busTypesList);
-            return response;
-        }catch (Exception ex){
-            throw new BadRequestException(ex.getMessage());
-        }
+        return busTypesService.getAllBusTypes();
     }
 
     @GetMapping(path = "getAllBusTypesByNumberOfSeat")
-    public BusTypesResponse getAllBusTypesByNumberOfSeat(int numberOfSeat){
-        try {
-            if(!busTypesRepository.findALlByNumberOfSeat(numberOfSeat).isEmpty()){
-                List<BusTypes> busTypesList = busTypesRepository.findALlByNumberOfSeat(numberOfSeat);
-                BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPES_FIND_ALL_SUCCESS, true, busTypesList);
-                return response;
-            }
-            BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPES_FIND_ALL_FAILED, false);
-            return response;
-        }catch (Exception ex){
-            throw new BadRequestException(ex.getMessage());
-        }
+    public BusTypesResponse getAllBusTypesByNumberOfSeat(@RequestParam int numberOfSeat){
+        return busTypesService.getAllBusTypesByNumberOfSeat(numberOfSeat);
     }
 
     @GetMapping(path = "getAllBusTypesByStatus")
-    public BusTypesResponse getAllBusTypesByStatus(Status status){
-        try {
-            if(!busTypesRepository.findAllByStatus(status).isEmpty()){
-                List<BusTypes> busTypesList = busTypesRepository.findAllByStatus(status);
-                BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPES_FIND_ALL_SUCCESS, true, busTypesList);
-                return response;
-            }
-            BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPES_FIND_ALL_FAILED, false);
-            return response;
-        }catch (Exception ex){
-            throw new BadRequestException(ex.getMessage());
-        }
+    public BusTypesResponse getAllBusTypesByStatus(@RequestParam UUID idStatus){
+        return busTypesService.getAllBusTypesByStatus(idStatus);
     }
 
     @GetMapping(path = "getBusTypesById")
-    public BusTypesResponse getBusTypesById(UUID id){
-        try {
-            if(busTypesRepository.findById(id).isPresent()){
-                Optional<BusTypes> busTypes = busTypesRepository.findById(id);
-                BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPE_FIND_SUCCESS, true, busTypes);
-                return response;
-            }
-            BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPE_FIND_FAILED, false);
-            return response;
-        }catch (Exception ex){
-            throw new BadRequestException(ex.getMessage());
-        }
+    public BusTypesResponse getBusTypesById(@RequestParam UUID id){
+        return busTypesService.getBusTypesById(id);
     }
 
     @GetMapping(path = "getBusTypesByLicensePlate")
-    public BusTypesResponse getBusTypesByLicensePlate(String licensePlate){
-        try {
-            if(!(busTypesRepository.findByLicensePlate(licensePlate) == null)){
-                BusTypes busTypes = busTypesRepository.findByLicensePlate(licensePlate);
-                BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPE_FIND_SUCCESS, true, busTypes);
-                return response;
-            }
-            BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPE_FIND_FAILED, false);
-            return response;
-        }catch (Exception ex){
-            throw new BadRequestException(ex.getMessage());
-        }
+    public BusTypesResponse getBusTypesByLicensePlate(@RequestParam String licensePlate){
+        return busTypesService.getBusTypesByLicensePlate(licensePlate);
     }
 
     @PostMapping(path = "updateBusType")
     public BusTypesResponse updateBusType(@RequestBody @Valid BusTypes busTypes){
-        try {
-            if(!busTypesRepository.findById(busTypes.getId()).isPresent()){
-                BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_FIND_BUS_TYPE_FAILED, false);
-                return response;
-            }
-            BusTypes updatedBusType = busTypesRepository.findById(busTypes.getId()).get();
-            updatedBusType.setType(busTypes.getType());
-            updatedBusType.setLicensePlate(busTypes.getLicensePlate());
-            updatedBusType.setNumberOfSeat(busTypes.getNumberOfSeat());
-            updatedBusType.setStatus(busTypes.getStatus());
-            updatedBusType.setIdUserConfig(busTypes.getIdUserConfig());
-            busTypesRepository.save(updatedBusType);
-            BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPES_UPDATE_SUCCESS, true, updatedBusType);
-            return response;
-        }catch (Exception ex){
-            throw new BadRequestException(ex.getMessage());
-        }
+        return busTypesService.updateBusType(busTypes);
     }
 
     @DeleteMapping(path = "deleteBusTypesById")
-    public BusTypesResponse deleteBusTypesById(@RequestBody @Valid BusTypes busTypes){
-        try {
-            if(busTypesRepository.findById(busTypes.getId()) == null){
-                BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_STATUS_FIND_STATUS_FAILED, false);
-                return response;
-            }
-            busTypesRepository.deleteById(busTypes.getId());
-            BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_DELETE_BUS_TYPE_SUCCESS, true, busTypes);
-            return response;
-        }catch (Exception ex){
-            throw new BadRequestException(ex.getMessage());
-        }
+    public BusTypesResponse deleteBusTypesById(@RequestParam UUID id){
+        return busTypesService.deleteBusTypesById(id);
     }
 }
