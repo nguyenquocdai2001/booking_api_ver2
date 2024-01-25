@@ -9,10 +9,10 @@ import java.util.UUID;
 
 public interface IBusSeatService {
     BusSeatResponse createBusSeat(BusSeat busSeat);
-    public BusSeatResponse getAllBusSeat();
-    public BusSeatResponse getBusSeatById(UUID id);
-    public BusSeatResponse getAllByIsAvailable(boolean isAvailable);
-    public BusSeatResponse getAllByIdBusTypes(UUID busType);
-    public BusSeatResponse updateBusSeat(BusSeat busSeat);
-    public BusSeatResponse deleteBusSeatById(UUID id);
+    BusSeatResponse getAllBusSeat();
+    BusSeatResponse getBusSeatById(UUID id);
+    BusSeatResponse getAllByIsAvailable(boolean isAvailable);
+    BusSeatResponse getAllByIdBusTypes(UUID busType);
+    BusSeatResponse updateBusSeat(BusSeat busSeat);
+    BusSeatResponse deleteBusSeatById(UUID id);
 }
