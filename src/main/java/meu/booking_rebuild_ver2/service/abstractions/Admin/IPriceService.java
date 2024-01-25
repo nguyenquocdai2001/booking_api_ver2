@@ -13,6 +13,6 @@ public interface IPriceService {
     PriceModel findByID(UUID id);
     PriceResponse deleteById(UUID id);
     List<PriceModel> getPriceByStatus(UUID id);
-    List<PriceModel> getPriceByBusType(UUID id);
-    List<PriceModel> getPriceByRoutesTime(UUID id);
+//    List<PriceModel> getPriceByBusType(UUID id);
+//    List<PriceModel> getPriceByRoutesTime(UUID id);
 }

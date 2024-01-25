@@ -146,21 +146,21 @@ public class PriceController {
     /* getAllPriceByBusTypeID
      * start
      *  */
-    @GetMapping("/getAllPriceByStatus")
-    public PriceResponse getAllPriceModelsByBusType(@RequestParam UUID busTypeId) {
-        log.debug("Inside getAllPriceModelsByStatus");
-        try {
-            List<PriceModel> list = priceService.getPriceByBusType(busTypeId);
-            PriceResponse response;
-            if(!list.isEmpty()){
-                response = new PriceResponse(Constants.MESSAGE_STATUS_GET_ALL_PRICE_SUCCESS, true, list);
-                return response;
-            }
-            return new PriceResponse("BusType not found", false);
-        }catch (Exception e){
-            throw new BadRequestException(e.getMessage());
-        }
-    }
+//    @GetMapping("/getAllPriceByStatus")
+//    public PriceResponse getAllPriceModelsByBusType(@RequestParam UUID busTypeId) {
+//        log.debug("Inside getAllPriceModelsByStatus");
+//        try {
+//            List<PriceModel> list = priceService.getPriceByBusType(busTypeId);
+//            PriceResponse response;
+//            if(!list.isEmpty()){
+//                response = new PriceResponse(Constants.MESSAGE_STATUS_GET_ALL_PRICE_SUCCESS, true, list);
+//                return response;
+//            }
+//            return new PriceResponse("BusType not found", false);
+//        }catch (Exception e){
+//            throw new BadRequestException(e.getMessage());
+//        }
+//    }
     /* getAllPriceByBusTypeID
      * end
      *  */
@@ -168,21 +168,21 @@ public class PriceController {
     /* getAllPriceModelsByRoutesTimeID
      * start
      *  */
-    @GetMapping("/getAllPriceByStatus")
-    public PriceResponse getAllPriceModelsByRoutesTime(@RequestParam UUID routesTimeId) {
-        log.debug("Inside getAllPriceModelsByStatus");
-        try {
-            List<PriceModel> list = priceService.getPriceByRoutesTime(routesTimeId);
-            PriceResponse response;
-            if(!list.isEmpty()){
-                response = new PriceResponse(Constants.MESSAGE_STATUS_GET_ALL_PRICE_SUCCESS, true, list);
-                return response;
-            }
-            return new PriceResponse("RoutesTime not found", false);
-        }catch (Exception e){
-            throw new BadRequestException(e.getMessage());
-        }
-    }
+//    @GetMapping("/getAllPriceByStatus")
+//    public PriceResponse getAllPriceModelsByRoutesTime(@RequestParam UUID routesTimeId) {
+//        log.debug("Inside getAllPriceModelsByStatus");
+//        try {
+//            List<PriceModel> list = priceService.getPriceByRoutesTime(routesTimeId);
+//            PriceResponse response;
+//            if(!list.isEmpty()){
+//                response = new PriceResponse(Constants.MESSAGE_STATUS_GET_ALL_PRICE_SUCCESS, true, list);
+//                return response;
+//            }
+//            return new PriceResponse("RoutesTime not found", false);
+//        }catch (Exception e){
+//            throw new BadRequestException(e.getMessage());
+//        }
+//    }
     /* getAllPriceModelsByRoutesTimeID
      * end
      *  */

@@ -87,15 +87,15 @@ public class PriceService implements IPriceService {
         return priceRepository.getPriceByStatus(id);
     }
 
-    @Override
-    public List<PriceModel> getPriceByBusType(UUID id) {
-        return priceRepository.getPriceByBusType(id);
-    }
+//    @Override
+//    public List<PriceModel> getPriceByBusType(UUID id) {
+//        return priceRepository.getPriceByBusType(id);
+//    }
 
-    @Override
-    public List<PriceModel> getPriceByRoutesTime(UUID id) {
-        return priceRepository.getPriceByRoutesTime(id);
-    }
+//    @Override
+//    public List<PriceModel> getPriceByRoutesTime(UUID id) {
+//        return priceRepository.getPriceByRoutesTime(id);
+//    }
 
     private boolean checkDate(PriceModel priceModel){
 
