@@ -1,6 +1,7 @@
 package meu.booking_rebuild_ver2.service.concretions.Admin;
 
 import meu.booking_rebuild_ver2.config.Constants;
+import meu.booking_rebuild_ver2.exception.BadRequestException;
 import meu.booking_rebuild_ver2.exception.GenericResponseExceptionHandler;
 import meu.booking_rebuild_ver2.exception.NotFoundException;
 import meu.booking_rebuild_ver2.model.Admin.Loyalty;
@@ -31,12 +32,11 @@ public class LoyaltyService implements ILoyaltyService {
     public Optional<Loyalty> getLoyaltyByRank(String rank) throws NotFoundException {
         Optional<Loyalty> response = loyaltyRepository.findByRank(rank.toLowerCase());
         if (response.isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundException(Constants.MESSAGE_GET_LOYALTY_FAILED  + " rank : " + rank);
         } else return response;
     }
-
     @Override
-    public GenericResponse addNewLoyalty(Loyalty request) {
+    public GenericResponse addNewLoyalty(Loyalty request) throws GenericResponseExceptionHandler {
         Optional<Loyalty> loylalty = loyaltyRepository.findByRank(request.getRank().toLowerCase());
         if (loylalty.isEmpty() && getLoyaltyByDiscount(request.getDiscount()).isEmpty()) {
             try {
@@ -65,9 +65,8 @@ public class LoyaltyService implements ILoyaltyService {
         Sort sortByDiscount = Sort.by(Sort.Direction.ASC, "discount");
         return loyaltyRepository.findAll(sortByDiscount);
     }
-
     @Override
-    public GenericResponse updateLoyalty(UUID id, LoyaltyRequest request) throws NotFoundException {
+    public GenericResponse updateLoyalty(UUID id, LoyaltyRequest request) throws NotFoundException, GenericResponseExceptionHandler {
         try {
             Optional<Loyalty> model = loyaltyRepository.findById(id);
             if (model.isEmpty())  throw new NotFoundException();
@@ -80,9 +79,7 @@ public class LoyaltyService implements ILoyaltyService {
         } catch (RuntimeException e) {
             throw new GenericResponseExceptionHandler(e.getMessage());
         }
-
     }
-
     @Override
     public GenericResponse deleteLoyalty(UUID id) throws NotFoundException {
         try {
@@ -96,9 +93,8 @@ public class LoyaltyService implements ILoyaltyService {
             throw new RuntimeException(e.getMessage());
         }
     }
-
     @Override
-    public Optional<Loyalty> getLoyaltyByPrice(double price) {
+    public Optional<Loyalty> getLoyaltyByPrice(double price) throws GenericResponseExceptionHandler {
         try {
             Optional<Loyalty> model = loyaltyRepository.getLoyaltyByPrice(price);
             if (model.isEmpty()) {
@@ -107,8 +103,23 @@ public class LoyaltyService implements ILoyaltyService {
                 return Optional.of(setLoyalty);
             }
             return model;
-        } catch (Exception e) {
-            throw new GenericResponseExceptionHandler(e.getMessage());
+        } catch (RuntimeException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+    @Override
+    public Loyalty getLoyaltyById(UUID id) throws NotFoundException {
+        try{
+            Optional<Loyalty> response = loyaltyRepository.findById(id);
+            if(response.isPresent()){
+                return response.get();
+            }
+            else{
+                throw new NotFoundException(Constants.MESSAGE_GET_LOYALTY_FAILED + "id = " + id);
+            }
+        }
+       catch (RuntimeException e) {
+            throw new BadRequestException(e.getMessage());
         }
     }
 }

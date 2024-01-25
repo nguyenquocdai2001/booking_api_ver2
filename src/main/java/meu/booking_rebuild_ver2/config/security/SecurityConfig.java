@@ -73,6 +73,7 @@ public class SecurityConfig {
                                 "/routes/**",
                                 "/time/**",
                                 "/loyalty",
+                                "/customers/**",
                                 "/routeTime/**" )
                         .hasAnyRole("SUPER_ADMIN","ADMIN")
                         .requestMatchers(HttpMethod.GET,
@@ -81,6 +82,7 @@ public class SecurityConfig {
                                 "/routes/**",
                                 "/time/**",
                                 "/loyalty",
+                                "/customers/**",
                                 "/routeTime/**" )
                         .hasAnyRole("SUPER_ADMIN","ADMIN")
                         .requestMatchers(HttpMethod.PUT,
@@ -92,6 +94,7 @@ public class SecurityConfig {
                                 "/routes/**",
                                 "/time/**",
                                 "/loyalty",
+                                "/customers/**",
                                 "/routeTime/**" )
                         .hasAnyRole("SUPER_ADMIN")
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**",
