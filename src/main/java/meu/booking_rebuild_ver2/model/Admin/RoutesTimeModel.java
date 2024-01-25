@@ -35,7 +35,7 @@ public class RoutesTimeModel {
     @JsonIgnore
     private User idUserConfig;
     @JsonIgnore
-    private ZonedDateTime createdAt;
+    private ZonedDateTime createdAt = ZonedDateTime.now();
     @JsonIgnore
     private ZonedDateTime updatedAt = ZonedDateTime.now();
 }
