@@ -16,6 +16,6 @@ public class LoyaltyDto {
         this.id = loyalty.getId();
         this.rank = loyalty.getRank();
         this.discount = loyalty.getDiscount();
-        this.loyalty_spent = loyalty.getLoyalty_spent();
+        this.loyalty_spent = loyalty.getLoyaltySpent();
     }
 }

@@ -1,8 +1,6 @@
 package meu.booking_rebuild_ver2.model.Admin;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,10 +32,11 @@ public class Loyalty {
     @NotNull
     private int discount ;
     @JsonProperty(access = JsonProperty.Access.READ_WRITE)
-    @Column(nullable = false)
+    @Column(name = "loyalty_spent",nullable = false)
+
     @NotNull
 //    @OrderBy("'loyalty_spent' ASC")
-    private double loyalty_spent ;
+    private double loyaltySpent;
     public  Loyalty(String rank) {
         this.rank = rank;
     }

@@ -13,6 +13,6 @@ public interface LoyaltyRepository extends CrudRepository<Loyalty, UUID> {
     Optional<Loyalty> findByDiscount(int discount);
     Optional<Loyalty> findById(UUID id);
     Iterable<Loyalty> findAll(Sort sort);
-    @Query("SELECT l FROM Loyalty l WHERE l.loyalty_spent <= :loyaltySpent ORDER BY l.loyalty_spent DESC LIMIT 1")
+    @Query("SELECT l FROM Loyalty l WHERE l.loyaltySpent <= :loyaltySpent ORDER BY l.loyaltySpent DESC LIMIT 1")
     Optional<Loyalty> getLoyaltyByPrice(double loyaltySpent);
 }
