@@ -27,7 +27,6 @@ import java.util.UUID;
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
 
     private UUID id;
     @Column(nullable = false, length = 100)
