@@ -18,13 +18,13 @@ import java.util.UUID;
 public interface PriceRepository extends JpaRepository<PriceModel, UUID> {
     PriceModel findPriceModelById(UUID id);
 
-    @Query(value = "SELECT p FROM PriceModel p WHERE p.status.id = :statusId")
-    List<PriceModel> getPriceByStatus(@Param("statusId") UUID statusId);
+//    @Query(value = "SELECT p FROM PriceModel p WHERE p.status.id = :statusId")
+//    List<PriceModel> getPriceByStatus(@Param("statusId") UUID statusId);
 
-    @Query(value = "SELECT p FROM PriceModel p WHERE p.bus_types.id = :busTypeId")
-    List<PriceModel> getPriceByBusType(@Param("busTypeId") UUID busTypeId);
+//    @Query(value = "SELECT p FROM PriceModel p WHERE p.bus_types.id = :busTypeId")
+//    List<PriceModel> getPriceByBusType(@Param("busTypeId") UUID busTypeId);
 
-    @Query(value = "SELECT p FROM PriceModel p WHERE p.routes_time.id = :routesTimeId")
-    List<PriceModel> getPriceByRoutesTime(@Param("routesTimeId") UUID routesTimeId);
+//    @Query(value = "SELECT p FROM PriceModel p WHERE p.routes_time.id = :routesTimeId")
+//    List<PriceModel> getPriceByRoutesTime(@Param("routesTimeId") UUID routesTimeId);
 }
 

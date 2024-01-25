@@ -36,7 +36,7 @@ public class UserRepositoryTest {
         assertThat(savedUser.getUsername()).isEqualTo("testcase1@gmail.com");
     }
     @Test
-    public void testSaveAndRetrieveUser() {
+    public void UserRepository_Save_ReturnValidUser() {
         User user = User.builder()
                 .fullname("John Doe")
                 .username("john.doe@example.com")

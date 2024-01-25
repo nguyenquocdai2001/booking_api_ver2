@@ -17,91 +17,130 @@ import java.util.UUID;
 
 @Service
 public class PriceService implements IPriceService {
-    @Autowired
-    PriceRepository priceRepository;
-    @Autowired
-    StatusRepository statusRepository;
-    @Autowired
-    BusTypesRepository busTypesRepository;
-    @Autowired
-    RoutesTimeRepository routesTimeRepository;
     @Override
     public PriceResponse createPrice(PriceModel priceModel) {
-        /* checkPriceInput start*/
-        PriceResponse response;
-        /* checkPriceInput end*/
-        if(checkDate(priceModel)){
-            priceRepository.save(priceModel);
-            return new PriceResponse(Constants.MESSAGE_STATUS_ADD_PRICE_SUCCESS, true, priceModel);
-        }
-        return new PriceResponse("Invalid status or BusType", false);
+        return null;
     }
 
     @Override
     public List<PriceModel> getAllPrice() {
-        return priceRepository.findAll();
+        return null;
     }
 
     @Override
     public PriceResponse updatePrice(PriceModel priceModel) {
-        PriceModel updateModel = priceRepository.findPriceModelById(priceModel.getId());
-        PriceResponse response;
-
-        if(updateModel != null && checkDate(updateModel)) {
-            updateModel.setPrice(priceModel.getPrice());
-            updateModel.setIdBusType(priceModel.getIdBusType());
-            updateModel.setIdRoutesTime(priceModel.getIdRoutesTime());
-            updateModel.setStatus(priceModel.getStatus());
-            updateModel.setUpdatedAt(ZonedDateTime.now());
-            updateModel.setIdUserConfig(priceModel.getIdUserConfig());
-            priceRepository.save(updateModel);
-            response = new PriceResponse(Constants.MESSAGE_UPDATE_TIME_SUCCESS, true, updateModel);
-            return response;
-        }
-        response = new PriceResponse("ID not found", false);
-        return response;
+        return null;
     }
 
     @Override
     public PriceModel findByID(UUID id) {
-        if(priceRepository.existsById(id)) {
-            return priceRepository.findPriceModelById(id);
-        }
         return null;
     }
 
     @Override
     public PriceResponse deleteById(UUID id) {
-        if(!priceRepository.existsById(id)){
-            return new PriceResponse("Invalid ID",true );
-        }
-        else{
-            priceRepository.deleteById(id);
-            return new PriceResponse("Delete Price Success",true );
-        }
-
+        return null;
     }
 
     @Override
     public List<PriceModel> getPriceByStatus(UUID id) {
-        return priceRepository.getPriceByStatus(id);
+        return null;
     }
 
     @Override
     public List<PriceModel> getPriceByBusType(UUID id) {
-        return priceRepository.getPriceByBusType(id);
+        return null;
     }
 
     @Override
     public List<PriceModel> getPriceByRoutesTime(UUID id) {
-        return priceRepository.getPriceByRoutesTime(id);
+        return null;
     }
-
-    private boolean checkDate(PriceModel priceModel){
-
-        return statusRepository.existsById(priceModel.getStatus().getId())
-                && busTypesRepository.existsById(priceModel.getIdBusType().getId())
-                && routesTimeRepository.existsById(priceModel.getIdRoutesTime().getId());
-    }
+//    @Autowired
+//    PriceRepository priceRepository;
+//    @Autowired
+//    StatusRepository statusRepository;
+//    @Autowired
+//    BusTypesRepository busTypesRepository;
+//    @Autowired
+//    RoutesTimeRepository routesTimeRepository;
+//    @Override
+//    public PriceResponse createPrice(PriceModel priceModel) {
+//        /* checkPriceInput start*/
+//        PriceResponse response;
+//        /* checkPriceInput end*/
+//        if(checkDate(priceModel)){
+//            priceRepository.save(priceModel);
+//            return new PriceResponse(Constants.MESSAGE_STATUS_ADD_PRICE_SUCCESS, true, priceModel);
+//        }
+//        return new PriceResponse("Invalid status or BusType", false);
+//    }
+//
+//    @Override
+//    public List<PriceModel> getAllPrice() {
+//        return priceRepository.findAll();
+//    }
+//
+//    @Override
+//    public PriceResponse updatePrice(PriceModel priceModel) {
+//        PriceModel updateModel = priceRepository.findPriceModelById(priceModel.getId());
+//        PriceResponse response;
+//
+//        if(updateModel != null && checkDate(updateModel)) {
+//            updateModel.setPrice(priceModel.getPrice());
+//            updateModel.setIdBusType(priceModel.getIdBusType());
+//            updateModel.setIdRoutesTime(priceModel.getIdRoutesTime());
+//            updateModel.setStatus(priceModel.getStatus());
+//            updateModel.setUpdatedAt(ZonedDateTime.now());
+//            updateModel.setIdUserConfig(priceModel.getIdUserConfig());
+//            priceRepository.save(updateModel);
+//            response = new PriceResponse(Constants.MESSAGE_UPDATE_TIME_SUCCESS, true, updateModel);
+//            return response;
+//        }
+//        response = new PriceResponse("ID not found", false);
+//        return response;
+//    }
+//
+//    @Override
+//    public PriceModel findByID(UUID id) {
+//        if(priceRepository.existsById(id)) {
+//            return priceRepository.findPriceModelById(id);
+//        }
+//        return null;
+//    }
+//
+//    @Override
+//    public PriceResponse deleteById(UUID id) {
+//        if(!priceRepository.existsById(id)){
+//            return new PriceResponse("Invalid ID",true );
+//        }
+//        else{
+//            priceRepository.deleteById(id);
+//            return new PriceResponse("Delete Price Success",true );
+//        }
+//
+//    }
+//
+//    @Override
+//    public List<PriceModel> getPriceByStatus(UUID id) {
+//        return priceRepository.getPriceByStatus(id);
+//    }
+//
+//    @Override
+//    public List<PriceModel> getPriceByBusType(UUID id) {
+//        return priceRepository.getPriceByBusType(id);
+//    }
+//
+//    @Override
+//    public List<PriceModel> getPriceByRoutesTime(UUID id) {
+//        return priceRepository.getPriceByRoutesTime(id);
+//    }
+//
+//    private boolean checkDate(PriceModel priceModel){
+//
+//        return statusRepository.existsById(priceModel.getStatus().getId())
+//                && busTypesRepository.existsById(priceModel.getIdBusType().getId())
+//                && routesTimeRepository.existsById(priceModel.getIdRoutesTime().getId());
+//    }
 
 }
