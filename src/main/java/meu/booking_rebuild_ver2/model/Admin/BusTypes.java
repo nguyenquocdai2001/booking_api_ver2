@@ -14,7 +14,6 @@ import java.util.UUID;
 @Table(name = "bus_types")
 @Builder
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class BusTypes {
