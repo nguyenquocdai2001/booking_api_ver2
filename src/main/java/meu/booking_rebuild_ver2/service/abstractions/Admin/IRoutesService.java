@@ -8,9 +8,9 @@ import java.util.UUID;
 
 public interface IRoutesService {
     RoutesResponse createRoutes(RoutesModel routesModel);
-    List<RoutesModel> getAllRoutes();
+    RoutesResponse getAllRoutes();
     RoutesResponse updateRoutes(RoutesModel routesModel);
-    RoutesModel findByID(UUID id);
+    RoutesResponse findByID(UUID id);
     RoutesResponse deleteById(UUID id);
-    List<RoutesModel> getRoutesByStatus(UUID id);
+    RoutesResponse getRoutesByStatus(UUID id);
 }

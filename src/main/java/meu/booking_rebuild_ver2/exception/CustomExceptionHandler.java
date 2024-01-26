@@ -17,20 +17,23 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException ex) {
+        ex.printStackTrace();
         return new ResponseEntity<>("Access Denied (403 Forbidden)", HttpStatus.FORBIDDEN);
     }
     @ExceptionHandler(GenericResponseExceptionHandler.class)
-    public ResponseEntity<GenericResponse> handleGenericResponseException(GenericResponseExceptionHandler e){
-        GenericResponse response = new GenericResponse(e.getMessage(), false);
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Object> handleGenericResponseException(GenericResponseExceptionHandler e){
+        e.printStackTrace();
+        ApiError response = new ApiError(HttpStatus.BAD_REQUEST, new GenericResponse(e.getMessage(), false));
+        return buildResponseEntity(response);
     }
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<Object> handleNotFoundException(){
-        ApiError response = new ApiError(HttpStatus.NOT_FOUND, new GenericResponse(Constants.MESSAGE_GET_NOT_FOUND, false) );
+    public ResponseEntity<Object> handleNotFoundException(NotFoundException e){
+        e.printStackTrace();
+        ApiError response = new ApiError(HttpStatus.NOT_FOUND, new GenericResponse(e.getLocalizedMessage(), false) );
         return buildResponseEntity(response);
     }
     private ResponseEntity<Object> buildResponseEntity(ApiError apiError) {
-        logger.error("error" + apiError.getMessage().getMessage());
+        logger.error("error " + apiError.getMessage().getMessage());
         return new ResponseEntity<>(apiError.getMessage(), new HttpHeaders(), apiError.getStatus());
     }
 }

@@ -30,7 +30,7 @@ public class RoutesModel {
     @ManyToOne
     @JoinColumn(name = "status" )
     private Status status;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_user_config" )
     @JsonIgnore
     private User idUserConfig;

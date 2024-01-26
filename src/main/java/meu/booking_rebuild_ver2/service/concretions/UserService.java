@@ -30,6 +30,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,8 +55,8 @@ public class UserService implements IUserService {
         this.jwtUtils = jwtUtils;
     }
     @Override
-    public Integer getSessionUserId(@NotNull HttpSession session) {
-        return (Integer) session.getAttribute(USERID);
+    public UUID getSessionUserId(@NotNull HttpSession session) {
+        return (UUID) session.getAttribute(USERID);
     }
 
     @Override
@@ -98,7 +99,7 @@ public class UserService implements IUserService {
         User user = userRepository.findUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Not found"));
         HttpSession session = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
                 .getRequest().getSession();
-        session.setAttribute(USER_EMAIL, user.getUsername());
+        session.setAttribute(USERID, user.getId());
         return new UserDetailsImplement(user);
     }
 

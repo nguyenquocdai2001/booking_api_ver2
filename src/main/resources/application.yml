@@ -28,7 +28,6 @@ spring:
       hibernate:
         order_updates: true
 
-
   servlet:
     session:
       cookie:

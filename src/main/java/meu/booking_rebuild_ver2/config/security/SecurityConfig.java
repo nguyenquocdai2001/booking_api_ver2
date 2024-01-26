@@ -63,7 +63,9 @@ public class SecurityConfig {
                                 "/time/**",
                                 "/loyalty",
                                 "/routeTime/**",
-                                "/price/**")
+                                "/price/**",
+                                "/customers/**",
+                                "/routeTime/**" )
                         .hasAnyRole("SUPER_ADMIN","ADMIN")
                         .requestMatchers(HttpMethod.GET,
                                 "/busTypes/**" ,
@@ -72,7 +74,9 @@ public class SecurityConfig {
                                 "/time/**",
                                 "/loyalty",
                                 "/routeTime/**",
-                                "/price/**" )
+                                "/price/**" ,
+                                "/customers/**",
+                                "/routeTime/**" )
                         .hasAnyRole("SUPER_ADMIN","ADMIN")
                         .requestMatchers(HttpMethod.PUT,
                                 "/loyalty/**" )
@@ -84,15 +88,16 @@ public class SecurityConfig {
                                 "/time/**",
                                 "/loyalty",
                                 "/routeTime/**" ,
-                                "/price/**")
+                                "/price/**",
+                                "/customers/**",
+                                "/routeTime/**" )
                         .hasAnyRole("SUPER_ADMIN")
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**")
-
                         .permitAll()
                         .anyRequest().authenticated())
-                .exceptionHandling().authenticationEntryPoint((request, response, e) -> {
+        .exceptionHandling().authenticationEntryPoint((request, response, e) -> {
                     ErrorResponse errorResponse = new ErrorResponse("Access Denied (403 Forbidden) ",
                             HttpStatus.FORBIDDEN.value());
                     response.setContentType("application/json;charset=UTF-8");

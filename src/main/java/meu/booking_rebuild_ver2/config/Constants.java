@@ -86,11 +86,13 @@ public class Constants {
     public static final String MESSAGE_DELETE_BUS_SEAT_SUCCESS = "Deleting a bus seat successfully!";
 
 
+
     //dqdat BS-10
     public static final String MESSAGE_STATUS_ADD_PRICE_SUCCESS = "Adding a price successfully!";
     public static final String MESSAGE_STATUS_GET_ALL_PRICE_SUCCESS = "Getting all prices successfully!";
     public static final String MESSAGE_PRICE_FIND_SUCCESS = "Find prices successfully!";
     public static final String MESSAGE_UPDATE_PRICE_SUCCESS = "Updating price successfully!";
+
 
     public static final String MESSAGE_ADD_LOYALTY_SUCCESS = "Added a new loyalty successfully!";
     public static final String MESSAGE_ADD_RANK_FAILED = "The rank has been exit";
@@ -98,5 +100,13 @@ public class Constants {
     public static final String MESSAGE_UPDATE_LOYALTY_SUCCESS = "The loyalty has been updated successfully";
     public static final String MESSAGE_DELETED_SUCCESS = "Deleted successfully";
     public static final String MESSAGE_GET_NOT_FOUND = "NOT FOUND";
+
+
+    public static final String MESSAGE_GET_LOYALTY_FAILED = ". Can not get loyalty with ";
+    public static final String MESSAGE_ADD_CUSTOMER_FAILED = "The customer has been exit";
+    public static final String MESSAGE_ADDED_CUSTOMER_SUCCESSFULLY = "The customer has been added successfully";
+    public static final String MESSAGE_UPDATED_CUSTOMER_SUCCESSFULLY = "The customer has been updated successfully";
+    public static final String MESSAGE_PHONE_FORMAT_WRONG = "Phone number format is incorrect";
+
 
 }
