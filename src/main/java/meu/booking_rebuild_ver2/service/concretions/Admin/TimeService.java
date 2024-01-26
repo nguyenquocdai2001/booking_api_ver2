@@ -42,8 +42,10 @@ public class TimeService implements ITimeService {
     }
 
     @Override
-    public List<TimeModel> getAllTime() {
-        return timeRepository.findAll();
+    public TimeResponse getAllTime() {
+        List<TimeModel> list = timeRepository.findAll();
+        return new TimeResponse(Constants.MESSAGE_STATUS_GET_ALL_TIME_SUCCESS, true, list);
+
     }
 
     @Override
@@ -71,11 +73,16 @@ public class TimeService implements ITimeService {
     }
 
     @Override
-    public TimeModel findByID(UUID id) {
+    public TimeResponse findByID(UUID id) {
+        TimeResponse response;
         if(timeRepository.existsById(id)) {
-            return timeRepository.findTimeModelById(id);
+            TimeModel model = timeRepository.findTimeModelById(id);
+            response = new TimeResponse(Constants.MESSAGE_TIME_FIND_SUCCESS, true, model);
+            return response;
         }
-        return null;
+        response = new TimeResponse(Constants.MESSAGE_SOMETHING_WENT_WRONG, false);
+        return response;
+
     }
 
     @Override
@@ -98,8 +105,17 @@ public class TimeService implements ITimeService {
     }
 
     @Override
-    public List<TimeModel> getTimeByStatus(UUID id) {
-        return timeRepository.getTimeByStatus(id);
+    public TimeResponse getTimeByStatus(UUID id) {
+        if(statusRepository.existsById(id)) {
+            List<TimeModel> list = timeRepository.getTimeByStatus(id);
+            TimeResponse response;
+            if (!list.isEmpty()) {
+                response = new TimeResponse(Constants.MESSAGE_STATUS_GET_ALL_TIME_SUCCESS, true, list);
+                return response;
+            }
+            return new TimeResponse("List is empty", false);
+        }
+        return new TimeResponse("Status not found", false);
     }
     private boolean checkDate(TimeModel timeModel){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");

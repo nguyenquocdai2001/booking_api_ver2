@@ -11,9 +11,9 @@ import java.util.UUID;
 
 public interface ITimeService {
     TimeResponse createTime(TimeModel timeModel);
-    List<TimeModel> getAllTime();
+    TimeResponse getAllTime();
     TimeResponse updateTime(TimeModel timeModel);
-    TimeModel findByID(UUID id);
+    TimeResponse findByID(UUID id);
     TimeResponse deleteById(UUID id);
-    List<TimeModel> getTimeByStatus(UUID id);
+    TimeResponse getTimeByStatus(UUID id);
 }

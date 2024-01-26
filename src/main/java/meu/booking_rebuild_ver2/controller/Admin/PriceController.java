@@ -151,6 +151,10 @@ public class PriceController {
             throw new BadRequestException(e.getMessage());
         }
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0f1464926cb59c26b9e3eab36d48b68dd72a6fb3
     /* getAllPriceModelsByRoutesTimeID
      * end
      *  */

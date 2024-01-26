@@ -17,15 +17,17 @@ import meu.booking_rebuild_ver2.response.GenericResponse;
 import meu.booking_rebuild_ver2.response.Passanger.CustomerResponse;
 import meu.booking_rebuild_ver2.service.abstractions.Admin.ILoyaltyService;
 import meu.booking_rebuild_ver2.service.abstractions.Passanger.ICustomerService;
-import meu.booking_rebuild_ver2.service.concretions.Admin.LoyaltyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import java.util.List;
 @Service
 public class CustomerService implements ICustomerService {
     @Autowired
@@ -41,7 +43,7 @@ public class CustomerService implements ICustomerService {
     @Override
     public GenericResponse addCustomer(CustomerRequest request) throws GenericResponseExceptionHandler {
 
-        if(!phoneValid(request.getPhone())){
+        if(phoneValid(request.getPhone())){
             throw new GenericResponseExceptionHandler(Constants.MESSAGE_PHONE_FORMAT_WRONG);
         }
         try{
@@ -52,7 +54,7 @@ public class CustomerService implements ICustomerService {
                 requestCustomer.setStatus(status);
                 Loyalty loyalty = loyaltyService.getLoyaltyByPrice(0).get();
                 requestCustomer.setLoyalty(loyalty);
-                requestCustomer.setNumber_of_trip(0);
+                requestCustomer.setNumberOfTrips(0);
                 customerRepository.save(requestCustomer);
                 return new GenericResponse(Constants.MESSAGE_ADDED_CUSTOMER_SUCCESSFULLY);
             }
@@ -77,7 +79,7 @@ public class CustomerService implements ICustomerService {
             response.setId(id);
             response.setPhone(model.getPhone());
             response.setStatus(model.getStatus().getStatus());
-            response.setNumberOfTrips(model.getNumber_of_trip());
+            response.setNumberOfTrips(model.getNumberOfTrips());
             LoyaltyDto loyaltyDto = new LoyaltyDto(model.getLoyalty());
             response.setLoyalty(loyaltyDto);
             return response;
@@ -85,9 +87,41 @@ public class CustomerService implements ICustomerService {
             throw new BadRequestException(e.getMessage());
         }
     }
+
+    @Override
+    public List<CustomerResponse> getCustomerByPhone(String phone) throws NotFoundException {
+        List<CustomerResponse> listResponse = new ArrayList<>();
+        if(phone.length() < 5) {
+            CustomerResponse response = new CustomerResponse();
+            return listResponse;
+        }
+        List<Customer> models = customerRepository.getCustomersByPhone(phone);
+        return getListResponse(models);
+    }
+
+    @Override
+    public List<CustomerResponse> getCustomerByLoyalty(UUID idLoyalty) throws NotFoundException {
+        Optional<Loyalty> loyalty = loyaltyRepository.findById(idLoyalty);
+        if(loyalty.isEmpty()){
+            throw new NotFoundException();
+        }
+        List<Customer> models = customerRepository.getCustomersByLoyalty_Id(idLoyalty);
+
+        return getListResponse(models);
+    }
+    private List<CustomerResponse> getListResponse(List<Customer> models){
+        List<CustomerResponse> reponseList = new ArrayList<>();
+        for(Customer model: models){
+            LoyaltyDto loyaltyDto = new LoyaltyDto(model.getLoyalty());
+            CustomerResponse response = new CustomerResponse(model.getId(), model.getName(), model.getPhone(), loyaltyDto, model.getStatus().getStatus(),model.getNumberOfTrips());
+            reponseList.add(response);
+
+        }
+        return reponseList;
+    }
     @Override
     public GenericResponse updateCustomer(UUID id, UpdateCustomerRequest request) throws NotFoundException, GenericResponseExceptionHandler {
-        if(!phoneValid(request.getPhone())){
+        if(phoneValid(request.getPhone())){
             throw new GenericResponseExceptionHandler(Constants.MESSAGE_PHONE_FORMAT_WRONG);
         }
         try{
@@ -100,7 +134,7 @@ public class CustomerService implements ICustomerService {
             model.setLoyalty(loyalty);
             Status status = statusRepository.findStatusById(UUID.fromString(request.getStatus()));
             if(status != null) model.setStatus(status);
-            model.setNumber_of_trip(request.getNumberOfTrips());
+            model.setNumberOfTrips(request.getNumberOfTrips());
             customerRepository.save(model);
             return new GenericResponse(Constants.MESSAGE_UPDATED_CUSTOMER_SUCCESSFULLY);
         }catch (RuntimeException e){
@@ -110,7 +144,7 @@ public class CustomerService implements ICustomerService {
 
     @Override
     public GenericResponse updateCustomerByLoyalty(UUID id, UpdateCustomerRequest request) throws NotFoundException, GenericResponseExceptionHandler {
-        if(!phoneValid(request.getPhone())){
+        if(phoneValid(request.getPhone())){
             throw new GenericResponseExceptionHandler(Constants.MESSAGE_PHONE_FORMAT_WRONG);
         }
         try{
@@ -133,15 +167,49 @@ public class CustomerService implements ICustomerService {
             }
             Status status = statusRepository.findStatusById(UUID.fromString(request.getStatus()));
             if(status != null) model.setStatus(status);
-            model.setNumber_of_trip(request.getNumberOfTrips());
+            model.setNumberOfTrips(request.getNumberOfTrips());
             customerRepository.save(model);
             return new GenericResponse(Constants.MESSAGE_UPDATED_CUSTOMER_SUCCESSFULLY);
         }catch (RuntimeException e){
             throw new BadRequestException(e.getMessage());
         }
     }
+
+    @Override
+    public Page<CustomerResponse> getCustomerByPhoneWithPage(String phone, Integer page) {
+        try{
+            Page<CustomerResponse> listCustomer = customerRepository.getCustomersByPhoneAsPage(phone, PageRequest.of(Math.abs(page), 10));
+            return listCustomer;
+        }
+        catch (RuntimeException e){
+                    throw new BadRequestException(e.getMessage());
+        }
+
+    }
+
+    @Override
+    public Page<CustomerResponse> getCustomerByLoyaltyWithPage(UUID IdLoyalty, Integer page) {
+        try{
+            Page<CustomerResponse> listCustomer = customerRepository.getCustomersByLoyaltyAsPage(IdLoyalty, PageRequest.of(Math.abs(page), 10));
+            return listCustomer;
+        }
+        catch (RuntimeException e){
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
+    @Override
+    public GenericResponse deleteCustomerById(UUID id) throws NotFoundException {
+        Customer model = customerRepository.findCustomerById(id);
+        if(model == null){
+            throw new NotFoundException();
+        }
+        customerRepository.delete(model);
+        return new GenericResponse(Constants.MESSAGE_DELETED_SUCCESSFULLY);
+    }
+
     protected static boolean phoneValid(String phone){
         Matcher matcher = pattern.matcher(phone);
-        return matcher.matches();
+        return !matcher.matches();
     }
 }

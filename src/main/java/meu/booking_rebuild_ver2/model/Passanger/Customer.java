@@ -2,16 +2,14 @@ package meu.booking_rebuild_ver2.model.Passanger;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import meu.booking_rebuild_ver2.model.Admin.Loyalty;
 import meu.booking_rebuild_ver2.model.Status;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.UUID;
 
@@ -20,6 +18,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -29,7 +28,8 @@ public class Customer {
     @Size(max = 10, min = 10)
     @Column(nullable = false, unique = true)
     private String phone;
-    private int number_of_trip;
+    @Column(name = "number_of_trip")
+    private int numberOfTrips;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JsonBackReference
     @JoinColumn(name = "status")
