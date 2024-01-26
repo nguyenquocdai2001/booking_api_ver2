@@ -3,6 +3,7 @@ package meu.booking_rebuild_ver2.repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import meu.booking_rebuild_ver2.model.Admin.Loyalty;
+import meu.booking_rebuild_ver2.model.User;
 import meu.booking_rebuild_ver2.repository.Admin.LoyaltyRepository;
 import meu.booking_rebuild_ver2.service.abstractions.Admin.ILoyaltyService;
 
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Sort;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,6 +26,8 @@ import java.util.stream.StreamSupport;
 public class LoyaltyRepositoryTest {
     @Autowired
     private LoyaltyRepository loyaltyRepository;
+    @Autowired
+    private UserRepository userRepository;
     @PersistenceContext
     private EntityManager entityManager;
     @Test
@@ -88,13 +92,20 @@ public class LoyaltyRepositoryTest {
     }
     @Test
     public void LoyalRepository_GetAll_ReturnListOrderedAscByDiscount(){
+        Optional<User> modelUser = userRepository.findById(UUID.fromString("d595119c-4277-46ab-89be-febcdc930e85"));
         Loyalty loyalty1 = new Loyalty(UUID.randomUUID(),"gold", 20, 3.500);
         Loyalty loyalty2 = new Loyalty(UUID.randomUUID(),"bronze", 5, 4.500);
         Loyalty loyalty3 = new Loyalty(UUID.randomUUID(),"platinum", 30, 5.500);
         Loyalty loyalty4 = new Loyalty(UUID.randomUUID(),"diamond", 10, 6.500);
-        Iterable<Loyalty> loyalties = loyaltyRepository.findAll();
-        List<Loyalty> sortedList = StreamSupport.stream(loyalties.spliterator(), false)
-                .collect(Collectors.toList());
+        ArrayList<Loyalty> loyalties = new ArrayList<>();
+        loyalties.add(loyalty1);
+        loyalties.add(loyalty2);
+        loyalties.add(loyalty3);
+        loyalties.add(loyalty4);
+        loyaltyRepository.saveAll(loyalties);
+        Iterable<Loyalty> loyaltiesList = loyaltyRepository.findAll(Sort.by(Sort.Direction.ASC, "discount"));
+        List<Loyalty> sortedList = StreamSupport.stream(loyaltiesList.spliterator(), false)
+                .toList();
 
         for (int i = 0; i < sortedList.size() - 1; i++) {
             Loyalty current = sortedList.get(i);

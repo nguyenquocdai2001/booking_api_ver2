@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import meu.booking_rebuild_ver2.model.User;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -40,5 +41,14 @@ public class Loyalty {
     public  Loyalty(String rank) {
         this.rank = rank;
     }
+    @ManyToOne(cascade = {CascadeType.MERGE})
+    @JoinColumn(name = "id_user_config")
+    private User idUserConfig;
 
+    public Loyalty(UUID id, String rank, int discount, double loyaltySpent) {
+        this.id = id;
+        this.rank = rank;
+        this.discount = discount;
+        this.loyaltySpent = loyaltySpent;
+    }
 }

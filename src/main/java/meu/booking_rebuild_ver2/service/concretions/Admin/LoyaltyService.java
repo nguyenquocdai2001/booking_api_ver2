@@ -5,6 +5,7 @@ import meu.booking_rebuild_ver2.exception.BadRequestException;
 import meu.booking_rebuild_ver2.exception.GenericResponseExceptionHandler;
 import meu.booking_rebuild_ver2.exception.NotFoundException;
 import meu.booking_rebuild_ver2.model.Admin.Loyalty;
+import meu.booking_rebuild_ver2.model.UserID;
 import meu.booking_rebuild_ver2.repository.Admin.LoyaltyRepository;
 import meu.booking_rebuild_ver2.request.LoyaltyRequest;
 import meu.booking_rebuild_ver2.response.GenericResponse;
@@ -21,7 +22,8 @@ import java.util.UUID;
 public class LoyaltyService implements ILoyaltyService {
     private static LoyaltyRepository loyaltyRepository;
     private static ModelMapper modelMapper;
-
+    @Autowired
+    private UserID userID;
     @Autowired
     public LoyaltyService(LoyaltyRepository loyaltyRepository) {
         this.modelMapper = new ModelMapper();
@@ -40,7 +42,7 @@ public class LoyaltyService implements ILoyaltyService {
         Optional<Loyalty> loylalty = loyaltyRepository.findByRank(request.getRank().toLowerCase());
         if (loylalty.isEmpty() && getLoyaltyByDiscount(request.getDiscount()).isEmpty()) {
             try {
-                Loyalty loyalty = new Loyalty(request.getId(), request.getRank().toLowerCase(), request.getDiscount(), request.getLoyaltySpent());
+                Loyalty loyalty = new Loyalty(request.getId(), request.getRank().toLowerCase(), request.getDiscount(), request.getLoyaltySpent(), userID.getUserValue());
                 loyaltyRepository.save(loyalty);
                 GenericResponse response = new GenericResponse(Constants.MESSAGE_ADD_LOYALTY_SUCCESS);
                 System.out.print(request);
@@ -74,6 +76,7 @@ public class LoyaltyService implements ILoyaltyService {
             loyaltyModel.setDiscount(request.getDiscount());
             loyaltyModel.setLoyaltySpent(request.getLoyalty_spent());
             loyaltyModel.setRank(request.getRank().toLowerCase());
+            loyaltyModel.setIdUserConfig(userID.getUserValue());
             loyaltyRepository.save(loyaltyModel);
             return new GenericResponse(Constants.MESSAGE_UPDATE_LOYALTY_SUCCESS);
         } catch (RuntimeException e) {
@@ -98,7 +101,7 @@ public class LoyaltyService implements ILoyaltyService {
         try {
             Optional<Loyalty> model = loyaltyRepository.getLoyaltyByPrice(price);
             if (model.isEmpty()) {
-                Loyalty setLoyalty = new Loyalty(UUID.randomUUID(), "economy", 0, 0);
+                Loyalty setLoyalty = new Loyalty(UUID.randomUUID(), "economy", 0, 0, userID.getUserValue());
                 loyaltyRepository.save(setLoyalty);
                 return Optional.of(setLoyalty);
             }

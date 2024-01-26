@@ -7,12 +7,13 @@ import meu.booking_rebuild_ver2.model.Admin.Loyalty;
 import java.util.UUID;
 @Data
 @AllArgsConstructor
-public class LoyaltyDto {
+public class LoyaltyDTO {
     private UUID id;
     private String rank;
     private int discount;
     private double loyalty_spent;
-    public LoyaltyDto(Loyalty loyalty) {
+    private UUID idUserConfig;
+    public LoyaltyDTO(Loyalty loyalty) {
         this.id = loyalty.getId();
         this.rank = loyalty.getRank();
         this.discount = loyalty.getDiscount();

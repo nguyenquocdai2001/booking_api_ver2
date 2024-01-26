@@ -7,7 +7,7 @@ import meu.booking_rebuild_ver2.exception.NotFoundException;
 import meu.booking_rebuild_ver2.model.Admin.Loyalty;
 import meu.booking_rebuild_ver2.model.Passanger.Customer;
 import meu.booking_rebuild_ver2.model.Status;
-import meu.booking_rebuild_ver2.model.Admin.DTO.LoyaltyDto;
+import meu.booking_rebuild_ver2.model.Admin.DTO.LoyaltyDTO;
 import meu.booking_rebuild_ver2.repository.Admin.LoyaltyRepository;
 import meu.booking_rebuild_ver2.repository.Passanger.CustomerRepository;
 import meu.booking_rebuild_ver2.repository.StatusRepository;
@@ -78,10 +78,10 @@ public class CustomerService implements ICustomerService {
             response.setName(model.getName());
             response.setId(id);
             response.setPhone(model.getPhone());
-            response.setStatus(model.getStatus().getStatus());
+            response.setIdStatus(model.getStatus().getId());
             response.setNumberOfTrips(model.getNumberOfTrips());
-            LoyaltyDto loyaltyDto = new LoyaltyDto(model.getLoyalty());
-            response.setLoyalty(loyaltyDto);
+            LoyaltyDTO loyaltyDto = new LoyaltyDTO(model.getLoyalty());
+            response.setIdLoyalty(loyaltyDto.getId());
             return response;
         } catch (RuntimeException e) {
             throw new BadRequestException(e.getMessage());
@@ -112,8 +112,8 @@ public class CustomerService implements ICustomerService {
     private List<CustomerResponse> getListResponse(List<Customer> models){
         List<CustomerResponse> reponseList = new ArrayList<>();
         for(Customer model: models){
-            LoyaltyDto loyaltyDto = new LoyaltyDto(model.getLoyalty());
-            CustomerResponse response = new CustomerResponse(model.getId(), model.getName(), model.getPhone(), loyaltyDto, model.getStatus().getStatus(),model.getNumberOfTrips());
+            LoyaltyDTO loyaltyDto = new LoyaltyDTO(model.getLoyalty());
+            CustomerResponse response = new CustomerResponse(model.getId(), model.getName(), model.getPhone(), loyaltyDto.getId(), model.getStatus().getId(),model.getNumberOfTrips());
             reponseList.add(response);
 
         }

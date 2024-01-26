@@ -3,6 +3,7 @@ package meu.booking_rebuild_ver2.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,21 +33,24 @@ public class User implements Serializable {
     @Column(nullable = false, length = 100)
     @Size(max = 100)
     @Pattern(regexp = "^[ a-zA-Z0-9_.'\\-]+?", message = "Invalid characters in name")
-    @NotBlank
+    @NotNull
     private String fullname;
     @Column(nullable = false, unique = true)
     @Email
     @Pattern(regexp = "(^[0-9A-Za-z][\\w.\\-]+@[\\w]+\\.[\\w]\\S+\\w)$", message = Constants.MESSAGE_INVALID_USERNAME)
     @NotBlank
+    @NotNull
     private String username;
     @Column(length = 100)
     @Size(min = 8)
+    @NotNull
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     @Transient
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotBlank
     @Size(min = 8)
+    @NotNull
     private String confirmPass;
     @CreationTimestamp
     @Column(nullable = false)
