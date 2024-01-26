@@ -12,6 +12,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "bus_types")
+@Builder
 @Data
 @Builder
 @AllArgsConstructor

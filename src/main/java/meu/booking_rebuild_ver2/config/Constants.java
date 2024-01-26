@@ -103,10 +103,13 @@ public class Constants {
     public static final String MESSAGE_DELETED_SUCCESS = "Deleted successfully";
     public static final String MESSAGE_GET_NOT_FOUND = "NOT FOUND";
 
+
     public static final String MESSAGE_GET_LOYALTY_FAILED = ". Can not get loyalty with ";
     public static final String MESSAGE_ADD_CUSTOMER_FAILED = "The customer has been exit";
     public static final String MESSAGE_ADDED_CUSTOMER_SUCCESSFULLY = "The customer has been added successfully";
     public static final String MESSAGE_UPDATED_CUSTOMER_SUCCESSFULLY = "The customer has been updated successfully";
     public static final String MESSAGE_PHONE_FORMAT_WRONG = "Phone number format is incorrect";
+    public static final String MESSAGE_DELETED_SUCCESSFULLY = "Deleted object successfully!";
+
 
 }

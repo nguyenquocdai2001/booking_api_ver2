@@ -18,4 +18,5 @@ public interface ILoyaltyService {
     GenericResponse deleteLoyalty(UUID id) throws NotFoundException;
     Optional<Loyalty> getLoyaltyByPrice(double price) throws GenericResponseExceptionHandler;
     Loyalty getLoyaltyById(UUID id) throws NotFoundException;
+
 }
