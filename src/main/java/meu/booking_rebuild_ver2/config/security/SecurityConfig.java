@@ -55,6 +55,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors().and().csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+
 //                        .requestMatchers("/auth/**").permitAll()
 //                        .requestMatchers("/status/**")
 //                        .hasAnyRole("ADMIN")
@@ -70,6 +71,7 @@ public class SecurityConfig {
 //                        .requestMatchers("/price/**").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**")
                         .permitAll()
+
                         .requestMatchers("/auth/**", "/demo/**").permitAll()
                         .requestMatchers(HttpMethod.POST,
                                 "/busTypes/**" ,
@@ -77,6 +79,8 @@ public class SecurityConfig {
                                 "/routes/**",
                                 "/time/**",
                                 "/loyalty",
+                                "/routeTime/**",
+                                "/price/**",
                                 "/customers/**",
                                 "/routeTime/**" )
                         .hasAnyRole("SUPER_ADMIN","ADMIN")
@@ -86,6 +90,8 @@ public class SecurityConfig {
                                 "/routes/**",
                                 "/time/**",
                                 "/loyalty",
+                                "/routeTime/**",
+                                "/price/**" ,
                                 "/customers/**",
                                 "/routeTime/**" )
                         .hasAnyRole("SUPER_ADMIN","ADMIN")
@@ -98,6 +104,8 @@ public class SecurityConfig {
                                 "/routes/**",
                                 "/time/**",
                                 "/loyalty",
+                                "/routeTime/**" ,
+                                "/price/**",
                                 "/customers/**",
                                 "/routeTime/**" )
                         .hasAnyRole("SUPER_ADMIN")
@@ -106,7 +114,7 @@ public class SecurityConfig {
                                 "/v3/api-docs/**")
                         .permitAll()
                         .anyRequest().authenticated())
-                .exceptionHandling().authenticationEntryPoint((request, response, e) -> {
+        .exceptionHandling().authenticationEntryPoint((request, response, e) -> {
                     ErrorResponse errorResponse = new ErrorResponse("Access Denied (403 Forbidden) ",
                             HttpStatus.FORBIDDEN.value());
                     response.setContentType("application/json;charset=UTF-8");

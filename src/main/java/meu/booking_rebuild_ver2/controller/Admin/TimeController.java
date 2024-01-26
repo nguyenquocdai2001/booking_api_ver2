@@ -51,8 +51,7 @@ public class TimeController {
     public TimeResponse getAllTimeModels() {
         log.debug("Inside getAllTimeModels");
         try {
-            List<TimeModel> list = timeService.getAllTime();
-            return new TimeResponse(Constants.MESSAGE_STATUS_GET_ALL_TIME_SUCCESS, true, list);
+            return timeService.getAllTime();
         }catch (Exception e){
             throw new BadRequestException(e.getMessage());
         }
@@ -69,14 +68,7 @@ public class TimeController {
     public TimeResponse getTimeModelById(@RequestParam UUID id) {
         log.debug("Inside getTimeModelByID");
         try {
-            TimeResponse response;
-                TimeModel model = timeService.findByID(id);
-                if(model!= null) {
-                    response = new TimeResponse(Constants.MESSAGE_TIME_FIND_SUCCESS, true, model);
-                    return response;
-                }
-            response = new TimeResponse(Constants.MESSAGE_SOMETHING_WENT_WRONG, false);
-            return response;
+            return timeService.findByID(id);
         }catch (Exception e){
             throw new BadRequestException(e.getMessage());
         }
@@ -93,13 +85,7 @@ public class TimeController {
     public TimeResponse updateTimeModelById(@RequestBody TimeModel timeModel) {
         log.debug("Inside updateTimeModelById");
         try {
-            TimeResponse response;
-            if(timeModel.getId() != null) {
-                 response = timeService.updateTime(timeModel);
-                return response;
-            }
-            response = new TimeResponse("Something went wrong", false);
-            return response;
+            return timeService.updateTime(timeModel);
         }catch (Exception e){
             throw new BadRequestException(e.getMessage());
         }
@@ -116,13 +102,7 @@ public class TimeController {
     public TimeResponse getAllTimeModelsByStatus(@RequestParam UUID statusId) {
         log.debug("Inside getAllTimeModelsByStatus");
         try {
-            List<TimeModel> list = timeService.getTimeByStatus(statusId);
-            TimeResponse response;
-            if(!list.isEmpty()){
-                response = new TimeResponse(Constants.MESSAGE_STATUS_GET_ALL_TIME_SUCCESS, true, list);
-                return response;
-            }
-            return new TimeResponse("Status not found", false);
+            return timeService.getTimeByStatus(statusId);
         }catch (Exception e){
             throw new BadRequestException(e.getMessage());
         }
