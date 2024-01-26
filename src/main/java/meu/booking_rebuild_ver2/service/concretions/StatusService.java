@@ -2,6 +2,8 @@ package meu.booking_rebuild_ver2.service.concretions;
 
 import meu.booking_rebuild_ver2.config.Constants;
 import meu.booking_rebuild_ver2.exception.BadRequestException;
+import meu.booking_rebuild_ver2.model.Admin.DTO.StatusDTO;
+import meu.booking_rebuild_ver2.model.Admin.Mapper.StatusMapper;
 import meu.booking_rebuild_ver2.model.Status;
 import meu.booking_rebuild_ver2.repository.StatusRepository;
 import meu.booking_rebuild_ver2.response.StatusResponse;
@@ -19,11 +21,15 @@ import java.util.UUID;
 public class StatusService implements IStatusService {
     @Autowired
     private StatusRepository statusRepository;
+
+    private StatusMapper statusMapper;
+
     @Override
     public StatusResponse createStatus(Status status) {
         try {
             statusRepository.save(status);
-            StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_ADD_SUCCESS, true, status);
+            StatusDTO statusDTO = StatusMapper.toStatusDTO(status);
+            StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_ADD_SUCCESS, true, statusDTO);
             return response;
         }catch (Exception ex){
             throw new BadRequestException(ex.getMessage());
@@ -33,8 +39,11 @@ public class StatusService implements IStatusService {
     @Override
     public StatusResponse getAll() {
         try {
-            List<Status> statusList = statusRepository.findAll();
-            StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_FIND_ALL_SUCCESS, true, statusList);
+            List<StatusDTO> statusListDTO = statusRepository.findAll()
+                    .stream()
+                    .map(StatusMapper::toStatusDTO)
+                    .toList();
+            StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_FIND_ALL_SUCCESS, true, statusListDTO);
             return response;
         }catch (Exception ex){
             throw new BadRequestException(ex.getMessage());
@@ -44,8 +53,11 @@ public class StatusService implements IStatusService {
     @Override
     public StatusResponse getAllByFlag(boolean flag) {
         try {
-            List<Status> statusList = statusRepository.findAllByFlag(flag);
-            StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_FIND_ALL_SUCCESS, true, statusList);
+            List<StatusDTO> statusListDTO = statusRepository.findAllByFlag(flag)
+                    .stream()
+                    .map(StatusMapper::toStatusDTO)
+                    .toList();;
+            StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_FIND_ALL_SUCCESS, true, statusListDTO);
             return response;
         }catch (Exception ex){
             throw new BadRequestException(ex.getMessage());
@@ -60,7 +72,8 @@ public class StatusService implements IStatusService {
                 return response;
             }
             Status status = statusRepository.findById(idStatus).get();
-            StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_FIND_STATUS_SUCCESS, true, status);
+            StatusDTO statusDTO = StatusMapper.toStatusDTO(status);
+            StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_FIND_STATUS_SUCCESS, true, statusDTO);
             return response;
         }catch (Exception ex){
             throw new BadRequestException(ex.getMessage());
@@ -78,7 +91,8 @@ public class StatusService implements IStatusService {
             updatedStatus.setStatus(status.getStatus());
             updatedStatus.setFlag(status.isFlag());
             statusRepository.save(updatedStatus);
-            StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_UPDATE_STATUS_SUCCESS, true, status);
+            StatusDTO statusDTO = StatusMapper.toStatusDTO(updatedStatus);
+            StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_UPDATE_STATUS_SUCCESS, true, statusDTO);
             return response;
         }catch (Exception ex){
             throw new BadRequestException(ex.getMessage());

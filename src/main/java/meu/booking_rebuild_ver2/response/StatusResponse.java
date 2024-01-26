@@ -3,6 +3,7 @@ package meu.booking_rebuild_ver2.response;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import meu.booking_rebuild_ver2.model.Admin.DTO.StatusDTO;
 import meu.booking_rebuild_ver2.model.Status;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -19,9 +20,9 @@ public class StatusResponse extends ResponseEntityExceptionHandler {
     private String message;
     private Boolean success;
 
-    private List<Status> statusList;
+    private List<StatusDTO> statusList;
 
-    private Status status;
+    private StatusDTO status;
 
 
     public StatusResponse(String message, Boolean success) {
@@ -29,20 +30,20 @@ public class StatusResponse extends ResponseEntityExceptionHandler {
         this.success = success;
     }
 
-    public StatusResponse(String message, Boolean success, List<Status> statusList) {
+    public StatusResponse(String message, Boolean success, List<StatusDTO> statusList) {
         this.message = message;
         this.success = success;
         this.statusList = statusList;
     }
 
 
-    public StatusResponse(String message, Boolean success, Status status) {
+    public StatusResponse(String message, Boolean success, StatusDTO status) {
         this.message = message;
         this.success = success;
         this.status = status;
     }
 
-    public StatusResponse(Boolean success, Status status) {
+    public StatusResponse(Boolean success, StatusDTO status) {
         this.success = success;
         this.status = status;
     }

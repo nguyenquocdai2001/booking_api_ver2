@@ -27,9 +27,7 @@ public class PriceService implements IPriceService {
     RoutesTimeRepository routesTimeRepository;
     @Override
     public PriceResponse createPrice(PriceModel priceModel) {
-        /* checkPriceInput start*/
         PriceResponse response;
-        /* checkPriceInput end*/
         if(checkDate(priceModel)){
             priceRepository.save(priceModel);
             return new PriceResponse(Constants.MESSAGE_STATUS_ADD_PRICE_SUCCESS, true, priceModel);
@@ -38,8 +36,9 @@ public class PriceService implements IPriceService {
     }
 
     @Override
-    public List<PriceModel> getAllPrice() {
-        return priceRepository.findAll();
+    public PriceResponse getAllPrice() {
+        List<PriceModel> list = priceRepository.findAll();
+        return new PriceResponse(Constants.MESSAGE_STATUS_GET_ALL_PRICE_SUCCESS, true, list);
     }
 
     @Override
@@ -55,7 +54,7 @@ public class PriceService implements IPriceService {
             updateModel.setUpdatedAt(ZonedDateTime.now());
             updateModel.setIdUserConfig(priceModel.getIdUserConfig());
             priceRepository.save(updateModel);
-            response = new PriceResponse(Constants.MESSAGE_UPDATE_TIME_SUCCESS, true, updateModel);
+            response = new PriceResponse(Constants.MESSAGE_UPDATE_PRICE_SUCCESS, true, updateModel);
             return response;
         }
         response = new PriceResponse("ID not found", false);
@@ -63,11 +62,15 @@ public class PriceService implements IPriceService {
     }
 
     @Override
-    public PriceModel findByID(UUID id) {
+    public PriceResponse findByID(UUID id) {
+        PriceResponse response;
         if(priceRepository.existsById(id)) {
-            return priceRepository.findPriceModelById(id);
+            PriceModel model = priceRepository.findPriceModelById(id);
+            response = new PriceResponse(Constants.MESSAGE_PRICE_FIND_SUCCESS, true, model);
+            return response;
         }
-        return null;
+        response = new PriceResponse(Constants.MESSAGE_SOMETHING_WENT_WRONG, false);
+        return response;
     }
 
     @Override
@@ -83,19 +86,50 @@ public class PriceService implements IPriceService {
     }
 
     @Override
-    public List<PriceModel> getPriceByStatus(UUID id) {
-        return priceRepository.getPriceByStatus(id);
+    public PriceResponse getPriceByStatus(UUID id) {
+        if(statusRepository.existsById(id)) {
+            List<PriceModel> list = priceRepository.getPriceByStatus(id);
+            PriceResponse response;
+            if (!list.isEmpty()) {
+                response = new PriceResponse(Constants.MESSAGE_STATUS_GET_ALL_PRICE_SUCCESS, true, list);
+                return response;
+            }
+            response = new PriceResponse("List is empty", false);
+            return response;
+        }
+        return new PriceResponse("Status not found", false);
     }
 
-//    @Override
-//    public List<PriceModel> getPriceByBusType(UUID id) {
-//        return priceRepository.getPriceByBusType(id);
-//    }
+    @Override
+    public PriceResponse getPriceByBusType(UUID id) {
+        if(busTypesRepository.existsById(id)) {
+            List<PriceModel> list = priceRepository.getPriceByBusType(id);
+            PriceResponse response;
+            if (!list.isEmpty()) {
+                response = new PriceResponse(Constants.MESSAGE_STATUS_GET_ALL_PRICE_SUCCESS, true, list);
+                return response;
+            }
+            response = new PriceResponse("List is empty", false);
+            return response;
+        }
+        return new PriceResponse("BusType not found", false);
+    }
 
-//    @Override
-//    public List<PriceModel> getPriceByRoutesTime(UUID id) {
-//        return priceRepository.getPriceByRoutesTime(id);
-//    }
+    @Override
+    public PriceResponse getPriceByRoutesTime(UUID id) {
+        if(routesTimeRepository.existsById(id)) {
+            List<PriceModel> list = priceRepository.getPriceByRoutesTime(id);
+            PriceResponse response;
+            if (!list.isEmpty()) {
+                response = new PriceResponse(Constants.MESSAGE_STATUS_GET_ALL_PRICE_SUCCESS, true, list);
+                return response;
+            }
+            response = new PriceResponse("List is empty", false);
+            return response;
+        }
+        return new PriceResponse("RoutesTime not found", false);
+
+    }
 
     private boolean checkDate(PriceModel priceModel){
 

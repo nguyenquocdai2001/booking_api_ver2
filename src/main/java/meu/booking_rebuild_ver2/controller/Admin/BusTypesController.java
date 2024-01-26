@@ -3,6 +3,7 @@ package meu.booking_rebuild_ver2.controller.Admin;
 import meu.booking_rebuild_ver2.config.Constants;
 import meu.booking_rebuild_ver2.exception.BadRequestException;
 import meu.booking_rebuild_ver2.model.Admin.BusTypes;
+import meu.booking_rebuild_ver2.model.Admin.DTO.BusTypeDTO;
 import meu.booking_rebuild_ver2.model.Status;
 import meu.booking_rebuild_ver2.repository.Admin.BusTypesRepository;
 import meu.booking_rebuild_ver2.repository.Admin.TimeRepository;
@@ -30,8 +31,8 @@ public class BusTypesController {
     }
 
     @PostMapping(path = "/addBusTypes")
-    public BusTypesResponse addBusTypesPostMapping(@RequestBody @Valid BusTypes busTypes){
-        return busTypesService.createBusType(busTypes);
+    public BusTypesResponse addBusTypesPostMapping(@RequestBody @Valid BusTypeDTO busTypesDTO){
+        return busTypesService.createBusType(busTypesDTO);
     }
 
     @GetMapping(path = "getAllBusTypes")
@@ -60,8 +61,8 @@ public class BusTypesController {
     }
 
     @PostMapping(path = "updateBusType")
-    public BusTypesResponse updateBusType(@RequestBody @Valid BusTypes busTypes){
-        return busTypesService.updateBusType(busTypes);
+    public BusTypesResponse updateBusType(@RequestBody @Valid BusTypeDTO busTypeDTO){
+        return busTypesService.updateBusType(busTypeDTO);
     }
 
     @DeleteMapping(path = "deleteBusTypesById")

@@ -8,11 +8,11 @@ import java.util.UUID;
 
 public interface IPriceService {
     PriceResponse createPrice(PriceModel priceModel);
-    List<PriceModel> getAllPrice();
+    PriceResponse getAllPrice();
     PriceResponse updatePrice(PriceModel priceModel);
-    PriceModel findByID(UUID id);
+    PriceResponse findByID(UUID id);
     PriceResponse deleteById(UUID id);
-    List<PriceModel> getPriceByStatus(UUID id);
-//    List<PriceModel> getPriceByBusType(UUID id);
-//    List<PriceModel> getPriceByRoutesTime(UUID id);
+    PriceResponse getPriceByStatus(UUID id);
+    PriceResponse getPriceByBusType(UUID id);
+    PriceResponse getPriceByRoutesTime(UUID id);
 }

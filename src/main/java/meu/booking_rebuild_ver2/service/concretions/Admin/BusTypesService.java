@@ -3,6 +3,10 @@ package meu.booking_rebuild_ver2.service.concretions.Admin;
 import meu.booking_rebuild_ver2.config.Constants;
 import meu.booking_rebuild_ver2.exception.BadRequestException;
 import meu.booking_rebuild_ver2.model.Admin.BusTypes;
+import meu.booking_rebuild_ver2.model.Admin.DTO.BusTypeDTO;
+import meu.booking_rebuild_ver2.model.Admin.Mapper.BusTypeMapper;
+import meu.booking_rebuild_ver2.model.Status;
+import meu.booking_rebuild_ver2.model.User;
 import meu.booking_rebuild_ver2.repository.Admin.BusTypesRepository;
 import meu.booking_rebuild_ver2.response.Admin.BusTypesResponse;
 import meu.booking_rebuild_ver2.service.abstractions.Admin.IBusTypesService;
@@ -18,13 +22,15 @@ public class BusTypesService implements IBusTypesService {
     @Autowired
     private BusTypesRepository busTypesRepository;
     @Override
-    public BusTypesResponse createBusType(BusTypes busTypes) {
+    public BusTypesResponse createBusType(BusTypeDTO busTypesDTO) {
         try {
-            if(busTypesRepository.findByLicensePlate(busTypes.getLicensePlate()) != null){
+            if(busTypesRepository.findByLicensePlate(busTypesDTO.getLicensePlate()) != null){
                 BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPES_DUPLICATE_LICENSE_PLATE_SUCCESS, false);
+                return response;
             }
+            BusTypes busTypes = BusTypeMapper.dtoToBusTypes(busTypesDTO);
             busTypesRepository.save(busTypes);
-            BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPES_ADD_SUCCESS, true, busTypes);
+            BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPES_ADD_SUCCESS, true, busTypesDTO);
             return response;
         }catch (Exception ex){
             throw new BadRequestException(ex.getMessage());
@@ -34,8 +40,11 @@ public class BusTypesService implements IBusTypesService {
     @Override
     public BusTypesResponse getAllBusTypes() {
         try {
-            List<BusTypes> busTypesList = busTypesRepository.findAll();
-            BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPES_FIND_ALL_SUCCESS, true, busTypesList);
+            List<BusTypeDTO> busTypesListDTO = busTypesRepository.findAll()
+                    .stream()
+                    .map(BusTypeMapper::busTypeDTO)
+                    .toList();
+            BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPES_FIND_ALL_SUCCESS, true, busTypesListDTO);
             return response;
         }catch (Exception ex){
             throw new BadRequestException(ex.getMessage());
@@ -49,8 +58,11 @@ public class BusTypesService implements IBusTypesService {
                 BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPES_FIND_ALL_FAILED, false);
                 return response;
             }
-            List<BusTypes> busTypesList = busTypesRepository.findALlByNumberOfSeat(numberOfSeat);
-            BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPES_FIND_ALL_SUCCESS, true, busTypesList);
+            List<BusTypeDTO> busTypesListDTO = busTypesRepository.findALlByNumberOfSeat(numberOfSeat)
+                    .stream()
+                    .map(BusTypeMapper::busTypeDTO)
+                    .toList();
+            BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPES_FIND_ALL_SUCCESS, true, busTypesListDTO);
             return response;
 
         }catch (Exception ex){
@@ -65,8 +77,11 @@ public class BusTypesService implements IBusTypesService {
                 BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPES_FIND_ALL_FAILED, false);
                 return response;
             }
-            List<BusTypes> busTypesList = busTypesRepository.findAllByStatus(idStatus);
-            BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPES_FIND_ALL_SUCCESS, true, busTypesList);
+            List<BusTypeDTO> busTypesListDTO = busTypesRepository.findAllByStatus(idStatus)
+                    .stream()
+                    .map(BusTypeMapper::busTypeDTO)
+                    .toList();
+            BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPES_FIND_ALL_SUCCESS, true, busTypesListDTO);
             return response;
 
         }catch (Exception ex){
@@ -79,7 +94,8 @@ public class BusTypesService implements IBusTypesService {
         try {
             if(busTypesRepository.findById(id).isPresent()){
                 Optional<BusTypes> busTypes = busTypesRepository.findById(id);
-                BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPE_FIND_SUCCESS, true, busTypes);
+                BusTypeDTO busTypeDTO = BusTypeMapper.busTypeDTO(busTypes.get());
+                BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPE_FIND_SUCCESS, true, busTypeDTO);
                 return response;
             }
             BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPE_FIND_FAILED, false);
@@ -97,7 +113,8 @@ public class BusTypesService implements IBusTypesService {
                 return response;
             }
             BusTypes busTypes = busTypesRepository.findByLicensePlate(licensePlate);
-            BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPE_FIND_SUCCESS, true, busTypes);
+            BusTypeDTO busTypeDTO = BusTypeMapper.busTypeDTO(busTypes);
+            BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPE_FIND_SUCCESS, true, busTypeDTO);
             return response;
 
         }catch (Exception ex){
@@ -106,20 +123,20 @@ public class BusTypesService implements IBusTypesService {
     }
 
     @Override
-    public BusTypesResponse updateBusType(BusTypes busTypes) {
+    public BusTypesResponse updateBusType(BusTypeDTO busTypeDTO) {
         try {
-            if(!busTypesRepository.findById(busTypes.getId()).isPresent()){
+            if(!busTypesRepository.findById(busTypeDTO.getId()).isPresent()){
                 BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_FIND_BUS_TYPE_FAILED, false);
                 return response;
             }
-            BusTypes updatedBusType = busTypesRepository.findById(busTypes.getId()).get();
-            updatedBusType.setType(busTypes.getType());
-            updatedBusType.setLicensePlate(busTypes.getLicensePlate());
-            updatedBusType.setNumberOfSeat(busTypes.getNumberOfSeat());
-            updatedBusType.setStatus(busTypes.getStatus());
-            updatedBusType.setIdUserConfig(busTypes.getIdUserConfig());
+            BusTypes updatedBusType = busTypesRepository.findById(busTypeDTO.getId()).get();
+            updatedBusType.setType(busTypeDTO.getType());
+            updatedBusType.setLicensePlate(busTypeDTO.getLicensePlate());
+            updatedBusType.setNumberOfSeat(busTypeDTO.getNumberOfSeat());
+            updatedBusType.setStatus(new Status(busTypeDTO.getIdStatus()));
+            updatedBusType.setIdUserConfig(new User(busTypeDTO.getIdUserConfig()));
             busTypesRepository.save(updatedBusType);
-            BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPES_UPDATE_SUCCESS, true, updatedBusType);
+            BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPES_UPDATE_SUCCESS, true, busTypeDTO);
             return response;
         }catch (Exception ex){
             throw new BadRequestException(ex.getMessage());
