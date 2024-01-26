@@ -25,21 +25,21 @@ public class PriceController {
     @Autowired
     PriceService priceService;
 
-   /* addNewPrice
-   * start
-   *  */
+    /* addNewPrice
+     * start
+     *  */
     @PostMapping("/addPrice")
     public PriceResponse addPrice(@RequestBody PriceModel model){
         log.debug("Inside addPrice function()");
-     try {
-         return priceService.createPrice(model);
-     }catch(Exception e){
-         throw new BadRequestException(e.getMessage());
-     }
+        try {
+            return priceService.createPrice(model);
+        }catch(Exception e){
+            throw new BadRequestException(e.getMessage());
+        }
     }
     /* addNewPrice
-    * end
-    * */
+     * end
+     * */
 
 
     /* getAllPrice
@@ -110,9 +110,9 @@ public class PriceController {
      *  */
 
     /*
-    * deleteByid
-    *
-    * */
+     * deleteByid
+     *
+     * */
     @DeleteMapping("deletePriceById")
     public PriceResponse deletePriceModel(@RequestParam UUID id) {
         log.debug("Inside deletePriceModel");

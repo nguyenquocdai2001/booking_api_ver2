@@ -20,4 +20,8 @@ public class Status {
     private UUID id;
     private String status;
     private boolean flag;
+
+    public Status(UUID id) {
+        this.id = id;
+    }
 }

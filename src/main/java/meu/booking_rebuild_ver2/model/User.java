@@ -60,4 +60,8 @@ public class User implements Serializable {
     public String getUserRole() {
         return String.valueOf(userRole);
     }
+
+    public User(UUID id) {
+        this.id = id;
+    }
 }
