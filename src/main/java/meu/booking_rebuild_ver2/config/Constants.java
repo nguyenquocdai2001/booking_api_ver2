@@ -59,6 +59,8 @@ public class Constants {
 
     public static final String MESSAGE_BUS_TYPES_ADD_SUCCESS = "Adding a bus type successfully!";
 
+    public static final String MESSAGE_BUS_TYPES_DUPLICATE_LICENSE_PLATE_SUCCESS = "Duplicate License Plate!";
+
     public static final String MESSAGE_BUS_TYPES_FIND_ALL_SUCCESS = "Find all bus types successfully!";
 
     public static final String MESSAGE_BUS_TYPES_FIND_ALL_FAILED = "Find all bus types failed!";

@@ -12,6 +12,7 @@ public interface IPriceService {
     PriceResponse updatePrice(PriceModel priceModel);
     PriceResponse findByID(UUID id);
     PriceResponse deleteById(UUID id);
+
     PriceResponse getPriceByStatus(UUID id);
     PriceResponse getPriceByBusType(UUID id);
     PriceResponse getPriceByRoutesTime(UUID id);
