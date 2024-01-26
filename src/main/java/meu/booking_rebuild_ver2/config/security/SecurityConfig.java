@@ -55,6 +55,23 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors().and().csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+
+//                        .requestMatchers("/auth/**").permitAll()
+//                        .requestMatchers("/status/**")
+//                        .hasAnyRole("ADMIN")
+//                        .requestMatchers("/busTypes/**")
+//                        .hasAnyRole("ADMIN")
+//                        .requestMatchers("/busSeat/**")
+//                        .hasAnyRole("ADMIN")
+//                        .requestMatchers("/routes/**")
+//                        .hasAnyRole("ADMIN")
+//                        .requestMatchers("/time/**")
+//                        .hasAnyRole("ADMIN")
+//                        .requestMatchers("/routeTime/**").hasAnyRole("ADMIN")
+//                        .requestMatchers("/price/**").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**")
+                        .permitAll()
+
                         .requestMatchers("/auth/**", "/demo/**").permitAll()
                         .requestMatchers(HttpMethod.POST,
                                 "/busTypes/**" ,

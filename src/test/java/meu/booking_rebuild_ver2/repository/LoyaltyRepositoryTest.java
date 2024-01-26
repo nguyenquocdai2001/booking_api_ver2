@@ -33,14 +33,14 @@ public class LoyaltyRepositoryTest {
                 .id(UUID.randomUUID())
                 .rank("gold")
                 .discount(20)
-                .loyalty_spent(5.500)
+                .loyaltySpent(5.500)
                 .build();
         Loyalty loyaltySaved = loyaltyRepository.save(loyalty);
         Loyalty loyalty1 = Loyalty.builder()
                 .id(UUID.randomUUID())
                 .rank("bronze")
                 .discount(5)
-                .loyalty_spent(3.500)
+                .loyaltySpent(3.500)
                 .build();
         Loyalty loyalty1Saved = loyaltyRepository.save(loyalty1);
         Loyalty loyalty2 = Loyalty.builder()
@@ -53,7 +53,7 @@ public class LoyaltyRepositoryTest {
                 .id(UUID.randomUUID())
                 .rank("diamond")
                 .discount(50)
-                .loyalty_spent(6.500)
+                .loyaltySpent(6.500)
                 .build();
         Loyalty loyalty3Saved = loyaltyRepository.save(loyalty3);
         assertThat(loyaltySaved).isNotNull();

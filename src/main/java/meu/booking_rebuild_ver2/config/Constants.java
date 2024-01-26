@@ -107,6 +107,7 @@ public class Constants {
     public static final String MESSAGE_ADDED_CUSTOMER_SUCCESSFULLY = "The customer has been added successfully";
     public static final String MESSAGE_UPDATED_CUSTOMER_SUCCESSFULLY = "The customer has been updated successfully";
     public static final String MESSAGE_PHONE_FORMAT_WRONG = "Phone number format is incorrect";
+    public static final String MESSAGE_DELETED_SUCCESSFULLY = "Deleted object successfully!";
 
 
 }

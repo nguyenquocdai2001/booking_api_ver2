@@ -8,6 +8,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "bus_seat")
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class BusSeat {
@@ -20,7 +21,7 @@ public class BusSeat {
     private String nameSeat;
     @Column(name = "floor_number")
     private int floorNumber;
-    @OneToOne
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "id_bus_type")
     private BusTypes idBusTypes;
 }

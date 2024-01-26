@@ -14,6 +14,7 @@ import java.util.UUID;
 @Table(name = "bus_types")
 @Builder
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class BusTypes {
@@ -28,7 +29,7 @@ public class BusTypes {
     @ManyToOne
     @JoinColumn(name = "status")
     private Status status;
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "id_user_config")
     private User idUserConfig;
 
