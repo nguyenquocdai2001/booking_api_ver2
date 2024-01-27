@@ -1,10 +1,9 @@
 package meu.booking_rebuild_ver2.request.Passanger;
 
-import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Setter;
-import meu.booking_rebuild_ver2.model.Admin.DTO.LoyaltyDto;
+import meu.booking_rebuild_ver2.model.Admin.DTO.LoyaltyDTO;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -25,6 +24,6 @@ public class UpdateCustomerRequest {
     @NotBlank
     private String status;
     private double totalPaid;
-    private LoyaltyDto loyaltyDto;
+    private LoyaltyDTO loyaltyDto;
 
 }

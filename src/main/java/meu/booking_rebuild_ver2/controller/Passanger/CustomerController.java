@@ -2,8 +2,6 @@ package meu.booking_rebuild_ver2.controller.Passanger;
 
 import meu.booking_rebuild_ver2.exception.GenericResponseExceptionHandler;
 import meu.booking_rebuild_ver2.exception.NotFoundException;
-import meu.booking_rebuild_ver2.model.Admin.DTO.LoyaltyDto;
-import meu.booking_rebuild_ver2.model.Passanger.Customer;
 import meu.booking_rebuild_ver2.request.Passanger.CustomerRequest;
 import meu.booking_rebuild_ver2.request.Passanger.UpdateCustomerRequest;
 import meu.booking_rebuild_ver2.response.GenericResponse;
@@ -16,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.UUID;
-import java.util.List;
+
 /*
  * author: Nguyen Minh Tam
  * ticket: BS-3
