@@ -32,7 +32,7 @@ public class RoutesTimeModel {
     @ManyToOne
     @JoinColumn(name = "status" )
     private Status status;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "id_user_config" )
     @JsonIgnore
     private User idUserConfig;
@@ -40,4 +40,8 @@ public class RoutesTimeModel {
     private ZonedDateTime createdAt = ZonedDateTime.now();
     @JsonIgnore
     private ZonedDateTime updatedAt = ZonedDateTime.now();
+
+    public RoutesTimeModel(UUID id) {
+        this.id = id;
+    }
 }

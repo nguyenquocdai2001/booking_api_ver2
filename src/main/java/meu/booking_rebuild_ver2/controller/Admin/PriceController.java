@@ -4,6 +4,7 @@ package meu.booking_rebuild_ver2.controller.Admin;
 import lombok.extern.slf4j.Slf4j;
 import meu.booking_rebuild_ver2.config.Constants;
 import meu.booking_rebuild_ver2.exception.BadRequestException;
+import meu.booking_rebuild_ver2.model.Admin.DTO.PriceDTO;
 import meu.booking_rebuild_ver2.model.Admin.PriceModel;
 import meu.booking_rebuild_ver2.response.Admin.PriceResponse;
 import meu.booking_rebuild_ver2.service.concretions.Admin.PriceService;
@@ -29,7 +30,7 @@ public class PriceController {
      * start
      *  */
     @PostMapping("/addPrice")
-    public PriceResponse addPrice(@RequestBody PriceModel model){
+    public PriceResponse addPrice(@RequestBody PriceDTO model){
         log.debug("Inside addPrice function()");
         try {
             return priceService.createPrice(model);
@@ -80,7 +81,7 @@ public class PriceController {
      * start
      *  */
     @PutMapping("/updatePrice")
-    public PriceResponse updatePriceModelById(@RequestBody PriceModel priceModel) {
+    public PriceResponse updatePriceModelById(@RequestBody PriceDTO priceModel) {
         log.debug("Inside updatePriceModelById");
         try {
             return priceService.updatePrice(priceModel);

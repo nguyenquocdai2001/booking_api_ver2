@@ -32,4 +32,7 @@ public class BusTypes {
     @JoinColumn(name = "id_user_config")
     private User idUserConfig;
 
+    public BusTypes(UUID id) {
+        this.id = id;
+    }
 }
