@@ -1,5 +1,6 @@
 package meu.booking_rebuild_ver2.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -54,6 +55,7 @@ public class User implements Serializable {
     private String confirmPass;
     @CreationTimestamp
     @Column(nullable = false)
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "Asia/Ho_Chi_Minh")
     private Instant createdAt;
     @Enumerated(EnumType.STRING)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -63,6 +65,14 @@ public class User implements Serializable {
     private UserRole userRole = UserRole.ROLE_SUPER_ADMIN ;
     public String getUserRole() {
         return String.valueOf(userRole);
+    }
+
+    public User(UUID id, String fullname, String username, Instant createdAt, UserRole userRole) {
+        this.id = id;
+        this.fullname = fullname;
+        this.username = username;
+        this.createdAt = createdAt;
+        this.userRole = userRole;
     }
 
     public User(UUID id) {
