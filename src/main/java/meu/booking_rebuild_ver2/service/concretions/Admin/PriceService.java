@@ -1,7 +1,14 @@
 package meu.booking_rebuild_ver2.service.concretions.Admin;
 
 import meu.booking_rebuild_ver2.config.Constants;
+import meu.booking_rebuild_ver2.model.Admin.BusTypes;
+import meu.booking_rebuild_ver2.model.Admin.DTO.PriceDTO;
+import meu.booking_rebuild_ver2.model.Admin.Mapper.PriceMapper;
 import meu.booking_rebuild_ver2.model.Admin.PriceModel;
+import meu.booking_rebuild_ver2.model.Admin.RoutesTimeModel;
+import meu.booking_rebuild_ver2.model.Status;
+import meu.booking_rebuild_ver2.model.User;
+import meu.booking_rebuild_ver2.model.UserID;
 import meu.booking_rebuild_ver2.repository.Admin.BusTypesRepository;
 import meu.booking_rebuild_ver2.repository.Admin.PriceRepository;
 import meu.booking_rebuild_ver2.repository.Admin.RoutesTimeRepository;
@@ -25,36 +32,41 @@ public class PriceService implements IPriceService {
     BusTypesRepository busTypesRepository;
     @Autowired
     RoutesTimeRepository routesTimeRepository;
+    @Autowired
+    private UserID userID;
     @Override
-    public PriceResponse createPrice(PriceModel priceModel) {
-        PriceResponse response;
-        if(checkDate(priceModel)){
+    public PriceResponse createPrice(PriceDTO priceDTO) {
+        if(checkDate(priceDTO)){
+            priceDTO.setIdUserConfig(userID.getUserValue().getId());
+            PriceModel priceModel = PriceMapper.dtoToPrices(priceDTO);
             priceRepository.save(priceModel);
-            return new PriceResponse(Constants.MESSAGE_STATUS_ADD_PRICE_SUCCESS, true, priceModel);
+            return new PriceResponse(Constants.MESSAGE_STATUS_ADD_PRICE_SUCCESS, true, priceDTO);
         }
         return new PriceResponse("Invalid status or BusType", false);
     }
 
     @Override
     public PriceResponse getAllPrice() {
-        List<PriceModel> list = priceRepository.findAll();
+        List<PriceDTO> list = priceRepository.findAll()
+                .stream()
+                .map(PriceMapper::priceDTO)
+                .toList();
         return new PriceResponse(Constants.MESSAGE_STATUS_GET_ALL_PRICE_SUCCESS, true, list);
     }
 
     @Override
-    public PriceResponse updatePrice(PriceModel priceModel) {
-        PriceModel updateModel = priceRepository.findPriceModelById(priceModel.getId());
+    public PriceResponse updatePrice(PriceDTO priceDTO) {
+        PriceModel updateModel = priceRepository.findPriceModelById(priceDTO.getId());
         PriceResponse response;
-
-        if(updateModel != null && checkDate(updateModel)) {
-            updateModel.setPrice(priceModel.getPrice());
-            updateModel.setIdBusType(priceModel.getIdBusType());
-            updateModel.setIdRoutesTime(priceModel.getIdRoutesTime());
-            updateModel.setStatus(priceModel.getStatus());
+        if(updateModel != null && checkDate(priceDTO)) {
+            updateModel.setPrice(priceDTO.getPrice());
+            updateModel.setIdBusType(new BusTypes(priceDTO.getIdBusType()));
+            updateModel.setIdRoutesTime(new RoutesTimeModel(priceDTO.getIdRoutesTime()));
+            updateModel.setStatus(new Status(priceDTO.getIdStatus()));
             updateModel.setUpdatedAt(ZonedDateTime.now());
-            updateModel.setIdUserConfig(priceModel.getIdUserConfig());
+            updateModel.setIdUserConfig(userID.getUserValue());
             priceRepository.save(updateModel);
-            response = new PriceResponse(Constants.MESSAGE_UPDATE_PRICE_SUCCESS, true, updateModel);
+            response = new PriceResponse(Constants.MESSAGE_UPDATE_PRICE_SUCCESS, true, priceDTO);
             return response;
         }
         response = new PriceResponse("ID not found", false);
@@ -66,7 +78,8 @@ public class PriceService implements IPriceService {
         PriceResponse response;
         if(priceRepository.existsById(id)) {
             PriceModel model = priceRepository.findPriceModelById(id);
-            response = new PriceResponse(Constants.MESSAGE_PRICE_FIND_SUCCESS, true, model);
+            PriceDTO priceDTO = PriceMapper.priceDTO(model);
+            response = new PriceResponse(Constants.MESSAGE_PRICE_FIND_SUCCESS, true, priceDTO);
             return response;
         }
         response = new PriceResponse(Constants.MESSAGE_SOMETHING_WENT_WRONG, false);
@@ -88,7 +101,10 @@ public class PriceService implements IPriceService {
     @Override
     public PriceResponse getPriceByStatus(UUID id) {
         if(statusRepository.existsById(id)) {
-            List<PriceModel> list = priceRepository.getPriceByStatus(id);
+            List<PriceDTO> list = priceRepository.getPriceByStatus(id)
+                    .stream()
+                    .map(PriceMapper::priceDTO)
+                    .toList();
             PriceResponse response;
             if (!list.isEmpty()) {
                 response = new PriceResponse(Constants.MESSAGE_STATUS_GET_ALL_PRICE_SUCCESS, true, list);
@@ -103,7 +119,10 @@ public class PriceService implements IPriceService {
     @Override
     public PriceResponse getPriceByBusType(UUID id) {
         if(busTypesRepository.existsById(id)) {
-            List<PriceModel> list = priceRepository.getPriceByBusType(id);
+            List<PriceDTO> list = priceRepository.getPriceByBusType(id)
+                    .stream()
+                    .map(PriceMapper::priceDTO)
+                    .toList();
             PriceResponse response;
             if (!list.isEmpty()) {
                 response = new PriceResponse(Constants.MESSAGE_STATUS_GET_ALL_PRICE_SUCCESS, true, list);
@@ -118,7 +137,10 @@ public class PriceService implements IPriceService {
     @Override
     public PriceResponse getPriceByRoutesTime(UUID id) {
         if(routesTimeRepository.existsById(id)) {
-            List<PriceModel> list = priceRepository.getPriceByRoutesTime(id);
+            List<PriceDTO> list = priceRepository.getPriceByRoutesTime(id)
+                    .stream()
+                    .map(PriceMapper::priceDTO)
+                    .toList();
             PriceResponse response;
             if (!list.isEmpty()) {
                 response = new PriceResponse(Constants.MESSAGE_STATUS_GET_ALL_PRICE_SUCCESS, true, list);
@@ -131,11 +153,11 @@ public class PriceService implements IPriceService {
 
     }
 
-    private boolean checkDate(PriceModel priceModel){
+    private boolean checkDate(PriceDTO priceModel){
 
-        return statusRepository.existsById(priceModel.getStatus().getId())
-                && busTypesRepository.existsById(priceModel.getIdBusType().getId())
-                && routesTimeRepository.existsById(priceModel.getIdRoutesTime().getId());
+        return statusRepository.existsById(priceModel.getIdStatus())
+                && busTypesRepository.existsById(priceModel.getIdBusType())
+                && routesTimeRepository.existsById(priceModel.getIdRoutesTime());
     }
 
 }

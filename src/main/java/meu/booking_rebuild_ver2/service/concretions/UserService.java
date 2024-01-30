@@ -1,14 +1,11 @@
 package meu.booking_rebuild_ver2.service.concretions;
 
 import jakarta.servlet.http.HttpSession;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import java.util.Set;
 import meu.booking_rebuild_ver2.config.Constants;
 import meu.booking_rebuild_ver2.exception.BadRequestException;
+import meu.booking_rebuild_ver2.model.Admin.DTO.UserDTO;
 import meu.booking_rebuild_ver2.model.User;
+import meu.booking_rebuild_ver2.model.UserID;
 import meu.booking_rebuild_ver2.repository.UserRepository;
 import meu.booking_rebuild_ver2.response.GenericResponse;
 import meu.booking_rebuild_ver2.response.LoginResponse;
@@ -37,6 +34,7 @@ import java.util.regex.Pattern;
 @Service
 public class UserService implements IUserService {
     public static final String USERID = "USER_ID";
+    public static final String USEREMAIL = "USER_EMAIL";
     private static final String EMAIL_REGEX =
             "^[\\w.-]+@[a-zA-Z\\d.-]+\\.[a-zA-Z]{2,}$";
 
@@ -48,6 +46,8 @@ public class UserService implements IUserService {
     @Autowired
     private JwtUtils jwtUtils;
     @Autowired
+    private UserID userID;
+    @Autowired
     public UserService(BCryptPasswordEncoder passwordEncoder, UserRepository userRepository, JwtUtils jwtUtils) {
         this.modelMapper = new ModelMapper();
         this.passwordEncoder = passwordEncoder;
@@ -56,7 +56,13 @@ public class UserService implements IUserService {
     }
     @Override
     public UUID getSessionUserId(@NotNull HttpSession session) {
+
         return (UUID) session.getAttribute(USERID);
+    }
+
+    @Override
+    public String getSessionUserName(HttpSession session) {
+        return (String) session.getAttribute(USEREMAIL);
     }
 
     @Override
@@ -65,6 +71,7 @@ public class UserService implements IUserService {
         HttpSession session = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
                 .getRequest().getSession();
         session.setAttribute(USERID, model.get().getId());
+        session.setAttribute(USEREMAIL, model.get().getUsername());
         if (passwordEncoder.matches(password, model.get().getPassword())) {
             String jwt = jwtUtils.createToken(username, model.get().getUserRole());
             LoginResponse response = new LoginResponse(
@@ -99,11 +106,20 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public User getUserById(UUID id) {
+        return userRepository.findUserById(id);
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username)  throws UsernameNotFoundException  {
         User user = userRepository.findUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Not found"));
-
+        HttpSession session = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+                .getRequest().getSession();
+        session.setAttribute(USERID, user.getId());
+        session.setAttribute(USEREMAIL, user.getUsername());
         return new UserDetailsImplement(user);
     }
+
 
 }
 //}

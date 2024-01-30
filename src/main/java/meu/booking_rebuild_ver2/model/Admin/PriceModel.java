@@ -38,9 +38,8 @@ public class PriceModel {
     @ManyToOne
     @JoinColumn(name = "status" )
     private Status status;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "id_user_config" )
-    @JsonIgnore
     private User idUserConfig;
     @JsonIgnore
     private ZonedDateTime createdAt = ZonedDateTime.now();;

@@ -12,6 +12,7 @@ public interface IDriverService {
     DriverResponse getAllByIdBusTypes(UUID idBusType);
     DriverResponse getByPhone(String phone);
     DriverResponse getByKindOfLicense(String kindOfLicense);
+    DriverResponse getDriverById(UUID idDriver);
     DriverResponse updateDriver(DriverDTO driverDTO);
     DriverResponse deleteDriverById(UUID idDriver);
 }

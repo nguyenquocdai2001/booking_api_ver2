@@ -1,5 +1,6 @@
 package meu.booking_rebuild_ver2.model.Admin;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -38,12 +39,10 @@ public class Loyalty {
     @NotNull
 //    @OrderBy("'loyalty_spent' ASC")
     private double loyaltySpent;
-    public  Loyalty(String rank) {
-        this.rank = rank;
-    }
     @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "id_user_config")
-    private User idUserConfig;
+    @JsonIgnore
+    private User UserConfig;
 
     public Loyalty(UUID id, String rank, int discount, double loyaltySpent) {
         this.id = id;

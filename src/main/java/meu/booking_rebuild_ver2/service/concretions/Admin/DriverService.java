@@ -5,7 +5,6 @@ import meu.booking_rebuild_ver2.exception.BadRequestException;
 import meu.booking_rebuild_ver2.model.Admin.BusTypes;
 import meu.booking_rebuild_ver2.model.Admin.DTO.DriverDTO;
 import meu.booking_rebuild_ver2.model.Admin.Driver;
-import meu.booking_rebuild_ver2.model.Admin.Mapper.BusTypeMapper;
 import meu.booking_rebuild_ver2.model.Admin.Mapper.DriverMapper;
 import meu.booking_rebuild_ver2.model.Status;
 import meu.booking_rebuild_ver2.model.UserID;
@@ -14,7 +13,6 @@ import meu.booking_rebuild_ver2.repository.Admin.DriverRepository;
 import meu.booking_rebuild_ver2.repository.StatusRepository;
 import meu.booking_rebuild_ver2.response.Admin.DriverResponse;
 import meu.booking_rebuild_ver2.service.abstractions.Admin.IDriverService;
-import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -111,6 +109,21 @@ public class DriverService implements IDriverService {
                 return response;
             }
             DriverDTO driverDTO = DriverMapper.driverToDTO(driverRepository.findAllByKindOfLicense(kindOfLicense));
+            DriverResponse response = new DriverResponse(Constants.MESSAGE_GET_DRIVER_SUCCESS, true, driverDTO);
+            return response;
+        }catch (Exception ex) {
+            throw new BadRequestException(ex.getMessage());
+        }
+    }
+
+    @Override
+    public DriverResponse getDriverById(UUID idDriver) {
+        try {
+            if(!driverRepository.existsById(idDriver)){
+                DriverResponse response = new DriverResponse(Constants.MESSAGE_GET_DRIVER_FAILED, false);
+                return response;
+            }
+            DriverDTO driverDTO = DriverMapper.driverToDTO(driverRepository.findById(idDriver).get());
             DriverResponse response = new DriverResponse(Constants.MESSAGE_GET_DRIVER_SUCCESS, true, driverDTO);
             return response;
         }catch (Exception ex) {

@@ -5,9 +5,11 @@ import meu.booking_rebuild_ver2.exception.BadRequestException;
 import meu.booking_rebuild_ver2.exception.GenericResponseExceptionHandler;
 import meu.booking_rebuild_ver2.exception.NotFoundException;
 import meu.booking_rebuild_ver2.model.Admin.Loyalty;
+import meu.booking_rebuild_ver2.model.Admin.Mapper.LoyaltyMapper;
 import meu.booking_rebuild_ver2.model.Passanger.Customer;
 import meu.booking_rebuild_ver2.model.Status;
 import meu.booking_rebuild_ver2.model.Admin.DTO.LoyaltyDTO;
+import meu.booking_rebuild_ver2.model.User;
 import meu.booking_rebuild_ver2.repository.Admin.LoyaltyRepository;
 import meu.booking_rebuild_ver2.repository.Passanger.CustomerRepository;
 import meu.booking_rebuild_ver2.repository.StatusRepository;
@@ -16,7 +18,9 @@ import meu.booking_rebuild_ver2.request.Passanger.UpdateCustomerRequest;
 import meu.booking_rebuild_ver2.response.GenericResponse;
 import meu.booking_rebuild_ver2.response.Passanger.CustomerResponse;
 import meu.booking_rebuild_ver2.service.abstractions.Admin.ILoyaltyService;
+import meu.booking_rebuild_ver2.service.abstractions.IUserService;
 import meu.booking_rebuild_ver2.service.abstractions.Passanger.ICustomerService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,11 +39,19 @@ public class CustomerService implements ICustomerService {
     @Autowired
     private LoyaltyRepository loyaltyRepository;
     @Autowired
+    private LoyaltyMapper loyaltyMapper;
+    @Autowired
     private ILoyaltyService loyaltyService;
+    @Autowired
+    private IUserService userService;
     @Autowired
     private StatusRepository statusRepository;
     private static final String PHONE_NUMBER_REGEX = "^(\\+?84|0)([3|5|7|8|9])+([0-9]{8})$";
     private static final Pattern pattern = Pattern.compile(PHONE_NUMBER_REGEX);
+    @Autowired
+    public CustomerService(CustomerRepository customerRepository){
+        this.customerRepository = customerRepository;
+    }
     @Override
     public GenericResponse addCustomer(CustomerRequest request) throws GenericResponseExceptionHandler {
 
@@ -52,8 +64,8 @@ public class CustomerService implements ICustomerService {
                 Customer requestCustomer = new Customer(request.getName(), request.getPhone());
                 Status status = statusRepository.findStatusById(UUID.fromString("3fa85f64-5717-4562-b3fc-2c963f66afa7"));
                 requestCustomer.setStatus(status);
-                Loyalty loyalty = loyaltyService.getLoyaltyByPrice(0).get();
-                requestCustomer.setLoyalty(loyalty);
+                Loyalty loyaltydto = loyaltyService.getLoyaltyByPrice();
+                requestCustomer.setLoyalty(loyaltydto);
                 requestCustomer.setNumberOfTrips(0);
                 customerRepository.save(requestCustomer);
                 return new GenericResponse(Constants.MESSAGE_ADDED_CUSTOMER_SUCCESSFULLY);
@@ -80,7 +92,7 @@ public class CustomerService implements ICustomerService {
             response.setPhone(model.getPhone());
             response.setIdStatus(model.getStatus().getId());
             response.setNumberOfTrips(model.getNumberOfTrips());
-            LoyaltyDTO loyaltyDto = new LoyaltyDTO(model.getLoyalty());
+            LoyaltyDTO loyaltyDto = loyaltyMapper.toDTO(model.getLoyalty());
             response.setIdLoyalty(loyaltyDto.getId());
             return response;
         } catch (RuntimeException e) {
@@ -112,7 +124,7 @@ public class CustomerService implements ICustomerService {
     private List<CustomerResponse> getListResponse(List<Customer> models){
         List<CustomerResponse> reponseList = new ArrayList<>();
         for(Customer model: models){
-            LoyaltyDTO loyaltyDto = new LoyaltyDTO(model.getLoyalty());
+            LoyaltyDTO loyaltyDto = loyaltyMapper.toDTO(model.getLoyalty());
             CustomerResponse response = new CustomerResponse(model.getId(), model.getName(), model.getPhone(), loyaltyDto.getId(), model.getStatus().getId(),model.getNumberOfTrips());
             reponseList.add(response);
 
@@ -130,7 +142,8 @@ public class CustomerService implements ICustomerService {
             model.setName(request.getName());
             model.setPhone(request.getPhone());
             System.out.println(request);
-            Loyalty loyalty = loyaltyService.getLoyaltyByPrice(request.getTotalPaid()).get();
+            LoyaltyDTO loyaltyDTO = loyaltyService.getLoyaltyByPrice(request.getTotalPaid());
+            Loyalty loyalty = loyaltyMapper.toModel(loyaltyDTO);
             model.setLoyalty(loyalty);
             Status status = statusRepository.findStatusById(UUID.fromString(request.getStatus()));
             if(status != null) model.setStatus(status);
@@ -159,7 +172,8 @@ public class CustomerService implements ICustomerService {
                 loyalty.ifPresent(model::setLoyalty);
             }
             else if(id_loyalty != null){
-                Loyalty loyalty = loyaltyService.getLoyaltyById(id_loyalty);
+                LoyaltyDTO loyaltyDTO = loyaltyService.getLoyaltyById(id_loyalty);
+                Loyalty loyalty = loyaltyMapper.toModel(loyaltyDTO);
                 model.setLoyalty(loyalty);
             }
             else{
@@ -174,7 +188,6 @@ public class CustomerService implements ICustomerService {
             throw new BadRequestException(e.getMessage());
         }
     }
-
     @Override
     public Page<CustomerResponse> getCustomerByPhoneWithPage(String phone, Integer page) {
         try{
@@ -186,7 +199,6 @@ public class CustomerService implements ICustomerService {
         }
 
     }
-
     @Override
     public Page<CustomerResponse> getCustomerByLoyaltyWithPage(UUID IdLoyalty, Integer page) {
         try{
@@ -197,7 +209,6 @@ public class CustomerService implements ICustomerService {
             throw new BadRequestException(e.getMessage());
         }
     }
-
     @Override
     public GenericResponse deleteCustomerById(UUID id) throws NotFoundException {
         Customer model = customerRepository.findCustomerById(id);
@@ -207,7 +218,6 @@ public class CustomerService implements ICustomerService {
         customerRepository.delete(model);
         return new GenericResponse(Constants.MESSAGE_DELETED_SUCCESSFULLY);
     }
-
     protected static boolean phoneValid(String phone){
         Matcher matcher = pattern.matcher(phone);
         return !matcher.matches();

@@ -25,19 +25,23 @@ public class DriverController {
     public DriverResponse getAllDrivers(){
         return driverService.getAllDriver();
     }
+    @GetMapping(path = "getDriverById")
+    public DriverResponse getDriverById(@RequestParam UUID idDriver){
+        return driverService.getDriverById(idDriver);
+    }
 
     @GetMapping(path = "getAllDriversByIdBusTypes")
-    public DriverResponse getAllByIdBusTypes(UUID idBusTypes){
+    public DriverResponse getAllByIdBusTypes(@RequestParam UUID idBusTypes){
         return driverService.getAllByIdBusTypes(idBusTypes);
     }
 
     @GetMapping(path = "getDriverByPhone")
-    public DriverResponse getByPhone(String phone){
+    public DriverResponse getByPhone(@RequestParam String phone){
         return driverService.getByPhone(phone);
     }
 
     @GetMapping(path = "getDriverByKindOfLicense")
-    public DriverResponse getByKindOfLicense(String kindOfLicense){
+    public DriverResponse getByKindOfLicense(@RequestParam String kindOfLicense){
         return driverService.getByKindOfLicense(kindOfLicense);
     }
 
@@ -47,7 +51,7 @@ public class DriverController {
     }
 
     @DeleteMapping(path = "deleteDriverById")
-    public DriverResponse deleteDriverById(UUID idDriver){
+    public DriverResponse deleteDriverById(@RequestParam UUID idDriver){
         return driverService.deleteDriverById(idDriver);
     }
 }
