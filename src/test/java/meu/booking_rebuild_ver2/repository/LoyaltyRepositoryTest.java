@@ -2,6 +2,7 @@ package meu.booking_rebuild_ver2.repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import meu.booking_rebuild_ver2.model.Admin.DTO.LoyaltyDTO;
 import meu.booking_rebuild_ver2.model.Admin.Loyalty;
 import meu.booking_rebuild_ver2.model.User;
 import meu.booking_rebuild_ver2.repository.Admin.LoyaltyRepository;
@@ -103,13 +104,13 @@ public class LoyaltyRepositoryTest {
         loyalties.add(loyalty3);
         loyalties.add(loyalty4);
         loyaltyRepository.saveAll(loyalties);
-        Iterable<Loyalty> loyaltiesList = loyaltyRepository.findAll(Sort.by(Sort.Direction.ASC, "discount"));
-        List<Loyalty> sortedList = StreamSupport.stream(loyaltiesList.spliterator(), false)
+        Iterable<LoyaltyDTO> loyaltiesList = loyaltyRepository.findAll(Sort.by(Sort.Direction.ASC, "discount"));
+        List<LoyaltyDTO> sortedList = StreamSupport.stream(loyaltiesList.spliterator(), false)
                 .toList();
 
         for (int i = 0; i < sortedList.size() - 1; i++) {
-            Loyalty current = sortedList.get(i);
-            Loyalty next = sortedList.get(i + 1);
+            LoyaltyDTO current = sortedList.get(i);
+            LoyaltyDTO next = sortedList.get(i + 1);
             assertThat(current.getDiscount()).isLessThanOrEqualTo(next.getDiscount());
         }
     }

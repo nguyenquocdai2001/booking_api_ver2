@@ -1,7 +1,9 @@
 package meu.booking_rebuild_ver2.model.Passanger;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -10,7 +12,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import meu.booking_rebuild_ver2.model.Admin.Loyalty;
 import meu.booking_rebuild_ver2.model.Status;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -30,7 +34,7 @@ public class Customer {
     private String phone;
     @Column(name = "number_of_trip")
     private int numberOfTrips;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.REMOVE )
     @JsonBackReference
     @JoinColumn(name = "status")
     private Status status;
@@ -39,7 +43,11 @@ public class Customer {
     @JsonBackReference
     @JsonIgnore
     private Loyalty loyalty;
-
+    @CreationTimestamp
+    @Column( name = "created_at")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "Asia/Ho_Chi_Minh")
+    private Instant createdAt;
     public Customer(String name, String phone) {
         this.name = name;
         this.phone = phone;

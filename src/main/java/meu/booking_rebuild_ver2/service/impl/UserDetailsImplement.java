@@ -37,6 +37,7 @@ public class UserDetailsImplement implements UserDetails {
         return user.getUsername();
     }
 
+
     @Override
     @JsonIgnore
     public String getPassword() {
