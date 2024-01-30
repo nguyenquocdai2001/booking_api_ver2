@@ -1,6 +1,7 @@
 package meu.booking_rebuild_ver2.controller.Admin;
 
 import meu.booking_rebuild_ver2.model.Admin.BusSeat;
+import meu.booking_rebuild_ver2.model.Admin.DTO.BusSeatDTO;
 import meu.booking_rebuild_ver2.repository.Admin.BusSeatRepository;
 import meu.booking_rebuild_ver2.response.Admin.BusSeatResponse;
 import meu.booking_rebuild_ver2.service.concretions.Admin.BusSeatService;
@@ -25,8 +26,8 @@ public class BusSeatController {
 
 
     @PostMapping(path = "/addBusSeat")
-    public BusSeatResponse addBusSeatPostMapping(@RequestBody @Valid BusSeat busSeat){
-        return busSeatService.createBusSeat(busSeat);
+    public BusSeatResponse addBusSeatPostMapping(@RequestBody @Valid BusSeatDTO busSeatDTO){
+        return busSeatService.createBusSeat(busSeatDTO);
     }
 
     @GetMapping(path = "getAllBusSeats")
@@ -50,8 +51,8 @@ public class BusSeatController {
     }
 
     @PostMapping(path = "updateBusSeat")
-    public BusSeatResponse updateBusSeat(@RequestBody @Valid BusSeat busSeat){
-        return busSeatService.updateBusSeat(busSeat);
+    public BusSeatResponse updateBusSeat(@RequestBody @Valid BusSeatDTO busSeatDTO){
+        return busSeatService.updateBusSeat(busSeatDTO);
     }
 
     @DeleteMapping(path = "deleteBusSeatById")

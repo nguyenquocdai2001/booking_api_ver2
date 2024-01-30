@@ -109,7 +109,7 @@ public class CustomerRepositoryTest {
     }
     @Test
     public void CustomerRepository_Delete_ReturnCustomer(){
-        UUID id = UUID.fromString("58e30b4f-5b2d-4224-bcc1-d8a0e14a129d");
+        UUID id = UUID.fromString("226ad6eb-9996-4a11-8d8f-4d54cb86bd96");
         Loyalty loyalty = Loyalty.builder()
                 .id(UUID.randomUUID())
                 .rank("TestLoyalty")
@@ -191,11 +191,11 @@ public class CustomerRepositoryTest {
     @Test
     public void  CustomerRepository_GetByPhone_ReturnCustomer(){
         Customer model = customerRepository.findCustomerByPhone("0356013397");
-        Assertions.assertEquals("58e30b4f-5b2d-4224-bcc1-d8a0e14a129d", model.getId().toString());
+        Assertions.assertEquals("226ad6eb-9996-4a11-8d8f-4d54cb86bd96", model.getId().toString());
     }
     @Test
     public void CustomerRepository_GetByLoyaltyId_ReturnCustomer(){
-        List<Customer> model =  customerRepository.getCustomersByLoyalty_Id(UUID.fromString("d60d683c-54ed-4929-9237-b14db1313ed1"));
+        List<Customer> model =  customerRepository.getCustomersByLoyalty_Id(UUID.fromString("c7c0f4ca-be7b-4b76-a98a-3b6e1d7f971d"));
         Assertions.assertEquals(1, model.size());
     }
 

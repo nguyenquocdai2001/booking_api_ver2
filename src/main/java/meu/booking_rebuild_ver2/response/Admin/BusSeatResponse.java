@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import meu.booking_rebuild_ver2.model.Admin.BusSeat;
 import meu.booking_rebuild_ver2.model.Admin.BusTypes;
+import meu.booking_rebuild_ver2.model.Admin.DTO.BusSeatDTO;
 
 
 import java.util.List;
@@ -17,26 +18,26 @@ public class BusSeatResponse {
     private String message;
     private Boolean success;
 
-    private List<BusSeat> busSeatList;
+    private List<BusSeatDTO> busSeatList;
 
-    private Optional<BusSeat> busSeat;
+    private Optional<BusSeatDTO> busSeat;
 
-    private BusSeat busSeatAdding;
+    private BusSeatDTO busSeatAdding;
 
 
-    public BusSeatResponse(String message, Boolean success, List<BusSeat> busSeatList) {
+    public BusSeatResponse(String message, Boolean success, List<BusSeatDTO> busSeatList) {
         this.message = message;
         this.success = success;
         this.busSeatList = busSeatList;
     }
 
-    public BusSeatResponse(String message, Boolean success, BusSeat busSeatAdding) {
+    public BusSeatResponse(String message, Boolean success, BusSeatDTO busSeatAdding) {
         this.message = message;
         this.success = success;
         this.busSeatAdding = busSeatAdding;
     }
 
-    public BusSeatResponse(String message, Boolean success, Optional<BusSeat> busSeat) {
+    public BusSeatResponse(String message, Boolean success, Optional<BusSeatDTO> busSeat) {
         this.message = message;
         this.success = success;
         this.busSeat = busSeat;

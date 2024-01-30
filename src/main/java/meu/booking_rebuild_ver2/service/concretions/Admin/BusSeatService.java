@@ -3,6 +3,11 @@ package meu.booking_rebuild_ver2.service.concretions.Admin;
 import meu.booking_rebuild_ver2.config.Constants;
 import meu.booking_rebuild_ver2.exception.BadRequestException;
 import meu.booking_rebuild_ver2.model.Admin.BusSeat;
+import meu.booking_rebuild_ver2.model.Admin.BusTypes;
+import meu.booking_rebuild_ver2.model.Admin.DTO.BusSeatDTO;
+import meu.booking_rebuild_ver2.model.Admin.DTO.BusTypeDTO;
+import meu.booking_rebuild_ver2.model.Admin.Mapper.BusSeatMapper;
+import meu.booking_rebuild_ver2.model.Admin.Mapper.BusTypeMapper;
 import meu.booking_rebuild_ver2.repository.Admin.BusSeatRepository;
 import meu.booking_rebuild_ver2.response.Admin.BusSeatResponse;
 import meu.booking_rebuild_ver2.service.abstractions.Admin.IBusSeatService;
@@ -21,10 +26,11 @@ public class BusSeatService implements IBusSeatService {
     }
 
     @Override
-    public BusSeatResponse createBusSeat(BusSeat busSeat) {
+    public BusSeatResponse createBusSeat(BusSeatDTO busSeatDTO) {
         try {
+            BusSeat busSeat = BusSeatMapper.dtoToBusSeat(busSeatDTO);
             busSeatRepository.save(busSeat);
-            BusSeatResponse response = new BusSeatResponse(Constants.MESSAGE_BUS_SEAT_ADD_SUCCESS, true, busSeat);
+            BusSeatResponse response = new BusSeatResponse(Constants.MESSAGE_BUS_SEAT_ADD_SUCCESS, true, busSeatDTO);
             return response;
         }catch (Exception ex){
             throw new BadRequestException(ex.getMessage());
@@ -34,8 +40,12 @@ public class BusSeatService implements IBusSeatService {
     @Override
     public BusSeatResponse getAllBusSeat() {
         try {
-            List<BusSeat> busSeatList = busSeatRepository.findAll();
-            BusSeatResponse response = new BusSeatResponse(Constants.MESSAGE_BUS_SEATS_FIND_ALL_SUCCESS, true, busSeatList);
+            List<BusSeatDTO> busSeatListDTO = busSeatRepository.findAll()
+                    .stream()
+                    .map(BusSeatMapper::busSeatToDTO)
+                    .toList();
+
+            BusSeatResponse response = new BusSeatResponse(Constants.MESSAGE_BUS_SEATS_FIND_ALL_SUCCESS, true, busSeatListDTO);
             return response;
         }catch (Exception ex){
             throw new BadRequestException(ex.getMessage());
@@ -47,7 +57,8 @@ public class BusSeatService implements IBusSeatService {
         try {
             if(busSeatRepository.findById(id).isPresent()){
                 Optional<BusSeat> busSeat = busSeatRepository.findById(id);
-                BusSeatResponse response = new BusSeatResponse(Constants.MESSAGE_BUS_SEAT_FIND_SUCCESS, true, busSeat);
+                BusSeatDTO busSeatDTO = BusSeatMapper.busSeatToDTO(busSeat.get());
+                BusSeatResponse response = new BusSeatResponse(Constants.MESSAGE_BUS_SEAT_FIND_SUCCESS, true, busSeatDTO);
                 return response;
             }
             BusSeatResponse response = new BusSeatResponse(Constants.MESSAGE_BUS_SEAT_FIND_FAILED, false);
@@ -61,8 +72,12 @@ public class BusSeatService implements IBusSeatService {
     public BusSeatResponse getAllByIsAvailable(boolean isAvailable) {
         try {
             if(!(busSeatRepository.findAllByIsAvailable(isAvailable).isEmpty())){
-                List<BusSeat> busSeatList = busSeatRepository.findAllByIsAvailable(isAvailable);
-                BusSeatResponse response = new BusSeatResponse(Constants.MESSAGE_BUS_SEAT_FIND_SUCCESS, true, busSeatList);
+                List<BusSeatDTO> busSeatListDTO = busSeatRepository.findAllByIsAvailable(isAvailable)
+                        .stream()
+                        .map(BusSeatMapper::busSeatToDTO)
+                        .toList();
+
+                BusSeatResponse response = new BusSeatResponse(Constants.MESSAGE_BUS_SEAT_FIND_SUCCESS, true, busSeatListDTO);
                 return response;
             }
             BusSeatResponse response = new BusSeatResponse(Constants.MESSAGE_BUS_SEAT_FIND_FAILED, false);
@@ -76,8 +91,12 @@ public class BusSeatService implements IBusSeatService {
     public BusSeatResponse getAllByIdBusTypes(UUID busType) {
         try {
             if(!(busSeatRepository.findAllByIdBusTypes(busType).isEmpty())){
-                List<BusSeat> busSeatList = busSeatRepository.findAllByIdBusTypes(busType);
-                BusSeatResponse response = new BusSeatResponse(Constants.MESSAGE_BUS_SEAT_FIND_SUCCESS, true, busSeatList);
+                List<BusSeatDTO> busSeatListDTO = busSeatRepository.findAllByIdBusTypes(busType)
+                        .stream()
+                        .map(BusSeatMapper::busSeatToDTO)
+                        .toList();
+
+                BusSeatResponse response = new BusSeatResponse(Constants.MESSAGE_BUS_SEAT_FIND_SUCCESS, true, busSeatListDTO);
                 return response;
             }
             BusSeatResponse response = new BusSeatResponse(Constants.MESSAGE_BUS_SEAT_FIND_FAILED, false);
@@ -88,19 +107,19 @@ public class BusSeatService implements IBusSeatService {
     }
 
     @Override
-    public BusSeatResponse updateBusSeat(BusSeat busSeat) {
+    public BusSeatResponse updateBusSeat(BusSeatDTO busSeatDTO) {
         try {
-            if(!busSeatRepository.findById(busSeat.getId()).isPresent()){
+            if(!busSeatRepository.findById(busSeatDTO.getId()).isPresent()){
                 BusSeatResponse response = new BusSeatResponse(Constants.MESSAGE_BUS_SEAT_FIND_FAILED, false);
                 return response;
             }
-            BusSeat updatedBusSeat = busSeatRepository.findById(busSeat.getId()).get();
-            updatedBusSeat.setNameSeat(busSeat.getNameSeat());
-            updatedBusSeat.setFloorNumber(busSeat.getFloorNumber());
-            updatedBusSeat.setAvailable(busSeat.isAvailable());
-            updatedBusSeat.setIdBusTypes(busSeat.getIdBusTypes());
+            BusSeat updatedBusSeat = busSeatRepository.findById(busSeatDTO.getId()).get();
+            updatedBusSeat.setNameSeat(busSeatDTO.getNameSeat());
+            updatedBusSeat.setFloorNumber(busSeatDTO.getFloorNumber());
+            updatedBusSeat.setAvailable(busSeatDTO.isAvailable());
+            updatedBusSeat.setIdBusTypes(new BusTypes(busSeatDTO.getIdBusTypes()));
             busSeatRepository.save(updatedBusSeat);
-            BusSeatResponse response = new BusSeatResponse(Constants.MESSAGE_BUS_SEAT_UPDATE_SUCCESS, true, updatedBusSeat);
+            BusSeatResponse response = new BusSeatResponse(Constants.MESSAGE_BUS_SEAT_UPDATE_SUCCESS, true, busSeatDTO);
             return response;
         }catch (Exception ex){
             throw new BadRequestException(ex.getMessage());
