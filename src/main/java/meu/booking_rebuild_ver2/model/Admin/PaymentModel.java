@@ -7,10 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import meu.booking_rebuild_ver2.model.Passanger.Customer;
 import meu.booking_rebuild_ver2.model.Status;
 import meu.booking_rebuild_ver2.model.User;
 
-import java.sql.Time;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
@@ -19,22 +19,25 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "price")
-public class PriceModel {
+@Table(name = "payment")
+public class PaymentModel {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
    // @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
-
-    private String price;
+    @ManyToOne
+    @JoinColumn(name = "id_customer")
+    private Customer idCustomer;
 
     @ManyToOne
-    @JoinColumn(name = "id_bus_type")
-    private BusTypes idBusType;
+    @JoinColumn(name = "id_payment_type")
+    private PaymentTypesModel idPaymentTypes;
 
     @ManyToOne
-    @JoinColumn(name = "id_routes_time")
-    private RoutesTimeModel idRoutesTime;
+    @JoinColumn(name = "id_price")
+    private PriceModel idPrice;
+
+    private ZonedDateTime timePaid;
     @ManyToOne
     @JoinColumn(name = "status" )
     private Status status;
@@ -46,7 +49,7 @@ public class PriceModel {
     @JsonIgnore
     private ZonedDateTime updatedAt = ZonedDateTime.now();
 
-    public PriceModel(UUID id) {
+    public PaymentModel(UUID id) {
         this.id = id;
     }
 }
