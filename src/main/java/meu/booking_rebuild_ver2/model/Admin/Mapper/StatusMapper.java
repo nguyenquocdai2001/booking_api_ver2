@@ -2,6 +2,8 @@ package meu.booking_rebuild_ver2.model.Admin.Mapper;
 
 import meu.booking_rebuild_ver2.model.Admin.DTO.StatusDTO;
 import meu.booking_rebuild_ver2.model.Status;
+import org.springframework.stereotype.Component;
+
 
 public class StatusMapper {
     public static StatusDTO toStatusDTO(Status status){
@@ -11,5 +13,12 @@ public class StatusMapper {
         statusDTO.setFlag(status.isFlag());
 
         return statusDTO;
+    }
+    public static Status toModel(StatusDTO statusDTO){
+        Status status = new Status();
+        status.setId(statusDTO.getId());
+        status.setFlag(statusDTO.isFlag());
+        status.setStatus(statusDTO.getStatus());
+        return  status;
     }
 }

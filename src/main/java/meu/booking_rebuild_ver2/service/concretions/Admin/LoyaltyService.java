@@ -6,9 +6,7 @@ import meu.booking_rebuild_ver2.exception.BadRequestException;
 import meu.booking_rebuild_ver2.exception.GenericResponseExceptionHandler;
 import meu.booking_rebuild_ver2.exception.NotFoundException;
 import meu.booking_rebuild_ver2.model.Admin.DTO.LoyaltyDTO;
-import meu.booking_rebuild_ver2.model.Admin.DTO.UserDTO;
 import meu.booking_rebuild_ver2.model.Admin.Loyalty;
-import meu.booking_rebuild_ver2.model.Admin.Mapper.UserMapper;
 import meu.booking_rebuild_ver2.model.User;
 import meu.booking_rebuild_ver2.model.UserID;
 import meu.booking_rebuild_ver2.repository.Admin.LoyaltyRepository;
@@ -16,12 +14,10 @@ import meu.booking_rebuild_ver2.request.LoyaltyRequest;
 import meu.booking_rebuild_ver2.response.GenericResponse;
 import meu.booking_rebuild_ver2.service.abstractions.Admin.ILoyaltyService;
 import meu.booking_rebuild_ver2.service.abstractions.IUserService;
-import meu.booking_rebuild_ver2.service.concretions.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -103,6 +99,7 @@ public class LoyaltyService implements ILoyaltyService {
             if(model.isEmpty()){
                 throw new NotFoundException();
             }
+
             loyaltyRepository.deleteById(model.get().getId());
             return new GenericResponse(Constants.MESSAGE_DELETED_SUCCESS);
         } catch (RuntimeException e) {

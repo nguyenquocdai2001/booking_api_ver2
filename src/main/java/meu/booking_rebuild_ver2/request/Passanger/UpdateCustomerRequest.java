@@ -20,8 +20,6 @@ public class UpdateCustomerRequest {
     @NotNull
     @NotBlank
     private int numberOfTrips;
-    @NotNull
-    @NotBlank
     private String status;
     private double totalPaid;
     private LoyaltyDTO loyaltyDto;

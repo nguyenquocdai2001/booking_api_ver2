@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import meu.booking_rebuild_ver2.model.Admin.Loyalty;
 import meu.booking_rebuild_ver2.model.Status;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -37,10 +38,12 @@ public class Customer {
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.REMOVE )
     @JsonBackReference
     @JoinColumn(name = "status")
+    @JsonIgnore
     private Status status;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_loyalty")
     @JsonBackReference
+
     @JsonIgnore
     private Loyalty loyalty;
     @CreationTimestamp
@@ -48,6 +51,14 @@ public class Customer {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "Asia/Ho_Chi_Minh")
     private Instant createdAt;
+    @UpdateTimestamp
+    @Column( name = "updated_at")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "Asia/Ho_Chi_Minh")
+    private Instant updatedAt = null;
+    @Column(name = "last_updated")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private boolean lastUpdated = false;
     public Customer(String name, String phone) {
         this.name = name;
         this.phone = phone;

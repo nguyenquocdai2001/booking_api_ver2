@@ -2,6 +2,7 @@ package meu.booking_rebuild_ver2.service.abstractions.Passanger;
 
 import meu.booking_rebuild_ver2.exception.GenericResponseExceptionHandler;
 import meu.booking_rebuild_ver2.exception.NotFoundException;
+import meu.booking_rebuild_ver2.model.Admin.DTO.CustomerDTO;
 import meu.booking_rebuild_ver2.request.Passanger.CustomerRequest;
 import meu.booking_rebuild_ver2.request.Passanger.UpdateCustomerRequest;
 import meu.booking_rebuild_ver2.response.GenericResponse;
@@ -13,11 +14,12 @@ import java.util.List;
 public interface ICustomerService {
     GenericResponse addCustomer(CustomerRequest request) throws GenericResponseExceptionHandler;
     CustomerResponse getCustomerById(UUID id) throws NotFoundException;
-    List<CustomerResponse> getCustomerByPhone(String phone) throws NotFoundException;
-    List<CustomerResponse> getCustomerByLoyalty(UUID idLoyalty) throws NotFoundException;
+    CustomerResponse getCustomerByPhone(String phone) throws NotFoundException;
+    CustomerResponse getCustomerByLoyalty(UUID idLoyalty) throws NotFoundException;
     GenericResponse updateCustomer(UUID id,UpdateCustomerRequest request) throws NotFoundException, GenericResponseExceptionHandler;
     GenericResponse updateCustomerByLoyalty(UUID id, UpdateCustomerRequest request) throws NotFoundException, GenericResponseExceptionHandler;
-    Page<CustomerResponse> getCustomerByPhoneWithPage(String phone, Integer page);
-    Page<CustomerResponse> getCustomerByLoyaltyWithPage(UUID IdLoyalty, Integer page);
+    Page<CustomerResponse> getCustomerByPhoneWithPage(String phone, Integer page) throws NotFoundException;
+    Page<CustomerResponse> getCustomerByLoyaltyWithPage(UUID IdLoyalty, Integer page) throws NotFoundException;
+    boolean handleUpdateCustomerWhenLoyaltyDelete(List<CustomerDTO> customerDTOS) throws GenericResponseExceptionHandler, NotFoundException;
     GenericResponse deleteCustomerById(UUID id) throws NotFoundException;
 }
