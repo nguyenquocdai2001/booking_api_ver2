@@ -1,22 +1,15 @@
 package meu.booking_rebuild_ver2.controller.Admin;
 
-import meu.booking_rebuild_ver2.config.Constants;
-import meu.booking_rebuild_ver2.exception.BadRequestException;
-import meu.booking_rebuild_ver2.model.Admin.BusTypes;
+
 import meu.booking_rebuild_ver2.model.Admin.DTO.BusTypeDTO;
-import meu.booking_rebuild_ver2.model.Status;
 import meu.booking_rebuild_ver2.repository.Admin.BusTypesRepository;
-import meu.booking_rebuild_ver2.repository.Admin.TimeRepository;
 import meu.booking_rebuild_ver2.response.Admin.BusTypesResponse;
-import meu.booking_rebuild_ver2.response.StatusResponse;
 import meu.booking_rebuild_ver2.service.concretions.Admin.BusTypesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController

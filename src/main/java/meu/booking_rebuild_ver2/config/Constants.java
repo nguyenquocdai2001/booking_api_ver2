@@ -59,7 +59,7 @@ public class Constants {
 
     public static final String MESSAGE_BUS_TYPES_ADD_SUCCESS = "Adding a bus type successfully!";
 
-    public static final String MESSAGE_BUS_TYPES_DUPLICATE_LICENSE_PLATE_SUCCESS = "Duplicate License Plate!";
+    public static final String MESSAGE_BUS_TYPES_DUPLICATE_LICENSE_PLATE = "Duplicate License Plate!";
 
     public static final String MESSAGE_BUS_TYPES_FIND_ALL_SUCCESS = "Find all bus types successfully!";
 
@@ -111,5 +111,13 @@ public class Constants {
     public static final String MESSAGE_PHONE_FORMAT_WRONG = "Phone number format is incorrect";
     public static final String MESSAGE_DELETED_SUCCESSFULLY = "Deleted object successfully!";
 
-
+    //nqd11 bs-11
+    public static final String MESSAGE_DRIVER_DUPLICATE_PHONE = "Phone is exsisted!";
+    public static final String MESSAGE_ADDED_DRIVER_SUCCESS = "The driver has been added successfully";
+    public static final String MESSAGE_UPDATED_DRIVER_SUCCESS = "The driver has been updated successfully";
+    public static final String MESSAGE_DELETED_DRIVER_SUCCESS = "The driver has been deleted successfully";
+    public static final String MESSAGE_GET_ALL_DRIVER_SUCCESS = "Get all drivers successfully";
+    public static final String MESSAGE_GET_DRIVER_FAILED = "Get drivers failed";
+    public static final String MESSAGE_GET_DRIVER_SUCCESS = "Get drivers successfully";
+    public static final String MESSAGE_DRIVER_NULL= "Driver null";
 }

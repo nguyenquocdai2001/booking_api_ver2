@@ -5,12 +5,12 @@ import meu.booking_rebuild_ver2.exception.BadRequestException;
 import meu.booking_rebuild_ver2.model.Admin.BusSeat;
 import meu.booking_rebuild_ver2.model.Admin.BusTypes;
 import meu.booking_rebuild_ver2.model.Admin.DTO.BusSeatDTO;
-import meu.booking_rebuild_ver2.model.Admin.DTO.BusTypeDTO;
 import meu.booking_rebuild_ver2.model.Admin.Mapper.BusSeatMapper;
-import meu.booking_rebuild_ver2.model.Admin.Mapper.BusTypeMapper;
 import meu.booking_rebuild_ver2.repository.Admin.BusSeatRepository;
+import meu.booking_rebuild_ver2.repository.Admin.BusTypesRepository;
 import meu.booking_rebuild_ver2.response.Admin.BusSeatResponse;
 import meu.booking_rebuild_ver2.service.abstractions.Admin.IBusSeatService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,10 +25,17 @@ public class BusSeatService implements IBusSeatService {
         this.busSeatRepository = busSeatRepository;
     }
 
+    @Autowired
+    private BusTypesRepository busTypesRepository;
+
     @Override
     public BusSeatResponse createBusSeat(BusSeatDTO busSeatDTO) {
         try {
             BusSeat busSeat = BusSeatMapper.dtoToBusSeat(busSeatDTO);
+
+            BusTypes busTypes = busTypesRepository.findById(busSeatDTO.getIdBusTypes()).get();
+            busSeat.setIdBusTypes(busTypes);
+
             busSeatRepository.save(busSeat);
             BusSeatResponse response = new BusSeatResponse(Constants.MESSAGE_BUS_SEAT_ADD_SUCCESS, true, busSeatDTO);
             return response;
@@ -117,7 +124,10 @@ public class BusSeatService implements IBusSeatService {
             updatedBusSeat.setNameSeat(busSeatDTO.getNameSeat());
             updatedBusSeat.setFloorNumber(busSeatDTO.getFloorNumber());
             updatedBusSeat.setAvailable(busSeatDTO.isAvailable());
-            updatedBusSeat.setIdBusTypes(new BusTypes(busSeatDTO.getIdBusTypes()));
+
+            BusTypes busTypes = busTypesRepository.findById(busSeatDTO.getIdBusTypes()).get();
+            updatedBusSeat.setIdBusTypes(busTypes);
+
             busSeatRepository.save(updatedBusSeat);
             BusSeatResponse response = new BusSeatResponse(Constants.MESSAGE_BUS_SEAT_UPDATE_SUCCESS, true, busSeatDTO);
             return response;
