@@ -13,7 +13,7 @@ public class DriverMapper {
         driverDTO.setName(driver.getName());
         driverDTO.setPhone(driver.getPhone());
         driverDTO.setKindOfLicense(driver.getKindOfLicense());
-        driverDTO.setIdBusTypes(driver.getIdBusTypes());
+        driverDTO.setIdBusTypes(BusTypeMapper.busTypeDTO(driver.getIdBusTypes()));
         driverDTO.setIdUserConfig(driver.getIdUserConfig().getId());
         driverDTO.setIdStatus(driver.getStatus().getId());
 
@@ -26,7 +26,7 @@ public class DriverMapper {
         driver.setName(driverDTO.getName());
         driver.setPhone(driverDTO.getPhone());
         driver.setKindOfLicense(driverDTO.getKindOfLicense());
-        driver.setIdBusTypes(driverDTO.getIdBusTypes());
+        driver.setIdBusTypes(BusTypeMapper.dtoToBusTypes(driverDTO.getIdBusTypes()));
         driver.setIdUserConfig(new User(driverDTO.getIdUserConfig()));
         driver.setStatus(new Status(driverDTO.getIdStatus()));
 

@@ -16,7 +16,7 @@ public class DriverDTO {
     private String name;
     private String phone;
     private String kindOfLicense;
-    private BusTypes idBusTypes;
+    private BusTypeDTO idBusTypes;
     private UUID idUserConfig;
     private UUID idStatus;
 }

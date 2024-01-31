@@ -20,5 +20,5 @@ public class BusSeatDTO {
 
     private int floorNumber;
 
-    private BusTypes idBusTypes;
+    private BusTypeDTO idBusTypes;
 }
