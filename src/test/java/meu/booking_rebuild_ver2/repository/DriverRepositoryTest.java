@@ -259,7 +259,7 @@ public class DriverRepositoryTest {
                 .idBusTypes(busTypesSaved)
                 .build();
         Driver driverSaved = driverRepository.save(driver);
-        driverRepository.deleteById(driver.getId());
+        driverRepository.deleteById(driverSaved.getId());
 
         Optional<Driver> driverReturn = driverRepository.findById(driverSaved.getId());
 
