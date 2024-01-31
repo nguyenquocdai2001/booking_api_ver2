@@ -5,7 +5,7 @@ public class Constants {
 
     private Constants() {
     }
-
+    public static final String MESSAGE_GET_SUCCESSFULL = "The get request has been satisfied";
     public static final String MESSAGE_INVALID_TOKEN = "Invalid JWT token: {}";
     public static final String MESSAGE_TOKEN_EXPIRED = "JWT token is expired: {}";
     public static final String MESSAGE_TOKEN_UNSUPPORTED = "JWT token is unsupported: {}";
@@ -120,4 +120,6 @@ public class Constants {
     public static final String MESSAGE_GET_DRIVER_FAILED = "Get drivers failed";
     public static final String MESSAGE_GET_DRIVER_SUCCESS = "Get drivers successfully";
     public static final String MESSAGE_DRIVER_NULL= "Driver null";
+
+gi
 }

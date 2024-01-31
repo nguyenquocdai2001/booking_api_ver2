@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import meu.booking_rebuild_ver2.model.Admin.DTO.LoyaltyDTO;
 import meu.booking_rebuild_ver2.model.Admin.Loyalty;
+import meu.booking_rebuild_ver2.model.Status;
 import meu.booking_rebuild_ver2.model.User;
 import meu.booking_rebuild_ver2.repository.Admin.LoyaltyRepository;
 import meu.booking_rebuild_ver2.service.abstractions.Admin.ILoyaltyService;
@@ -29,6 +30,8 @@ public class LoyaltyRepositoryTest {
     private LoyaltyRepository loyaltyRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private StatusRepository statusRepository;
     @PersistenceContext
     private EntityManager entityManager;
     @Test
@@ -85,15 +88,45 @@ public class LoyaltyRepositoryTest {
     }
     @Test
     public void LoyalRepository_DeleteById(){
-         UUID id = UUID.fromString("9c1f7deb-d63f-493b-804c-eee9fc9ce998");
-        Optional<Loyalty> model = loyaltyRepository.findById(id);
+        Loyalty loyalty3 = Loyalty.builder()
+                .rank("diamond")
+                .discount(50)
+                .loyaltySpent(6.500)
+                .build();
+        Loyalty loyalty3Saved = loyaltyRepository.save(loyalty3);
+        Optional<Loyalty> model = loyaltyRepository.findById(loyalty3Saved.getId());
         assertThat(model.isPresent());
-        loyaltyRepository.deleteById(id);
+        loyaltyRepository.deleteById(loyalty3Saved.getId());
+         model = loyaltyRepository.findById(loyalty3Saved.getId());
         assertThat(model.isEmpty());
     }
     @Test
+    public void LoyalRepository_Update_ReturnLoyalty(){
+        Status status = Status.builder().status("test").flag(true).build();
+        Status modelStatus = statusRepository.save(status);
+        User user = User.builder().username("abc@gmail.com").password("string").confirmPass("string").fullname("abc").status(modelStatus).build();
+        user = userRepository.save(user);
+        Loyalty loyalty3 = Loyalty.builder()
+                .rank("diamond")
+                .discount(50)
+                .loyaltySpent(6.500)
+                .UserConfig(user)
+                .build();
+        Loyalty loyalty3Saved = loyaltyRepository.save(loyalty3);
+        Optional<Loyalty> model = loyaltyRepository.findById(loyalty3Saved.getId());
+        assertThat(model.isPresent());
+        model.get().setRank("gold");
+        model.get().setDiscount(30);
+        model.get().setLoyaltySpent(10.2);
+       Loyalty loyalty =  loyaltyRepository.save(model.get());
+        assertThat(loyalty != null);
+        model = loyaltyRepository.findById(loyalty.getId());
+        assertThat(model.get().getRank() == "diamond");
+        assertThat(model.get().getDiscount() == 30);
+        assertThat(model.get().getLoyaltySpent() == 10.2);
+    }
+    @Test
     public void LoyalRepository_GetAll_ReturnListOrderedAscByDiscount(){
-        Optional<User> modelUser = userRepository.findById(UUID.fromString("d595119c-4277-46ab-89be-febcdc930e85"));
         Loyalty loyalty1 = new Loyalty(UUID.randomUUID(),"gold", 20, 3.500);
         Loyalty loyalty2 = new Loyalty(UUID.randomUUID(),"bronze", 5, 4.500);
         Loyalty loyalty3 = new Loyalty(UUID.randomUUID(),"platinum", 30, 5.500);
@@ -114,9 +147,41 @@ public class LoyaltyRepositoryTest {
             assertThat(current.getDiscount()).isLessThanOrEqualTo(next.getDiscount());
         }
     }
-//    @Test
-//    public void LoyalRepostiory_Update(){
-//        UUID id = UUID.fromString("9c1f7deb-d63f-493b-804c-eee9fc9ce998");
-//        Optional<Loyalty> model = loyaltyRepository.findById(id);
-//    }
+    @Test
+    public void LoyalRepository_GetByRank_ReturnLoyalty(){
+        Status status = Status.builder().status("test").flag(true).build();
+        Status modelStatus = statusRepository.save(status);
+        User user = User.builder().username("abc@gmail.com").password("string").confirmPass("string").fullname("abc").status(modelStatus).build();
+        user = userRepository.save(user);
+        Loyalty loyalty3 = Loyalty.builder()
+                .rank("diamond")
+                .discount(50)
+                .loyaltySpent(6.500)
+                .UserConfig(user)
+                .build();
+        Loyalty loyalty3Saved = loyaltyRepository.save(loyalty3);
+        assertThat(loyalty3Saved != null);
+        Optional<Loyalty> model = loyaltyRepository.findByRank(loyalty3Saved.getRank());
+        assertThat(model.isPresent());
+        assertThat(model.get().getRank() == "diamond");
+    }
+    @Test
+    public void LoyalRepository_GetByPrice_ReturnLoyalty(){
+        Status status = Status.builder().status("test").flag(true).build();
+        Status modelStatus = statusRepository.save(status);
+        User user = User.builder().username("abc@gmail.com").password("string").confirmPass("string").fullname("abc").status(modelStatus).build();
+        user = userRepository.save(user);
+        Loyalty loyalty3 = Loyalty.builder()
+                .rank("diamond")
+                .discount(50)
+                .loyaltySpent(6.500)
+                .UserConfig(user)
+                .build();
+        Loyalty loyalty3Saved = loyaltyRepository.save(loyalty3);
+        assertThat(loyalty3Saved != null);
+        Optional<Loyalty> model = loyaltyRepository.getLoyaltyByPrice(7);
+        assertThat(model.get().getRank() == "diamond");
+        assertThat(model.get().getDiscount() == 50);
+        assertThat(model.get().getLoyaltySpent() == 6.5);
+    }
 }

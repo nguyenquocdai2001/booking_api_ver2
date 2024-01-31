@@ -7,10 +7,12 @@ import meu.booking_rebuild_ver2.exception.GenericResponseExceptionHandler;
 import meu.booking_rebuild_ver2.exception.NotFoundException;
 import meu.booking_rebuild_ver2.model.Admin.DTO.LoyaltyDTO;
 import meu.booking_rebuild_ver2.model.Admin.Loyalty;
+import meu.booking_rebuild_ver2.model.Admin.Mapper.LoyaltyMapper;
 import meu.booking_rebuild_ver2.model.User;
 import meu.booking_rebuild_ver2.model.UserID;
 import meu.booking_rebuild_ver2.repository.Admin.LoyaltyRepository;
 import meu.booking_rebuild_ver2.request.LoyaltyRequest;
+import meu.booking_rebuild_ver2.response.Admin.LoyaltyResponse;
 import meu.booking_rebuild_ver2.response.GenericResponse;
 import meu.booking_rebuild_ver2.service.abstractions.Admin.ILoyaltyService;
 import meu.booking_rebuild_ver2.service.abstractions.IUserService;
@@ -32,17 +34,22 @@ public class LoyaltyService implements ILoyaltyService {
     @Autowired
     private IUserService userService;
     @Autowired
+    private LoyaltyMapper loyaltyMapper;
+    @Autowired
     public LoyaltyService(LoyaltyRepository loyaltyRepository) {
         this.modelMapper = new ModelMapper();
         this.loyaltyRepository = loyaltyRepository;
     }
 
     @Override
-    public Optional<Loyalty> getLoyaltyByRank(String rank) throws NotFoundException {
+    public LoyaltyResponse getLoyaltyByRank(String rank) throws NotFoundException {
         Optional<Loyalty> response = loyaltyRepository.findByRank(rank.toLowerCase());
         if (response.isEmpty()) {
             throw new NotFoundException(Constants.MESSAGE_GET_LOYALTY_FAILED  + " rank : " + rank);
-        } else return response;
+        } else {
+            LoyaltyResponse loyaltyResponse = new LoyaltyResponse(loyaltyMapper.toDTO(response.get()));
+            return loyaltyResponse;
+        }
     }
     @Override
     public GenericResponse addNewLoyalty(Loyalty request) throws GenericResponseExceptionHandler {
@@ -71,9 +78,10 @@ public class LoyaltyService implements ILoyaltyService {
     }
 
     @Override
-    public Iterable<LoyaltyDTO> getAllLoyalty() {
+    public LoyaltyResponse getAllLoyalty() {
         Sort sortByDiscount = Sort.by(Sort.Direction.ASC, "discount");
-        return loyaltyRepository.findAll(sortByDiscount);
+        LoyaltyResponse response = new LoyaltyResponse(loyaltyRepository.findAll(sortByDiscount));
+        return response;
     }
     @Override
     public GenericResponse updateLoyalty(UUID id, LoyaltyRequest request, HttpSession httpSession) throws NotFoundException, GenericResponseExceptionHandler {
@@ -107,7 +115,7 @@ public class LoyaltyService implements ILoyaltyService {
         }
     }
     @Override
-        public LoyaltyDTO getLoyaltyByPrice(double price) throws GenericResponseExceptionHandler {
+        public LoyaltyResponse getLoyaltyByPrice(double price) throws GenericResponseExceptionHandler {
         try {
             Optional<Loyalty> model = loyaltyRepository.getLoyaltyByPrice(price);
             if (model.isEmpty()) {
@@ -115,16 +123,18 @@ public class LoyaltyService implements ILoyaltyService {
                 Loyalty setLoyalty = new Loyalty(UUID.randomUUID(), "economy", 0, 0, user);
                 loyaltyRepository.save(setLoyalty);
                 LoyaltyDTO response = new LoyaltyDTO(setLoyalty);
-                return response;
+                LoyaltyResponse loyaltyResponse = new LoyaltyResponse(response);
+                return loyaltyResponse;
             }
             LoyaltyDTO response = new LoyaltyDTO(model.get());
-            return response;
+            LoyaltyResponse loyaltyResponse = new LoyaltyResponse(response);
+            return loyaltyResponse;
         } catch (RuntimeException e) {
             throw new BadRequestException(e.getMessage());
         }
     }
     @Override
-    public Loyalty getLoyaltyByPrice() throws GenericResponseExceptionHandler {
+    public LoyaltyDTO getLoyaltyByPrice() throws GenericResponseExceptionHandler {
         try {
             int price = 0;
             Optional<Loyalty> model = loyaltyRepository.getLoyaltyByPrice(price);
@@ -132,21 +142,22 @@ public class LoyaltyService implements ILoyaltyService {
                 User user = userService.getUserById(userID.getUserValue().getId());
                 Loyalty setLoyalty = new Loyalty(UUID.randomUUID(), "economy", 0, 0,user);
                 loyaltyRepository.save(setLoyalty);
-                return setLoyalty;
+                return loyaltyMapper.toDTO(setLoyalty);
             }
             Loyalty response = model.get();
-            return response;
+            return loyaltyMapper.toDTO(response);
         } catch (RuntimeException e) {
             throw new BadRequestException(e.getMessage());
         }
     }
     @Override
-    public LoyaltyDTO getLoyaltyById(UUID id) throws NotFoundException {
+    public LoyaltyResponse getLoyaltyById(UUID id) throws NotFoundException {
         try{
             Optional<Loyalty> response = loyaltyRepository.findById(id);
             if(response.isPresent()){
                 LoyaltyDTO loyaltyDTO = new LoyaltyDTO(response.get());
-                return loyaltyDTO;
+                LoyaltyResponse loyaltyResponse = new LoyaltyResponse(loyaltyDTO);
+                return loyaltyResponse;
             }
             else{
                 throw new NotFoundException(Constants.MESSAGE_GET_LOYALTY_FAILED + "id = " + id);

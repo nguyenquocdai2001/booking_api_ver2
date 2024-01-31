@@ -20,6 +20,6 @@ public interface ICustomerService {
     GenericResponse updateCustomerByLoyalty(UUID id, UpdateCustomerRequest request) throws NotFoundException, GenericResponseExceptionHandler;
     Page<CustomerResponse> getCustomerByPhoneWithPage(String phone, Integer page) throws NotFoundException;
     Page<CustomerResponse> getCustomerByLoyaltyWithPage(UUID IdLoyalty, Integer page) throws NotFoundException;
-    boolean handleUpdateCustomerWhenLoyaltyDelete(List<CustomerDTO> customerDTOS) throws GenericResponseExceptionHandler, NotFoundException;
+    void handleUpdateCustomerWhenLoyaltyDelete(List<CustomerDTO> customerDTOS) throws GenericResponseExceptionHandler, NotFoundException;
     GenericResponse deleteCustomerById(UUID id) throws NotFoundException;
 }

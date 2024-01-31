@@ -7,6 +7,7 @@ import meu.booking_rebuild_ver2.exception.NotFoundException;
 import meu.booking_rebuild_ver2.model.Admin.DTO.LoyaltyDTO;
 import meu.booking_rebuild_ver2.model.Admin.Loyalty;
 import meu.booking_rebuild_ver2.request.LoyaltyRequest;
+import meu.booking_rebuild_ver2.response.Admin.LoyaltyResponse;
 import meu.booking_rebuild_ver2.response.GenericResponse;
 import meu.booking_rebuild_ver2.service.abstractions.Admin.ILoyaltyService;
 import meu.booking_rebuild_ver2.service.abstractions.IUserService;
@@ -43,28 +44,28 @@ public class LoyaltyController {
      * The function to get all rank and it's discount in table loyalty.
      */
     @GetMapping(path = "getAllLoyalty")
-    public Iterable<LoyaltyDTO> getAllLoyalty(){
+    public LoyaltyResponse getAllLoyalty(){
         return  loyaltyService.getAllLoyalty();
     }
     @GetMapping(path = "getLoyaltyByRank")
     /*
      * The function to get the detail of rank. With the rank is input from user
      */
-    public Optional<Loyalty> getLoyalty(@RequestBody LoyaltyRequest request) throws NotFoundException, GenericResponseExceptionHandler {
+    public LoyaltyResponse getLoyalty(@RequestBody LoyaltyRequest request) throws NotFoundException, GenericResponseExceptionHandler {
         return  loyaltyService.getLoyaltyByRank(request.getRank());
     }
     /*
      * The function used to get the rank with price will be the norm according to loyalty_spent
      */
     @GetMapping(path = "getLoyaltyByPrice")
-    public LoyaltyDTO getLoyaltyByPrice(@RequestParam double price) throws GenericResponseExceptionHandler{
+    public LoyaltyResponse getLoyaltyByPrice(@RequestParam double price) throws GenericResponseExceptionHandler{
         return loyaltyService.getLoyaltyByPrice(price);
     }
     /*
      * The function used to get the rank with price will be the norm according to id loyalty
      */
     @GetMapping(path = "getLoyaltyById")
-    public LoyaltyDTO getLoyaltyById(@RequestParam UUID id) throws GenericResponseExceptionHandler, NotFoundException {
+    public LoyaltyResponse getLoyaltyById(@RequestParam UUID id) throws GenericResponseExceptionHandler, NotFoundException {
         return loyaltyService.getLoyaltyById(id);
     }
     /*

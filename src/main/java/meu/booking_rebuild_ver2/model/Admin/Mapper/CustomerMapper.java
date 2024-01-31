@@ -42,7 +42,7 @@ public class CustomerMapper {
         customer.setName(customerDTO.getName());
         customer.setPhone(customerDTO.getPhone());
         StatusResponse statusModel = statusService.getStatusById(customerDTO.getIdStatus());
-        LoyaltyDTO loyaltyModel = loyaltyService.getLoyaltyById(customerDTO.getIdLoyalty());
+        LoyaltyDTO loyaltyModel = loyaltyService.getLoyaltyById(customerDTO.getIdLoyalty()).getLoyaltyDTO();
         customer.setLoyalty(loyaltyMapper.toModel(loyaltyModel));
         customer.setStatus(StatusMapper.toModel(statusModel.getStatus()));
         customer.setLastUpdated(customerDTO.isLastUpdated());
