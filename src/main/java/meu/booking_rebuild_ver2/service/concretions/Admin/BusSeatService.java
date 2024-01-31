@@ -33,7 +33,7 @@ public class BusSeatService implements IBusSeatService {
         try {
             BusSeat busSeat = BusSeatMapper.dtoToBusSeat(busSeatDTO);
 
-            BusTypes busTypes = busTypesRepository.findById(busSeatDTO.getIdBusTypes()).get();
+            BusTypes busTypes = busTypesRepository.findById(busSeatDTO.getIdBusTypes().getId()).get();
             busSeat.setIdBusTypes(busTypes);
 
             busSeatRepository.save(busSeat);
@@ -125,7 +125,7 @@ public class BusSeatService implements IBusSeatService {
             updatedBusSeat.setFloorNumber(busSeatDTO.getFloorNumber());
             updatedBusSeat.setAvailable(busSeatDTO.isAvailable());
 
-            BusTypes busTypes = busTypesRepository.findById(busSeatDTO.getIdBusTypes()).get();
+            BusTypes busTypes = busTypesRepository.findById(busSeatDTO.getIdBusTypes().getId()).get();
             updatedBusSeat.setIdBusTypes(busTypes);
 
             busSeatRepository.save(updatedBusSeat);
