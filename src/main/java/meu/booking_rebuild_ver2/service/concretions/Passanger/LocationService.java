@@ -1,5 +1,4 @@
 package meu.booking_rebuild_ver2.service.concretions.Passanger;
-
 import meu.booking_rebuild_ver2.config.Constants;
 import meu.booking_rebuild_ver2.exception.BadRequestException;
 import meu.booking_rebuild_ver2.model.Passanger.Location;

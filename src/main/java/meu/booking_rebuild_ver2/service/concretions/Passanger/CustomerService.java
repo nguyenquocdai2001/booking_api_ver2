@@ -64,7 +64,7 @@ public class CustomerService implements ICustomerService {
             Customer model = customerRepository.findCustomerByPhone(request.getPhone());
             if(model == null){
                 Customer requestCustomer = new Customer(request.getName(), request.getPhone());
-                Loyalty loyalty = loyaltyService.getLoyaltyByPrice();
+                Loyalty loyalty = loyaltyMapper.toModel(loyaltyService.getLoyaltyByPrice());
                 requestCustomer.setLoyalty(loyalty);
                 Status status = statusRepository.findStatusById(request.getStatusId());
                 requestCustomer.setStatus(status);
@@ -147,9 +147,8 @@ public class CustomerService implements ICustomerService {
             model.setName(request.getName());
             model.setPhone(request.getPhone());
             System.out.println(request);
-            LoyaltyDTO loyaltyDTO = loyaltyService.getLoyaltyByPrice(request.getTotalPaid());
-            Loyalty loyalty = loyaltyMapper.toModel(loyaltyDTO);
-            model.setLoyalty(loyalty);
+            Optional<Loyalty> loyalty = loyaltyRepository.getLoyaltyByPrice(request.getTotalPaid());
+            model.setLoyalty(loyalty.get());
             if(request.getStatus() != null){
                 Status status = statusRepository.findStatusById(UUID.fromString(request.getStatus()));
                 if(status != null) model.setStatus(status);
@@ -165,6 +164,7 @@ public class CustomerService implements ICustomerService {
 
     @Override
     public GenericResponse updateCustomerByLoyalty(UUID id, UpdateCustomerRequest request) throws NotFoundException, GenericResponseExceptionHandler {
+        boolean isSatisfied = false;
         if(phoneValid(request.getPhone())){
             throw new GenericResponseExceptionHandler(Constants.MESSAGE_PHONE_FORMAT_WRONG);
         }
@@ -187,14 +187,18 @@ public class CustomerService implements ICustomerService {
             String rank = request.getLoyaltyDto().getRank();
             UUID id_loyalty = request.getLoyaltyDto().getId();
             model.setLastUpdated(true);
-            if(rank != null){
-                Optional<Loyalty> loyalty = loyaltyService.getLoyaltyByRank(rank);
-                loyalty.ifPresent(model::setLoyalty);
+            if(id_loyalty != null){
+                Optional<Loyalty> loyalty = loyaltyRepository.findById(id_loyalty);
+
+                model.setLoyalty(loyalty.get());
+                isSatisfied = true;
             }
-            else if(id_loyalty != null){
-                LoyaltyDTO loyaltyDTO = loyaltyService.getLoyaltyById(id_loyalty);
-                Loyalty loyalty = loyaltyMapper.toModel(loyaltyDTO);
-                model.setLoyalty(loyalty);
+
+            else if((rank != null) && (!isSatisfied)){
+                Optional<Loyalty> loyalty = loyaltyRepository.findByRank(rank);
+                if(loyalty != null){
+                    model.setLoyalty(loyalty.get());
+                }
             }
             else{
                 throw new GenericResponseExceptionHandler("The request is not valid");
@@ -234,14 +238,13 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
-    public boolean handleUpdateCustomerWhenLoyaltyDelete(List<CustomerDTO> customerDTOS) throws GenericResponseExceptionHandler, NotFoundException {
+    public void handleUpdateCustomerWhenLoyaltyDelete(List<CustomerDTO> customerDTOS) throws GenericResponseExceptionHandler, NotFoundException {
         for(CustomerDTO customer : customerDTOS){
             customer.setIdLoyalty(loyaltyService.getLoyaltyByPrice().getId());
             Customer modelCustomer = customerMapper.toModel(customer);
             System.out.println(modelCustomer);
             customerRepository.save(modelCustomer);
         }
-        return true;
     }
 
     @Override
