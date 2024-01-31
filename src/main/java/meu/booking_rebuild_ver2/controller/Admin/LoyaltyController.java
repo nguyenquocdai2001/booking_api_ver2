@@ -1,6 +1,7 @@
 package meu.booking_rebuild_ver2.controller.Admin;
 
 import jakarta.servlet.http.HttpSession;
+import meu.booking_rebuild_ver2.config.Constants;
 import meu.booking_rebuild_ver2.exception.GenericResponseExceptionHandler;
 import meu.booking_rebuild_ver2.exception.NotFoundException;
 import meu.booking_rebuild_ver2.model.Admin.DTO.LoyaltyDTO;
@@ -9,6 +10,7 @@ import meu.booking_rebuild_ver2.request.LoyaltyRequest;
 import meu.booking_rebuild_ver2.response.GenericResponse;
 import meu.booking_rebuild_ver2.service.abstractions.Admin.ILoyaltyService;
 import meu.booking_rebuild_ver2.service.abstractions.IUserService;
+import meu.booking_rebuild_ver2.service.abstractions.Passanger.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +29,8 @@ import java.util.UUID;
 public class LoyaltyController {
     @Autowired
     private ILoyaltyService loyaltyService;
+    @Autowired
+    private ICustomerService customerService;
     /*
     * The function to add new loyalty with request with no duplicate rank and discount.
     * The model will ensure that the rank and discount are unique
@@ -74,7 +78,9 @@ public class LoyaltyController {
      * The function to delete the loyalty form id
      */
     @DeleteMapping(path = "deleteLoyalty")
-    public GenericResponse deleteLoyalty(@RequestParam UUID id) throws NotFoundException {
+    public GenericResponse deleteLoyalty(@RequestParam UUID id) throws NotFoundException, GenericResponseExceptionHandler {
+        System.out.println(customerService.getCustomerByLoyalty(id).getListCustomer());
+         customerService.handleUpdateCustomerWhenLoyaltyDelete(customerService.getCustomerByLoyalty(id).getListCustomer());
         return loyaltyService.deleteLoyalty(id);
     }
 }

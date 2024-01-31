@@ -1,11 +1,15 @@
 package meu.booking_rebuild_ver2.controller;
 
 import jakarta.servlet.http.HttpSession;
+import lombok.Getter;
 import meu.booking_rebuild_ver2.exception.BadRequestException;
+import meu.booking_rebuild_ver2.exception.NotFoundException;
+import meu.booking_rebuild_ver2.model.Admin.DTO.UserDTO;
 import meu.booking_rebuild_ver2.model.User;
 import meu.booking_rebuild_ver2.model.UserID;
 import meu.booking_rebuild_ver2.repository.UserRepository;
 import meu.booking_rebuild_ver2.request.LoginRequest;
+import meu.booking_rebuild_ver2.request.RegisterRequest;
 import meu.booking_rebuild_ver2.response.GenericResponse;
 import meu.booking_rebuild_ver2.response.LoginResponse;
 import meu.booking_rebuild_ver2.service.abstractions.IUserService;
@@ -19,10 +23,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 import javax.validation.Valid;
@@ -55,7 +56,7 @@ public class AuthController {
     }
 
     @PostMapping(path = "/register")
-    public ResponseEntity<GenericResponse> addNewUser(@RequestBody @Valid User user) {
+    public ResponseEntity<GenericResponse> addNewUser(@RequestBody @Valid RegisterRequest user) {
         try {
             return userService.registerHandle(user);
         } catch (Exception ex) {
@@ -81,6 +82,10 @@ public class AuthController {
         catch (Exception ex) {
             throw new BadRequestException(ex.getMessage());
         }
+    }
+    @GetMapping("profile/me")
+    public UserDTO getProfileMe(@RequestParam UUID id) throws NotFoundException {
+        return userService.getProfileMe(id);
     }
 //    @PostMapping(path = "/login")
 //    public LoginResponse login(@RequestBody @Valid LoginRequest loginRequest, HttpSession httpSession) {

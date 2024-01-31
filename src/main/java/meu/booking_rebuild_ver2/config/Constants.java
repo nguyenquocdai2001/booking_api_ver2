@@ -17,23 +17,14 @@ public class Constants {
     public static final String MESSAGE_INVALID_PASSWORD = "Invalid password.";
     public static final String MESSAGE_INVALID_MATCH_PASSWORD = "Passwords don't match.";
 
-    public static final String MESSAGE_ALL_SAVE = "All saved!";
 
-    public static final String MESSAGE_THANK_YOU_REVIEW = "Thanks for your review!";
-    public static final String MESSAGE_CANNOT_ADD_REVIEW = "Could not add review : ";
-    public static final String MESSAGE_CANNOT_EDIT_REVIEW = "Could not edit review : ";
-
-    public static final String MESSAGE_CAN_NOT_SAVE_OBJECTIVE = "Could not save new objectives";
-
+    //nqd11
     public static final String MESSAGE_STATUS_ADD_SUCCESS = "Adding a status successfully!";
-
     public static final String MESSAGE_STATUS_FIND_ALL_SUCCESS = "Find all status successfully!";
-
     public static final String MESSAGE_STATUS_FIND_STATUS_SUCCESS = "Find status successfully!";
-
     public static final String MESSAGE_STATUS_FIND_STATUS_FAILED = "Status Null";
-
     public static final String MESSAGE_STATUS_UPDATE_STATUS_SUCCESS = "Updating a status successfully!";
+    public static final String MESSAGE_STATUS_DELETE_STATUS_SUCCESS = "Deleting a status successfully!";
 
 
     //dqdat
@@ -55,36 +46,25 @@ public class Constants {
 
 
 
-    public static final String MESSAGE_STATUS_DELETE_STATUS_SUCCESS = "Deleting a status successfully!";
 
+    //nqd11
     public static final String MESSAGE_BUS_TYPES_ADD_SUCCESS = "Adding a bus type successfully!";
-
-    public static final String MESSAGE_BUS_TYPES_DUPLICATE_LICENSE_PLATE_SUCCESS = "Duplicate License Plate!";
-
+    public static final String MESSAGE_BUS_TYPES_DUPLICATE_LICENSE_PLATE = "Duplicate License Plate!";
     public static final String MESSAGE_BUS_TYPES_FIND_ALL_SUCCESS = "Find all bus types successfully!";
-
     public static final String MESSAGE_BUS_TYPES_FIND_ALL_FAILED = "Find all bus types failed!";
-
     public static final String MESSAGE_BUS_TYPE_FIND_SUCCESS = "Find bus type successfully!";
-
     public static final String MESSAGE_BUS_TYPE_FIND_FAILED = "Find bus type failed!";
-
     public static final String MESSAGE_FIND_BUS_TYPE_FAILED = "Bus type Null";
-
     public static final String MESSAGE_BUS_TYPES_UPDATE_SUCCESS = "Updating a bus type successfully!";
-
     public static final String MESSAGE_DELETE_BUS_TYPE_SUCCESS = "Deleting a bus type successfully!";
 
+
+    //nqd11
     public static final String MESSAGE_BUS_SEAT_ADD_SUCCESS = "Adding a bus seat successfully!";
-
     public static final String MESSAGE_BUS_SEATS_FIND_ALL_SUCCESS = "Find all bus seats successfully!";
-
     public static final String MESSAGE_BUS_SEAT_FIND_SUCCESS = "Find bus seat successfully!";
-
     public static final String MESSAGE_BUS_SEAT_FIND_FAILED = "Find bus seat failed!";
-
     public static final String MESSAGE_BUS_SEAT_UPDATE_SUCCESS = "Updating a bus seat successfully!";
-
     public static final String MESSAGE_DELETE_BUS_SEAT_SUCCESS = "Deleting a bus seat successfully!";
 
 
@@ -124,5 +104,23 @@ public class Constants {
     public static final String MESSAGE_EMPTY_LIST= "List is empty!";
     public static final String MESSAGE_INVALID_DATA = "Invalid data!";
     public static final String MESSAGE_ID_NOT_FOUND = "ID not found!";
+
+    //nqd11 bs-11
+    public static final String MESSAGE_DRIVER_DUPLICATE_PHONE = "Phone is exsisted!";
+    public static final String MESSAGE_ADDED_DRIVER_SUCCESS = "The driver has been added successfully";
+    public static final String MESSAGE_UPDATED_DRIVER_SUCCESS = "The driver has been updated successfully";
+    public static final String MESSAGE_DELETED_DRIVER_SUCCESS = "The driver has been deleted successfully";
+    public static final String MESSAGE_GET_ALL_DRIVER_SUCCESS = "Get all drivers successfully";
+    public static final String MESSAGE_GET_DRIVER_FAILED = "Get drivers failed";
+    public static final String MESSAGE_GET_DRIVER_SUCCESS = "Get drivers successfully";
+    public static final String MESSAGE_DRIVER_NULL= "Driver null";
+
+    //nqd11 bs-4
+    public static final String MESSAGE_LOCATION_ADD_SUCCESS = "Adding a location successfully!";
+    public static final String MESSAGE_LOCATION_UPDATE_SUCCESS = "Updating a location successfully!";
+    public static final String MESSAGE_LOCATION_DELETE_SUCCESS = "Deleting a location successfully!";
+    public static final String MESSAGE_LOCATION_GET_ALL_SUCCESS = "Get all locations successfully!";
+    public static final String MESSAGE_LOCATION_GET_LOCATION_SUCCESS = "Get locations successfully!";
+    public static final String MESSAGE_LOCATION_GET_NULL = "Not found!";
 
 }

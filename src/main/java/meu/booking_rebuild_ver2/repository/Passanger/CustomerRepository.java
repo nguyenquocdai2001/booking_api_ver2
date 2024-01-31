@@ -1,5 +1,6 @@
 package meu.booking_rebuild_ver2.repository.Passanger;
 
+import meu.booking_rebuild_ver2.model.Admin.DTO.CustomerDTO;
 import meu.booking_rebuild_ver2.model.Passanger.Customer;
 import meu.booking_rebuild_ver2.response.Passanger.CustomerResponse;
 import org.springframework.data.domain.Page;
@@ -13,16 +14,20 @@ import java.util.UUID;
 import java.util.List;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, UUID> {
+
     Customer findCustomerById(UUID id);
     Customer findCustomerByPhone(String phone);
 //    @Query("select c from Customer c where c.loyalty.id = :loyaltyId")
     List<Customer> getCustomersByLoyalty_Id(@Param("loyaltyId") UUID loyaltyId);
     @Query("SELECT c FROM Customer c WHERE c.phone LIKE %:phone%")
     List<Customer> getCustomersByPhone(String phone);
-    @Query("SELECT NEW meu.booking_rebuild_ver2.response.Passanger.CustomerResponse(c.id, c.name, c.phone, c.loyalty.id, c.status.id, c.numberOfTrips) " +
+    @Query("SELECT NEW meu.booking_rebuild_ver2.model.Admin.DTO.CustomerDTO(" +
+            "c.id, c.name, c.phone, c.numberOfTrips, c.loyalty.id, c.status.id, c.createdAt, c.updatedAt, c.lastUpdated)" +
             "FROM Customer c WHERE c.phone LIKE %:phone%")
-    Page<CustomerResponse> getCustomersByPhoneAsPage(String phone, Pageable pageable);
-    @Query("SELECT NEW meu.booking_rebuild_ver2.response.Passanger.CustomerResponse(c.id, c.name, c.phone, c.loyalty.id, c.status.id, c.numberOfTrips) " +
-            "FROM Customer c WHERE c.loyalty.id = :loyaltyId")
-    Page<CustomerResponse> getCustomersByLoyaltyAsPage(@Param("loyaltyId") UUID loyaltyId, Pageable pageable);
+    Page<CustomerDTO> getCustomersByPhoneAsPage(String phone, Pageable pageable);
+    @Query("SELECT NEW meu.booking_rebuild_ver2.model.Admin.DTO.CustomerDTO(" +
+            "c.id, c.name, c.phone, c.numberOfTrips, c.loyalty.id, c.status.id, c.createdAt, c.updatedAt, c.lastUpdated)" +
+            "FROM Customer c " +
+            "WHERE c.loyalty.id = :loyaltyId")
+    Page<CustomerDTO> getCustomersByLoyaltyAsPage(@Param("loyaltyId") UUID loyaltyId, Pageable pageable);
 }

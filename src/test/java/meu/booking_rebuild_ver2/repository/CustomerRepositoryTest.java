@@ -24,7 +24,7 @@ import java.util.List;
         "spring.datasource.password=NSzo4uDp",
         "spring.datasource.driver-class-name=org.postgresql.Driver"
 })
-public class CustomerRepositoryTest {
+public class  CustomerRepositoryTest {
     @Autowired
     private CustomerRepository customerRepository;
     @Autowired
@@ -32,120 +32,119 @@ public class CustomerRepositoryTest {
     @Autowired
     private StatusRepository statusRepository;
     @Test
-    public void CustomerRepository_SavedAll_ReturnSavedCustomers(){
+    public void CustomerRepository_SavedAll_ReturnSavedCustomers() {
+        int countPrev = (int) customerRepository.count();
         Loyalty loyalty = Loyalty.builder()
-                .id(UUID.randomUUID())
                 .rank("TestLoyalty")
                 .discount(70)
                 .loyaltySpent(1232.500)
                 .build();
         Loyalty loyaltySaved = loyaltyRepository.save(loyalty);
-        Status status = Status.builder().status("TestStatus").flag(true).build();
+        Status status = Status.builder()
+                .status("TestStatus")
+                .flag(true)
+                .build();
         Status statusSaved = statusRepository.save(status);
-        Customer customer = Customer.builder()
-                .id(UUID.randomUUID())
+        Customer customer1 = Customer.builder()
                 .name("tesstasv")
                 .phone("1234567890")
                 .loyalty(loyaltySaved)
                 .status(statusSaved)
                 .numberOfTrips(0)
                 .build();
-        Customer customerSaved1 = customerRepository.save(customer);
-        Customer customer1 = Customer.builder()
-                .id(UUID.randomUUID())
+        Customer customerSaved1 = customerRepository.save(customer1);
+        Customer customer2 = Customer.builder()
                 .name("aedvdca")
                 .phone("2223334445")
                 .loyalty(loyaltySaved)
                 .status(statusSaved)
                 .numberOfTrips(0)
                 .build();
-
-        Customer customerSaved2 = customerRepository.save(customer1);
-        Assertions.assertNotEquals(customerSaved2,customerSaved1);
+        Customer customerSaved2 = customerRepository.save(customer2);
+        Assertions.assertNotNull(customerSaved1.getId());
+        Assertions.assertNotNull(customerSaved2.getId());
+        Assertions.assertNotEquals(customerSaved2, customerSaved1);
         Assertions.assertNotEquals("tesstasv", customerSaved2.getName());
         Assertions.assertNotEquals(customerSaved1.getId(), customerSaved2.getId());
         Assertions.assertEquals("2223334445", customerSaved2.getPhone());
         Assertions.assertEquals("1234567890", customerSaved1.getPhone());
         Assertions.assertEquals("tesstasv", customerSaved1.getName());
-        Assertions.assertEquals(3, customerRepository.count());
+        Assertions.assertEquals(countPrev + 2, customerRepository.count());
     }
     @Test
-    public void CustomerRepository_SaveAllAndGetAll_ReturnListCustomer(){
+    public void CustomerRepository_SaveAllAndGetAll_ReturnListCustomer() {
+        int countPrev = (int) customerRepository.count();
         Loyalty loyalty = Loyalty.builder()
-                .id(UUID.randomUUID())
                 .rank("TestLoyalty")
                 .discount(70)
                 .loyaltySpent(1232.500)
                 .build();
-
         Loyalty loyaltySaved = loyaltyRepository.save(loyalty);
-        Status status = Status.builder().status("TestStatus").flag(true).build();
+        Status status = Status.builder()
+                .status("TestStatus")
+                .flag(true)
+                .build();
         Status statusSaved = statusRepository.save(status);
-        Customer customer = Customer.builder()
-                .id(UUID.randomUUID())
+        Customer customer1 = Customer.builder()
                 .name("tesstasv")
                 .phone("1234567890")
                 .loyalty(loyaltySaved)
                 .status(statusSaved)
                 .numberOfTrips(0)
                 .build();
-        Customer customer1 = Customer.builder()
-                .id(UUID.randomUUID())
+        Customer customer2 = Customer.builder()
                 .name("aedvdca")
                 .phone("2223334445")
                 .loyalty(loyaltySaved)
                 .status(statusSaved)
                 .numberOfTrips(0)
                 .build();
-        ArrayList<Customer> customerList = new ArrayList<>();
-        customerList.add(customer);
+        List<Customer> customerList = new ArrayList<>();
         customerList.add(customer1);
-         customerRepository.saveAll(customerList);
-        List<Customer> listCustomers = customerRepository.findAll();
-        Assertions.assertEquals(3, listCustomers.size());
-        Assertions.assertNotEquals(listCustomers.get(0).getId(),listCustomers.get(1).getId());
-        Assertions.assertNotEquals(listCustomers.get(2).getId(),listCustomers.get(1).getId());
-        Assertions.assertNotEquals(listCustomers.get(0).getId(),listCustomers.get(2).getId());
-    }
-    @Test
-    public void CustomerRepository_Delete_ReturnCustomer(){
-        UUID id = UUID.fromString("226ad6eb-9996-4a11-8d8f-4d54cb86bd96");
-        Loyalty loyalty = Loyalty.builder()
-                .id(UUID.randomUUID())
-                .rank("TestLoyalty")
-                .discount(70)
-                .loyaltySpent(1232.500)
-                .build();
-
-        Loyalty loyaltySaved = loyaltyRepository.save(loyalty);
-        Status status = Status.builder().status("TestStatus").flag(true).build();
-        Status statusSaved = statusRepository.save(status);
-        Customer customer = Customer.builder()
-                .id(UUID.randomUUID())
-                .name("tesstasv")
-                .phone("1234567890")
-                .loyalty(loyaltySaved)
-                .status(statusSaved)
-                .numberOfTrips(0)
-                .build();
-        Customer customer1 = Customer.builder()
-                .id(UUID.randomUUID())
-                .name("aedvdca")
-                .phone("2223334445")
-                .loyalty(loyaltySaved)
-                .status(statusSaved)
-                .numberOfTrips(0)
-                .build();
-        ArrayList<Customer> customerList = new ArrayList<>();
-        customerList.add(customer);
-        customerList.add(customer1);
+        customerList.add(customer2);
         customerRepository.saveAll(customerList);
-        Customer modelDelete = customerRepository.findCustomerById(id);
-        Assertions.assertEquals(3,customerRepository.count());
-        customerRepository.delete(modelDelete);
         List<Customer> listCustomers = customerRepository.findAll();
-        Assertions.assertEquals(2, listCustomers.size());
+        Assertions.assertEquals(countPrev + 2, listCustomers.size());
+        Assertions.assertNotEquals(listCustomers.get(0).getId(), listCustomers.get(1).getId());
     }
+    @Test
+    public void CustomerRepository_Delete_ReturnCustomer() {
+
+        int countPrev = (int) customerRepository.count();
+
+        Loyalty loyaltyToFind = Loyalty.builder()
+                .rank("TestLoyaltyToFind")
+                .discount(50)
+                .loyaltySpent(1000)
+                .build();
+        Loyalty loyaltySaved2 = loyaltyRepository.save(loyaltyToFind);
+
+        Status status2 = Status.builder()
+                .status("TestStatus")
+                .flag(true)
+                .build();
+        Status statusSaved2 = statusRepository.save(status2);
+        Customer customer2 = Customer.builder()
+                .name("Customer1")
+                .phone("1234567890")
+                .loyalty(loyaltySaved2)
+                .status(statusSaved2)
+                .numberOfTrips(0)
+                .build();
+
+        Customer customerSaved = customerRepository.save(customer2);
+
+        Customer modelDelete = customerRepository.findCustomerById(customerSaved.getId());
+
+        Assertions.assertEquals(countPrev + 1, customerRepository.count());
+
+        customerRepository.delete(modelDelete);
+
+        List<Customer> listCustomers = customerRepository.findAll();
+
+        Assertions.assertEquals(countPrev, listCustomers.size());
+    }
+
     @Test
     public void CustomerRepository_Update_ReturnCustomer(){
         Loyalty loyalty = Loyalty.builder()
@@ -174,6 +173,7 @@ public class CustomerRepositoryTest {
                 .numberOfTrips(0)
                 .build();
         Customer CustomerSaved = customerRepository.save(customer);
+
         Customer model = customerRepository.findCustomerById(customer.getId());
         model.setName("abc-def");
         model.setPhone("1111111111");
@@ -189,14 +189,60 @@ public class CustomerRepositoryTest {
         Assertions.assertEquals("TestLoyaltyUpdate", modelUpdated.getLoyalty().getRank());
     }
     @Test
-    public void  CustomerRepository_GetByPhone_ReturnCustomer(){
-        Customer model = customerRepository.findCustomerByPhone("0356013397");
-        Assertions.assertEquals("226ad6eb-9996-4a11-8d8f-4d54cb86bd96", model.getId().toString());
+    public void CustomerRepository_GetByPhone_ReturnCustomer() {
+        // Tạo một hội viên mới
+        Loyalty loyalty = Loyalty.builder()
+                .rank("TestLoyalty")
+                .discount(70)
+                .loyaltySpent(1232.500)
+                .build();
+        Loyalty loyaltySaved = loyaltyRepository.save(loyalty);
+        Status status = Status.builder()
+                .status("TestStatus")
+                .flag(true)
+                .build();
+        Status statusSaved = statusRepository.save(status);
+        Customer customerToFind = Customer.builder()
+                .name("CustomerToFind")
+                .phone("1234567890")
+                .loyalty(loyaltySaved)
+                .status(statusSaved)
+                .numberOfTrips(0)
+                .build();
+        customerRepository.save(customerToFind);
+
+        Customer foundCustomer = customerRepository.findCustomerByPhone("1234567890");
+        Assertions.assertNotNull(foundCustomer);
+        Assertions.assertEquals(customerToFind.getId(), foundCustomer.getId());
     }
+
     @Test
-    public void CustomerRepository_GetByLoyaltyId_ReturnCustomer(){
-        List<Customer> model =  customerRepository.getCustomersByLoyalty_Id(UUID.fromString("c7c0f4ca-be7b-4b76-a98a-3b6e1d7f971d"));
-        Assertions.assertEquals(1, model.size());
+    public void CustomerRepository_GetByLoyaltyId_ReturnCustomer() {
+        // Tạo một hội viên mới
+        Loyalty loyaltyToFind = Loyalty.builder()
+                .rank("TestLoyaltyToFind")
+                .discount(50)
+                .loyaltySpent(1000)
+                .build();
+        Loyalty loyaltySaved = loyaltyRepository.save(loyaltyToFind);
+
+        Status status = Status.builder()
+                .status("TestStatus")
+                .flag(true)
+                .build();
+        Status statusSaved = statusRepository.save(status);
+
+        Customer customer1 = Customer.builder()
+                .name("Customer1")
+                .phone("1234567890")
+                .loyalty(loyaltySaved)
+                .status(statusSaved)
+                .numberOfTrips(0)
+                .build();
+        customerRepository.save(customer1);
+        List<Customer> customersWithLoyalty = customerRepository.getCustomersByLoyalty_Id(loyaltySaved.getId());
+        Assertions.assertEquals(1, customersWithLoyalty.size());
     }
+
 
 }

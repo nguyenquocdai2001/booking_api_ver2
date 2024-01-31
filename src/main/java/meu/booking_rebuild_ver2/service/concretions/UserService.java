@@ -3,12 +3,20 @@ package meu.booking_rebuild_ver2.service.concretions;
 import jakarta.servlet.http.HttpSession;
 import meu.booking_rebuild_ver2.config.Constants;
 import meu.booking_rebuild_ver2.exception.BadRequestException;
+import meu.booking_rebuild_ver2.exception.GenericResponseExceptionHandler;
+import meu.booking_rebuild_ver2.exception.NotFoundException;
+import meu.booking_rebuild_ver2.model.Admin.DTO.StatusDTO;
 import meu.booking_rebuild_ver2.model.Admin.DTO.UserDTO;
+import meu.booking_rebuild_ver2.model.Admin.Mapper.StatusMapper;
+import meu.booking_rebuild_ver2.model.Admin.Mapper.UserMapper;
+import meu.booking_rebuild_ver2.model.Status;
 import meu.booking_rebuild_ver2.model.User;
 import meu.booking_rebuild_ver2.model.UserID;
 import meu.booking_rebuild_ver2.repository.UserRepository;
+import meu.booking_rebuild_ver2.request.RegisterRequest;
 import meu.booking_rebuild_ver2.response.GenericResponse;
 import meu.booking_rebuild_ver2.response.LoginResponse;
+import meu.booking_rebuild_ver2.service.abstractions.IStatusService;
 import meu.booking_rebuild_ver2.service.abstractions.IUserService;
 import meu.booking_rebuild_ver2.service.impl.UserDetailsImplement;
 import meu.booking_rebuild_ver2.service.utils.JwtUtils;
@@ -25,6 +33,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.validation.constraints.NotNull;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
@@ -48,6 +57,10 @@ public class UserService implements IUserService {
     @Autowired
     private UserID userID;
     @Autowired
+    private IStatusService statusService;
+    @Autowired
+    private UserMapper userMapper;
+    @Autowired
     public UserService(BCryptPasswordEncoder passwordEncoder, UserRepository userRepository, JwtUtils jwtUtils) {
         this.modelMapper = new ModelMapper();
         this.passwordEncoder = passwordEncoder;
@@ -63,6 +76,20 @@ public class UserService implements IUserService {
     @Override
     public String getSessionUserName(HttpSession session) {
         return (String) session.getAttribute(USEREMAIL);
+    }
+
+    @Override
+    public UserDTO getProfileMe(UUID id) throws NotFoundException{
+        try{
+            UserDTO response = userRepository.getUserById(id);
+            if(response == null){
+                throw new NotFoundException(Constants.MESSAGE_GET_NOT_FOUND);
+            }
+            return response;
+        }catch (RuntimeException e){
+            throw new BadRequestException(e.getMessage());
+        }
+
     }
 
     @Override
@@ -91,18 +118,24 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public ResponseEntity<GenericResponse> registerHandle(User user) {
-        if (!user.getPassword().equals(user.getConfirmPass()))
+    public ResponseEntity<GenericResponse> registerHandle(RegisterRequest request) {
+
+        if (!request.getPassword().equals(request.getConfirmPassword()))
             throw new BadRequestException(Constants.MESSAGE_INVALID_MATCH_PASSWORD);
-        Matcher matcher = pattern.matcher(user.getUsername());
+        Matcher matcher = pattern.matcher(request.getUsername());
         if(!matcher.matches()){
             GenericResponse response = new GenericResponse(Constants.MESSAGE_INVALID_USERNAME, false);
             return new ResponseEntity<GenericResponse>(response,HttpStatus.BAD_REQUEST);
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-        GenericResponse response = new GenericResponse(Constants.MESSAGE_REGISTER_WELCOME);
-        return new ResponseEntity<GenericResponse>(response,HttpStatus.OK);
+        try{
+            User user = userMapper.RegisterRequestToModel(request);
+            userRepository.save(user);
+            GenericResponse response = new GenericResponse(Constants.MESSAGE_REGISTER_WELCOME);
+            return new ResponseEntity<GenericResponse>(response,HttpStatus.OK);
+        }
+    catch (RuntimeException e){
+            throw new BadRequestException(e.getMessage());
+    }
     }
 
     @Override
