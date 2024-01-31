@@ -63,4 +63,8 @@ public class Customer {
         this.name = name;
         this.phone = phone;
     }
+
+    public Customer(UUID id) {
+        this.id = id;
+    }
 }

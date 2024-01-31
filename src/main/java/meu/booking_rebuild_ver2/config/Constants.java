@@ -111,6 +111,20 @@ public class Constants {
     public static final String MESSAGE_PHONE_FORMAT_WRONG = "Phone number format is incorrect";
     public static final String MESSAGE_DELETED_SUCCESSFULLY = "Deleted object successfully!";
 
+
+    /*
+    * Payment
+    * */
+    public static final String MESSAGE_GET_PAYMENT_FAILED = ". Can not get payment ";
+    public static final String MESSAGE_ADD_PAYMENT_FAILED = "The customer has been exit";
+    public static final String MESSAGE_ADDED_PAYMENT_SUCCESSFULLY = "The payment has been added successfully";
+    public static final String MESSAGE_UPDATED_PAYMENT_SUCCESSFULLY = "The payment has been updated successfully";
+    public static final String MESSAGE_DELETE_PAYMENT_SUCCESSFULLY = "Deleted payment successfully!";
+    public static final String MESSAGE_STATUS_GET_PAYMENT_SUCCESS = "Getting payment successfully!";
+    public static final String MESSAGE_EMPTY_LIST= "List is empty!";
+    public static final String MESSAGE_INVALID_DATA = "Invalid data!";
+    public static final String MESSAGE_ID_NOT_FOUND = "ID not found!";
+
     //nqd11 bs-11
     public static final String MESSAGE_DRIVER_DUPLICATE_PHONE = "Phone is exsisted!";
     public static final String MESSAGE_ADDED_DRIVER_SUCCESS = "The driver has been added successfully";
@@ -127,4 +141,5 @@ public class Constants {
     public static final String MESSAGE_LOCATION_GET_ALL_SUCCESS = "Get all locations successfully!";
     public static final String MESSAGE_LOCATION_GET_LOCATION_SUCCESS = "Get locations successfully!";
     public static final String MESSAGE_LOCATION_GET_NULL = "Not found!";
+
 }
