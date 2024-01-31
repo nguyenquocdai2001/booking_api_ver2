@@ -190,7 +190,6 @@ public class  CustomerRepositoryTest {
     }
     @Test
     public void CustomerRepository_GetByPhone_ReturnCustomer() {
-        // Tạo một hội viên mới
         Loyalty loyalty = Loyalty.builder()
                 .rank("TestLoyalty")
                 .discount(70)
@@ -218,7 +217,6 @@ public class  CustomerRepositoryTest {
 
     @Test
     public void CustomerRepository_GetByLoyaltyId_ReturnCustomer() {
-        // Tạo một hội viên mới
         Loyalty loyaltyToFind = Loyalty.builder()
                 .rank("TestLoyaltyToFind")
                 .discount(50)

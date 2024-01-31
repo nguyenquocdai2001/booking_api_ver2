@@ -23,7 +23,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.UUID;
-
+/**
+ * Author: Nguyễn Minh Tâm
+ * BS-2
+ */
 @Service
 
 public class LoyaltyService implements ILoyaltyService {
@@ -40,7 +43,7 @@ public class LoyaltyService implements ILoyaltyService {
         this.modelMapper = new ModelMapper();
         this.loyaltyRepository = loyaltyRepository;
     }
-
+    // Function to get loyalty by rank
     @Override
     public LoyaltyResponse getLoyaltyByRank(String rank) throws NotFoundException {
         Optional<Loyalty> response = loyaltyRepository.findByRank(rank.toLowerCase());
@@ -51,6 +54,7 @@ public class LoyaltyService implements ILoyaltyService {
             return loyaltyResponse;
         }
     }
+    // Function to add new loyalty
     @Override
     public GenericResponse addNewLoyalty(Loyalty request) throws GenericResponseExceptionHandler {
         Optional<Loyalty> loylalty = loyaltyRepository.findByRank(request.getRank().toLowerCase());
@@ -70,19 +74,20 @@ public class LoyaltyService implements ILoyaltyService {
             throw new GenericResponseExceptionHandler(Constants.MESSAGE_ADD_DISCOUNT_FAILED);
         }
     }
-
+    // Function to get LoyaltyByDiscount to use in this service when we need to check the exits of discount
     @Override
     public Optional<Loyalty> getLoyaltyByDiscount(int discount) {
 
         return loyaltyRepository.findByDiscount(discount);
     }
-
+    // The function to get all of loyalty
     @Override
     public LoyaltyResponse getAllLoyalty() {
         Sort sortByDiscount = Sort.by(Sort.Direction.ASC, "discount");
         LoyaltyResponse response = new LoyaltyResponse(loyaltyRepository.findAll(sortByDiscount));
         return response;
     }
+    // The function to update loyalty
     @Override
     public GenericResponse updateLoyalty(UUID id, LoyaltyRequest request, HttpSession httpSession) throws NotFoundException, GenericResponseExceptionHandler {
         try {
@@ -100,6 +105,7 @@ public class LoyaltyService implements ILoyaltyService {
             throw new GenericResponseExceptionHandler(e.getMessage());
         }
     }
+    // The function to delete loyalty by id loyalty
     @Override
     public GenericResponse deleteLoyalty(UUID id) throws NotFoundException {
         try {
@@ -114,6 +120,7 @@ public class LoyaltyService implements ILoyaltyService {
             throw new RuntimeException(e.getMessage());
         }
     }
+    // Function to get loyalty by price
     @Override
         public LoyaltyResponse getLoyaltyByPrice(double price) throws GenericResponseExceptionHandler {
         try {
@@ -133,6 +140,7 @@ public class LoyaltyService implements ILoyaltyService {
             throw new BadRequestException(e.getMessage());
         }
     }
+    // Function to init the price when we create new customer
     @Override
     public LoyaltyDTO getLoyaltyByPrice() throws GenericResponseExceptionHandler {
         try {
@@ -150,6 +158,7 @@ public class LoyaltyService implements ILoyaltyService {
             throw new BadRequestException(e.getMessage());
         }
     }
+    // The function to get loyalty by id loyalty
     @Override
     public LoyaltyResponse getLoyaltyById(UUID id) throws NotFoundException {
         try{

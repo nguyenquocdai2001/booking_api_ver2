@@ -16,6 +16,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+/*
+author: Nguyen Minh Tam
+Component: It will validate token, validate user
+ */
 @Component
 public class AuthTokenFilter extends OncePerRequestFilter {
     @Autowired
@@ -23,6 +27,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     @Autowired
     private IUserService userService;
     @Override
+    // Function to check valid token with token
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         try {
@@ -44,6 +49,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
+    // Function to get token,
     private String parseJwt(HttpServletRequest request) {
         String headerAuth = request.getHeader("Authorization");
 

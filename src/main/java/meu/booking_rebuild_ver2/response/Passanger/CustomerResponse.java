@@ -10,6 +10,10 @@ import meu.booking_rebuild_ver2.model.Admin.DTO.LoyaltyDTO;
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.List;
+/*
+Author: Nguyen Minh Tam
+Response for controller of BS-3
+ */
 @Data
 @NoArgsConstructor
 public class CustomerResponse {

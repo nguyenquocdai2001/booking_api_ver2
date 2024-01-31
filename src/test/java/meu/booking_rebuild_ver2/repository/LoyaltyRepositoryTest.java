@@ -9,6 +9,7 @@ import meu.booking_rebuild_ver2.model.User;
 import meu.booking_rebuild_ver2.repository.Admin.LoyaltyRepository;
 import meu.booking_rebuild_ver2.service.abstractions.Admin.ILoyaltyService;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
@@ -183,5 +184,22 @@ public class LoyaltyRepositoryTest {
         assertThat(model.get().getRank() == "diamond");
         assertThat(model.get().getDiscount() == 50);
         assertThat(model.get().getLoyaltySpent() == 6.5);
+    }
+    @Test
+    public void LoyaltyRepository_GetByDiscount_ReturnLoyalty(){
+        Status status = Status.builder().status("test").flag(true).build();
+        Status modelStatus = statusRepository.save(status);
+        User user = User.builder().username("abc@gmail.com").password("string").confirmPass("string").fullname("abc").status(modelStatus).build();
+        user = userRepository.save(user);
+        Loyalty loyalty3 = Loyalty.builder()
+                .rank("diamond")
+                .discount(50)
+                .loyaltySpent(6.500)
+                .UserConfig(user)
+                .build();
+        Loyalty loyalty3Saved = loyaltyRepository.save(loyalty3);
+        Optional<Loyalty> loyalty = loyaltyRepository.findByDiscount(50);
+        Assertions.assertNotNull(loyalty);
+        Assertions.assertEquals(loyalty3Saved.getId(), loyalty.get().getId());
     }
 }

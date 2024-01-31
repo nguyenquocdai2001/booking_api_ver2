@@ -30,6 +30,10 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+/**
+ * Author: Nguyễn Minh Tâm
+ * BS-3
+ */
 
 @Service
 public class CustomerService implements ICustomerService {
@@ -48,12 +52,14 @@ public class CustomerService implements ICustomerService {
 
     @Autowired
     private StatusRepository statusRepository;
+    // The phone number regex to check phone valid
     private static final String PHONE_NUMBER_REGEX = "^(\\+?84|0)([3|5|7|8|9])+([0-9]{8})$";
     private static final Pattern pattern = Pattern.compile(PHONE_NUMBER_REGEX);
     @Autowired
     public CustomerService(CustomerRepository customerRepository){
         this.customerRepository = customerRepository;
     }
+    // The function to add new customer
     @Override
     public GenericResponse addCustomer(CustomerRequest request) throws GenericResponseExceptionHandler {
 
@@ -80,7 +86,7 @@ public class CustomerService implements ICustomerService {
             throw new BadRequestException(e.getMessage());
         }
     }
-
+    // The function to get customer by id customer
     @Override
     public CustomerResponse getCustomerById(UUID id) throws NotFoundException {
         try{
@@ -94,7 +100,7 @@ public class CustomerService implements ICustomerService {
             throw new BadRequestException(e.getMessage());
         }
     }
-
+    // The function will get the list customer by phone. It has no pagination
     @Override
     public CustomerResponse getCustomerByPhone(String phone) throws NotFoundException {
         CustomerResponse listResponse = new CustomerResponse();
@@ -105,7 +111,7 @@ public class CustomerService implements ICustomerService {
          listResponse.setListCustomer(getListResponse(models));
          return listResponse;
     }
-
+    // The function will get the list customer. It has no pagination
     @Override
     public CustomerResponse getCustomerByLoyalty(UUID idLoyalty) throws NotFoundException {
         Optional<Loyalty> loyalty = loyaltyRepository.findById(idLoyalty);
@@ -117,6 +123,7 @@ public class CustomerService implements ICustomerService {
         listResponse.setListCustomer(getListResponse(models));
         return listResponse;
     }
+    // The function will return the list from Customer to CustomerDTO
     private  List<CustomerDTO> getListResponse(List<Customer> models){
         List<CustomerDTO> reponseList = new ArrayList<>();
         for(Customer model: models){
@@ -125,6 +132,7 @@ public class CustomerService implements ICustomerService {
         }
         return reponseList;
     }
+    // Function to update customer with total paid
     @Override
     public GenericResponse updateCustomer(UUID id, UpdateCustomerRequest request) throws NotFoundException, GenericResponseExceptionHandler {
         if(phoneValid(request.getPhone())){
@@ -161,7 +169,7 @@ public class CustomerService implements ICustomerService {
             throw new BadRequestException(e.getMessage());
         }
     }
-
+    // Function to update by set rank or loyalty id. It will prioritize set the loyalty by id
     @Override
     public GenericResponse updateCustomerByLoyalty(UUID id, UpdateCustomerRequest request) throws NotFoundException, GenericResponseExceptionHandler {
         boolean isSatisfied = false;
@@ -196,9 +204,7 @@ public class CustomerService implements ICustomerService {
 
             else if((rank != null) && (!isSatisfied)){
                 Optional<Loyalty> loyalty = loyaltyRepository.findByRank(rank);
-                if(loyalty != null){
-                    model.setLoyalty(loyalty.get());
-                }
+                loyalty.ifPresent(model::setLoyalty);
             }
             else{
                 throw new GenericResponseExceptionHandler("The request is not valid");
@@ -212,6 +218,7 @@ public class CustomerService implements ICustomerService {
             throw new BadRequestException(e.getMessage());
         }
     }
+    // Function to getCustomer by phone. It has pagination
     @Override
     public Page<CustomerResponse> getCustomerByPhoneWithPage(String phone, Integer page) throws NotFoundException {
         if (phone.length() < 5) {
@@ -225,6 +232,7 @@ public class CustomerService implements ICustomerService {
             throw new BadRequestException(e.getMessage());
         }
     }
+    // The function to get the list customer by loyalty. It has pagination
     @Override
     public Page<CustomerResponse> getCustomerByLoyaltyWithPage(UUID IdLoyalty, Integer page) throws NotFoundException {
         try{
@@ -236,7 +244,7 @@ public class CustomerService implements ICustomerService {
             throw new BadRequestException(e.getMessage());
         }
     }
-
+    // Function to update customer to economy when loyalty is deleted
     @Override
     public void handleUpdateCustomerWhenLoyaltyDelete(List<CustomerDTO> customerDTOS) throws GenericResponseExceptionHandler, NotFoundException {
         for(CustomerDTO customer : customerDTOS){
@@ -246,7 +254,7 @@ public class CustomerService implements ICustomerService {
             customerRepository.save(modelCustomer);
         }
     }
-
+    //Function to delete Customer by id customer
     @Override
     public GenericResponse deleteCustomerById(UUID id) throws NotFoundException {
         Customer model = customerRepository.findCustomerById(id);
@@ -256,10 +264,12 @@ public class CustomerService implements ICustomerService {
         customerRepository.delete(model);
         return new GenericResponse(Constants.MESSAGE_DELETED_SUCCESSFULLY);
     }
+    //Function to check valid phone with regex phone
     protected static boolean phoneValid(String phone){
         Matcher matcher = pattern.matcher(phone);
         return !matcher.matches();
     }
+    //Function to Covert from CustomerDTO to CustomerResponse
     private Page<CustomerResponse> convertToCustomerResponse(Page<CustomerDTO> customerDTO, int page) throws NotFoundException {
         CustomerResponse customerResponse = new CustomerResponse(customerDTO.getContent());
         if(customerResponse.getListCustomer().isEmpty()){

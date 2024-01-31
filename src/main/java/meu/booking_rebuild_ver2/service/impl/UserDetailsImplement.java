@@ -13,6 +13,11 @@ import java.io.Serial;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
+/*
+/* Author: Nguyễn Minh Tâm
+Hàm này để lấy thông tin người dùng sau khi đăng nhập để get ra role, mật khẩu, tài khoản v các thông tin cần thiết để thiết
+lập token và bảo maajt
+ */
 
 @AllArgsConstructor
 @Data

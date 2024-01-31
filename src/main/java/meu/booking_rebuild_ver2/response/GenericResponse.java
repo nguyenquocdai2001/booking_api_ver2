@@ -1,7 +1,9 @@
 package meu.booking_rebuild_ver2.response;
 
 import lombok.Data;
-
+/*
+the response for generic response with no data type
+ */
 @Data
 public class GenericResponse {
     private String message;
