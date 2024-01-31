@@ -60,7 +60,7 @@ public class RoutesService implements IRoutesService{
             return new RoutesResponse(Constants.MESSAGE_UPDATE_ROUTES_SUCCESS, true,updateModel);
 
         }
-        return new RoutesResponse("ID not found", false);
+        return new RoutesResponse("ID "+ Constants.MESSAGE_ID_NOT_FOUND, false);
     }
 
     @Override
@@ -76,14 +76,14 @@ public class RoutesService implements IRoutesService{
     public RoutesResponse deleteById(UUID id) {
         RoutesResponse response;
         if(!routesRepo.existsById(id)){
-            response = new RoutesResponse("Invalid ID",true );
+            response = new RoutesResponse(Constants.MESSAGE_ID_NOT_FOUND,true );
         }else if(!routesTimeRepository.getRoutesTimeByRoutes(id).isEmpty()){
             //check if routes_time data contain id
-            response = new RoutesResponse("Route Time still has ID, can't delete",true );
+            response = new RoutesResponse(Constants.MESSAGE_ROUTES_TIME_STILL_HAS,true );
         }
         else{
             routesRepo.deleteById(id);
-            response = new RoutesResponse("Delete Routes Success",true);
+            response = new RoutesResponse("Routes "+ Constants.MESSAGE_DELETED_SUCCESS,true);
         }
         return response;
     }
@@ -96,7 +96,7 @@ public class RoutesService implements IRoutesService{
                 return new RoutesResponse(Constants.MESSAGE_STATUS_GET_ALL_ROUTES_SUCCESS, true, list);
             }
         }
-        return new RoutesResponse("Status not found", false);
+        return new RoutesResponse("Status "+ Constants.MESSAGE_ID_NOT_FOUND, false);
 
     }
 

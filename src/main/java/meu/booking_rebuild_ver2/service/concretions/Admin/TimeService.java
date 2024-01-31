@@ -29,7 +29,7 @@ public class TimeService implements ITimeService {
         /* checkTimeInput start*/
         TimeResponse response;
         if(checkDate(timeModel)){
-            response  = new TimeResponse("Invalid day",false, timeModel);
+            response  = new TimeResponse(Constants.MESSAGE_INVALID_DATA,false, timeModel);
             return response;
         }
         /* checkTimeInput end*/
@@ -53,7 +53,7 @@ public class TimeService implements ITimeService {
         TimeModel updateModel = timeRepository.findTimeModelById(timeModel.getId());
         TimeResponse response;
         if(checkDate(timeModel)){
-            response  = new TimeResponse("Invalid day",false, timeModel);
+            response  = new TimeResponse(Constants.MESSAGE_INVALID_DATA,false, timeModel);
             return response;
         }
         if(updateModel != null && statusRepository.existsById(timeModel.getStatus().getId())) {
@@ -68,7 +68,7 @@ public class TimeService implements ITimeService {
             response = new TimeResponse(Constants.MESSAGE_UPDATE_TIME_SUCCESS, true, updateModel);
             return response;
         }
-        response = new TimeResponse("ID not found", false);
+        response = new TimeResponse(Constants.MESSAGE_ID_NOT_FOUND, false);
         return response;
     }
 
@@ -89,16 +89,16 @@ public class TimeService implements ITimeService {
     public TimeResponse deleteById(UUID id) {
         TimeResponse response;
         if(!timeRepository.existsById(id)){
-            response = new TimeResponse("Invalid ID",true );
+            response = new TimeResponse(Constants.MESSAGE_ID_NOT_FOUND,true );
             return response;
         }else if(!routesTimeRepository.getRoutesTimeByTime(id).isEmpty()){
             //check if routes_time data contain id
-            response = new TimeResponse("Route Time still has ID, can't delete",true );
+            response = new TimeResponse(Constants.MESSAGE_ROUTES_TIME_STILL_HAS,true );
             return response;
         }
         else{
             timeRepository.deleteById(id);
-            response = new TimeResponse("Delete Time Success",true );
+            response = new TimeResponse("Time " +Constants.MESSAGE_DELETE_SUCCESS,true );
             return response;
         }
 
@@ -113,9 +113,9 @@ public class TimeService implements ITimeService {
                 response = new TimeResponse(Constants.MESSAGE_STATUS_GET_ALL_TIME_SUCCESS, true, list);
                 return response;
             }
-            return new TimeResponse("List is empty", false);
+            return new TimeResponse(Constants.MESSAGE_EMPTY_LIST, false);
         }
-        return new TimeResponse("Status not found", false);
+        return new TimeResponse(Constants.MESSAGE_ID_NOT_FOUND, false);
     }
     private boolean checkDate(TimeModel timeModel){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");

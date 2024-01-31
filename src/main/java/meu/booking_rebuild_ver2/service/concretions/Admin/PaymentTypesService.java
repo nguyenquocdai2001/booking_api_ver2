@@ -39,9 +39,9 @@ public class PaymentTypesService implements IPaymentTypeService {
                 paymentTypesDTO.setIdUserConfig(userID.getUserValue().getId());
                 PaymentTypesModel paymentTypes = PaymentTypesMapper.dtoToPaymentType(paymentTypesDTO);
                 paymentTypesRepository.save(paymentTypes);
-                return new PaymentTypesResponse("Add Payment Type successfully", true, paymentTypesDTO);
+                return new PaymentTypesResponse(Constants.MESSAGE_ADDED_PAYMENT_TYPE_SUCCESSFULLY, true, paymentTypesDTO);
             }
-            return new PaymentTypesResponse("Invalid status", false);
+            return new PaymentTypesResponse(Constants.MESSAGE_INVALID_DATA+ " status", false);
 
         }catch (Exception ex){
             throw new BadRequestException(ex.getMessage());
@@ -58,10 +58,10 @@ public class PaymentTypesService implements IPaymentTypeService {
             updateModel.setUpdatedAt(ZonedDateTime.now());
             updateModel.setIdUserConfig(userID.getUserValue());
             paymentTypesRepository.save(updateModel);
-            response = new PaymentTypesResponse("Updating payment success", true, paymentTypesDTO);
+            response = new PaymentTypesResponse(Constants.MESSAGE_UPDATED_PAYMENT_TYPE_SUCCESSFULLY, true, paymentTypesDTO);
             return response;
         }
-        response = new PaymentTypesResponse("ID not found", false);
+        response = new PaymentTypesResponse(Constants.MESSAGE_ID_NOT_FOUND, false);
         return response;
     }
 
@@ -73,7 +73,7 @@ public class PaymentTypesService implements IPaymentTypeService {
                     .stream()
                     .map(PaymentTypesMapper::paymentDTO)
                     .toList();
-            return new PaymentTypesResponse("Find all payment success", true, paymentTypesListDTO);
+            return new PaymentTypesResponse(Constants.MESSAGE_STATUS_GET_PAYMENT_TYPE_SUCCESS, true, paymentTypesListDTO);
         }catch (Exception ex){
             throw new BadRequestException(ex.getMessage());
         }
@@ -91,10 +91,10 @@ public class PaymentTypesService implements IPaymentTypeService {
                 response = new PaymentTypesResponse(Constants.MESSAGE_STATUS_GET_ALL_PRICE_SUCCESS, true, list);
                 return response;
             }
-            response = new PaymentTypesResponse("List is empty", false);
+            response = new PaymentTypesResponse(Constants.MESSAGE_EMPTY_LIST, false);
             return response;
         }
-        return new PaymentTypesResponse("Status not found", false);
+        return new PaymentTypesResponse("Status "+ Constants.MESSAGE_ID_NOT_FOUND, false);
     }
 
     @Override
@@ -103,7 +103,7 @@ public class PaymentTypesService implements IPaymentTypeService {
         if(paymentTypesRepository.existsById(id)) {
             PaymentTypesModel model = paymentTypesRepository.findPaymentTypesModelById(id);
             PaymentTypesDTO paymentTypesDTO = PaymentTypesMapper.paymentDTO(model);
-            response = new PaymentTypesResponse("Find Payment by ID success", true, paymentTypesDTO);
+            response = new PaymentTypesResponse(Constants.MESSAGE_STATUS_GET_PAYMENT_TYPE_SUCCESS, true, paymentTypesDTO);
             return response;
         }
         response = new PaymentTypesResponse(Constants.MESSAGE_SOMETHING_WENT_WRONG, false);
@@ -113,11 +113,11 @@ public class PaymentTypesService implements IPaymentTypeService {
     @Override
     public PaymentTypesResponse deletePaymentTypesModelById(UUID id) {
         if(!paymentTypesRepository.existsById(id)){
-            return new PaymentTypesResponse("Invalid ID",true );
+            return new PaymentTypesResponse(Constants.MESSAGE_ID_NOT_FOUND,true );
         }
         else{
             paymentTypesRepository.deleteById(id);
-            return new PaymentTypesResponse("Delete PaymentType Success",true );
+            return new PaymentTypesResponse("PaymentType "+ Constants.MESSAGE_DELETED_SUCCESS,true );
         }
 
     }
