@@ -94,7 +94,7 @@ public class Constants {
     public static final String MESSAGE_STATUS_GET_ALL_PRICE_SUCCESS = "Getting all prices successfully!";
     public static final String MESSAGE_PRICE_FIND_SUCCESS = "Find prices successfully!";
     public static final String MESSAGE_UPDATE_PRICE_SUCCESS = "Updating price successfully!";
-
+    public static final String MESSAGE_GET_SUCCESSFULL = "The get request has been Satisfied";
 
     public static final String MESSAGE_ADD_LOYALTY_SUCCESS = "Added a new loyalty successfully!";
     public static final String MESSAGE_ADD_RANK_FAILED = "The rank has been exit";
@@ -120,4 +120,11 @@ public class Constants {
     public static final String MESSAGE_GET_DRIVER_FAILED = "Get drivers failed";
     public static final String MESSAGE_GET_DRIVER_SUCCESS = "Get drivers successfully";
     public static final String MESSAGE_DRIVER_NULL= "Driver null";
+    //nqd11 bs-4
+    public static final String MESSAGE_LOCATION_ADD_SUCCESS = "Adding a location successfully!";
+    public static final String MESSAGE_LOCATION_UPDATE_SUCCESS = "Updating a location successfully!";
+    public static final String MESSAGE_LOCATION_DELETE_SUCCESS = "Deleting a location successfully!";
+    public static final String MESSAGE_LOCATION_GET_ALL_SUCCESS = "Get all locations successfully!";
+    public static final String MESSAGE_LOCATION_GET_LOCATION_SUCCESS = "Get locations successfully!";
+    public static final String MESSAGE_LOCATION_GET_NULL = "Not found!";
 }
