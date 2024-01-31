@@ -23,7 +23,7 @@ public class PaymentTypesModel {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    private String payment_type;
+    private String paymentType;
 
     @ManyToOne
     @JoinColumn(name = "status" )

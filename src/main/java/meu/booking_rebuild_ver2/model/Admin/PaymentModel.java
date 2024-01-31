@@ -10,7 +10,9 @@ import lombok.NoArgsConstructor;
 import meu.booking_rebuild_ver2.model.Passanger.Customer;
 import meu.booking_rebuild_ver2.model.Status;
 import meu.booking_rebuild_ver2.model.User;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
@@ -36,8 +38,7 @@ public class PaymentModel {
     @ManyToOne
     @JoinColumn(name = "id_price")
     private PriceModel idPrice;
-
-    private ZonedDateTime timePaid;
+    private LocalDateTime timePaid;
     @ManyToOne
     @JoinColumn(name = "status" )
     private Status status;

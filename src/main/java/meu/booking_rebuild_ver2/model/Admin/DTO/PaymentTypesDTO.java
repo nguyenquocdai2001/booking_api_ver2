@@ -13,4 +13,5 @@ public class PaymentTypesDTO {
     private UUID id;
     private String paymentType;
     private UUID idStatus;
+    private UUID idUserConfig;
 }

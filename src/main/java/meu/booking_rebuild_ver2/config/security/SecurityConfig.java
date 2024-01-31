@@ -82,7 +82,9 @@ public class SecurityConfig {
                                 "/routeTime/**",
                                 "/price/**",
                                 "/customers/**",
-                                "/routeTime/**" )
+                                "/routeTime/**",
+                                "/paymentType/**",
+                                "/payment/**")
                         .hasAnyRole("SUPER_ADMIN","ADMIN")
                         .requestMatchers(HttpMethod.GET,
                                 "/busTypes/**" ,
@@ -93,7 +95,9 @@ public class SecurityConfig {
                                 "/routeTime/**",
                                 "/price/**" ,
                                 "/customers/**",
-                                "/routeTime/**" )
+                                "/routeTime/**",
+                                "/paymentType/**",
+                                "/payment/**")
                         .hasAnyRole("SUPER_ADMIN","ADMIN")
                         .requestMatchers(HttpMethod.PUT,
                                 "/loyalty/**" )
@@ -107,7 +111,9 @@ public class SecurityConfig {
                                 "/routeTime/**" ,
                                 "/price/**",
                                 "/customers/**",
-                                "/routeTime/**" )
+                                "/routeTime/**",
+                                "/paymentType/**",
+                                "/payment/**")
                         .hasAnyRole("SUPER_ADMIN")
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**",
                                 "/swagger-ui.html",

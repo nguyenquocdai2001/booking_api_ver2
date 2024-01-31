@@ -1,10 +1,15 @@
 package meu.booking_rebuild_ver2.model.Admin.DTO;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.ZonedDateTime;
+import org.springframework.format.annotation.DateTimeFormat;
+
+
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -12,7 +17,8 @@ import java.util.UUID;
 @NoArgsConstructor
 public class PaymentDTO {
     private UUID id;
-    private ZonedDateTime timePaid;
+    @JsonFormat( pattern = "dd-MM-yyyy HH:mm")
+    private LocalDateTime timePaid;
     private UUID idCustomer;
     private UUID idPaymentType;
     private UUID idPrice;
