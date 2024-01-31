@@ -6,6 +6,7 @@ import meu.booking_rebuild_ver2.model.Status;
 import meu.booking_rebuild_ver2.model.User;
 
 public class BusTypeMapper {
+
     public static BusTypeDTO busTypeDTO(BusTypes busTypes){
         BusTypeDTO busTypeDTO = new BusTypeDTO();
         busTypeDTO.setId(busTypes.getId());

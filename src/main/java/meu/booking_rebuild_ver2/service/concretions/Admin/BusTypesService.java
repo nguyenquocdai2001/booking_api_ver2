@@ -6,8 +6,9 @@ import meu.booking_rebuild_ver2.model.Admin.BusTypes;
 import meu.booking_rebuild_ver2.model.Admin.DTO.BusTypeDTO;
 import meu.booking_rebuild_ver2.model.Admin.Mapper.BusTypeMapper;
 import meu.booking_rebuild_ver2.model.Status;
-import meu.booking_rebuild_ver2.model.User;
+import meu.booking_rebuild_ver2.model.UserID;
 import meu.booking_rebuild_ver2.repository.Admin.BusTypesRepository;
+import meu.booking_rebuild_ver2.repository.StatusRepository;
 import meu.booking_rebuild_ver2.response.Admin.BusTypesResponse;
 import meu.booking_rebuild_ver2.service.abstractions.Admin.IBusTypesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +21,24 @@ import java.util.UUID;
 @Service
 public class BusTypesService implements IBusTypesService {
     @Autowired
+    UserID userID;
+    @Autowired
     private BusTypesRepository busTypesRepository;
+    @Autowired
+    private StatusRepository statusRepository;
     @Override
     public BusTypesResponse createBusType(BusTypeDTO busTypesDTO) {
         try {
             if(busTypesRepository.findByLicensePlate(busTypesDTO.getLicensePlate()) != null){
-                BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPES_DUPLICATE_LICENSE_PLATE_SUCCESS, false);
+                BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPES_DUPLICATE_LICENSE_PLATE, false);
                 return response;
             }
+            busTypesDTO.setIdUserConfig(userID.getUserValue().getId());
             BusTypes busTypes = BusTypeMapper.dtoToBusTypes(busTypesDTO);
+
+            Status status = statusRepository.findStatusById(busTypesDTO.getIdStatus());
+            busTypes.setStatus(status);
+
             busTypesRepository.save(busTypes);
             BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPES_ADD_SUCCESS, true, busTypesDTO);
             return response;
@@ -133,9 +143,12 @@ public class BusTypesService implements IBusTypesService {
             updatedBusType.setType(busTypeDTO.getType());
             updatedBusType.setLicensePlate(busTypeDTO.getLicensePlate());
             updatedBusType.setNumberOfSeat(busTypeDTO.getNumberOfSeat());
-            updatedBusType.setStatus(new Status(busTypeDTO.getIdStatus()));
-            updatedBusType.setIdUserConfig(new User(busTypeDTO.getIdUserConfig()));
+            Status status = statusRepository.findStatusById(busTypeDTO.getIdStatus());
+            updatedBusType.setStatus(status);
+            updatedBusType.setIdUserConfig(userID.getUserValue());
             busTypesRepository.save(updatedBusType);
+
+            busTypeDTO.setIdUserConfig(userID.getUserValue().getId());
             BusTypesResponse response = new BusTypesResponse(Constants.MESSAGE_BUS_TYPES_UPDATE_SUCCESS, true, busTypeDTO);
             return response;
         }catch (Exception ex){

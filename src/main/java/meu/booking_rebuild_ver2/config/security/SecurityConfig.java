@@ -72,7 +72,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**")
                         .permitAll()
 
-                        .requestMatchers("/auth/**", "/demo/**").permitAll()
+                        .requestMatchers("/auth/login", "/demo/**").permitAll()
                         .requestMatchers(HttpMethod.POST,
                                 "/busTypes/**" ,
                                 "/busSeat/**",
@@ -86,8 +86,12 @@ public class SecurityConfig {
                                 "/paymentType/**",
                                 "/payment/**")
                         .hasAnyRole("SUPER_ADMIN","ADMIN")
+                        .requestMatchers(HttpMethod.POST,
+                                "/auth/register" )
+                        .hasAnyRole("SUPER_ADMIN")
                         .requestMatchers(HttpMethod.GET,
                                 "/busTypes/**" ,
+                                "/auth/profile/me",
                                 "/busSeat/**",
                                 "/routes/**",
                                 "/time/**",

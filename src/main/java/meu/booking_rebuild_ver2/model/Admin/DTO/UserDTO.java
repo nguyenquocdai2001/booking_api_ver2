@@ -17,4 +17,5 @@ public class UserDTO {
     private String username;
     private Instant createdAt;
     private UserRole role;
+    private UUID  idStatus;
 }

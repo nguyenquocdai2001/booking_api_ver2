@@ -100,7 +100,7 @@ public class BusSeatRepositoryTest {
     }
 
     @Test
-    public void BusSeatRepository_FindByAllIdBusType_ReturnAllBusSeatByIdBusType(){
+    public void BusSeatRepository_FindAllByIdBusType_ReturnAllBusSeatByIdBusType(){
         BusTypes busTypes = BusTypes.builder().
                 type("String1").
                 numberOfSeat(32).
