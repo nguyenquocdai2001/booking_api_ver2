@@ -1,4 +1,4 @@
-package meu.booking_rebuild_ver2.model;
+package meu.booking_rebuild_ver2.model.Passanger;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -11,23 +11,29 @@ import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "status")
+@Table(name = "location")
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Status {
+@Builder
+public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private String status;
-    private boolean flag;
+    @Column(name = "house_number")
+    private String houseNumber;
+    @Column(name = "street")
+    private String street;
+    @Column(name = "ward")
+    private String ward;
+    @Column(name = "district")
+    private String district;
+    @Column(name = "province")
+    private String province;
+    @Column(name = "is_destination")
+    private boolean isDestination;
     @JsonIgnore
     private ZonedDateTime createdAt = ZonedDateTime.now();;
     @JsonIgnore
     private ZonedDateTime updatedAt = ZonedDateTime.now();
-
-    public Status(UUID id) {
-        this.id = id;
-    }
 }
