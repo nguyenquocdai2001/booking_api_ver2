@@ -1,21 +1,16 @@
 package meu.booking_rebuild_ver2.controller.Admin;
 
-import jakarta.servlet.http.HttpSession;
+
 import lombok.extern.slf4j.Slf4j;
-import meu.booking_rebuild_ver2.config.Constants;
 import meu.booking_rebuild_ver2.exception.BadRequestException;
-import meu.booking_rebuild_ver2.model.Admin.RoutesTimeModel;
-import meu.booking_rebuild_ver2.repository.Admin.RoutesRepository;
-import meu.booking_rebuild_ver2.repository.Admin.RoutesTimeRepository;
-import meu.booking_rebuild_ver2.repository.Admin.TimeRepository;
-import meu.booking_rebuild_ver2.repository.StatusRepository;
+import meu.booking_rebuild_ver2.model.Admin.DTO.RoutesTimeDTO;
 import meu.booking_rebuild_ver2.response.Admin.RoutesTimeResponse;
+import meu.booking_rebuild_ver2.service.concretions.Admin.RoutesTimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.ZonedDateTime;
-import java.util.List;
+
 import java.util.UUID;
 /*
  * author: Quoc Dat
@@ -26,31 +21,17 @@ import java.util.UUID;
 @RequestMapping(path = "/routeTime",  produces = MediaType.APPLICATION_JSON_VALUE)
 public class RoutesTimeController {
     @Autowired
-    RoutesTimeRepository routesTimeRepo;
-    @Autowired
-    RoutesRepository routesRepo;
-    @Autowired
-    TimeRepository timeRepository;
-    @Autowired
-    StatusRepository statusRepo;
+    RoutesTimeService routesTimeService;
+
 
     /* addRoutesTime
      * start
      *  */
     @PostMapping("/addRoutesTime")
-    public RoutesTimeResponse addRoutesTime(@RequestBody RoutesTimeModel model){
+    public RoutesTimeResponse addRoutesTime(@RequestBody RoutesTimeDTO model){
         log.debug("Inside addRoutesTime function()");
      try {
-         RoutesTimeResponse response;
-         //check ID_Time & ID_routes
-         if(!checkIdTimeAndRoute(model)){
-             response = new RoutesTimeResponse("Time or Route or Status is Invalid", false , model);
-         }else {
-             model.setCreatedAt(ZonedDateTime.now());
-             routesTimeRepo.save(model);
-             response = new RoutesTimeResponse(Constants.MESSAGE_STATUS_ADD_ROUTE_TIME_SUCCESS, true, model);
-         }
-         return response;
+         return routesTimeService.createRoutesTime(model);
      }catch(Exception e){
          throw new BadRequestException(e.getMessage());
      }
@@ -59,98 +40,71 @@ public class RoutesTimeController {
      * end
      *  */
 
-    //check ID_Time & ID_routes start
-    private boolean checkIdTimeAndRoute(RoutesTimeModel model){
-        return timeRepository.existsById(model.getIdTime().getId())
-                && routesRepo.existsById(model.getIdRoutes().getId())
-                && statusRepo.existsById(model.getStatus().getId());
-    }
-    //check ID_Time & ID_routes end
 
-    /* getAllRoutesTimeModels
+
+    /* getAllRoutesTimeDTOs
      * start
      *  */
     @GetMapping("/getAllRoutesTime")
-    public RoutesTimeResponse getAllRoutesTimeModels() {
-        log.debug("Inside getAllRoutesTimeModels");
+    public RoutesTimeResponse getAllRoutesTimeDTOs() {
+        log.debug("Inside getAllRoutesTimeDTOs");
         try {
-          List<RoutesTimeModel> list = routesTimeRepo.findAll();
-            return new RoutesTimeResponse(Constants.MESSAGE_STATUS_GET_ALL_ROUTES_TIME_SUCCESS, true, list);
+            return routesTimeService.getAllRoutesTime();
         }catch (Exception e){
             throw new BadRequestException(e.getMessage());
         }
     }
-    /* getAllRoutesTimeModels
+    /* getAllRoutesTimeDTOs
      * end
      *  */
 
-    /* getRoutesTimeModelById
+    /* getRoutesTimeDTOById
      * start
      *  */
     @GetMapping("/getRoutesTimeById")
-    public RoutesTimeResponse getRoutesTimeModelById(@RequestParam UUID id) {
-
-        log.debug("Inside getRoutesTimeModelByID");
+    public RoutesTimeResponse getRoutesTimeDTOById(@RequestParam UUID id) {
+        log.debug("Inside getRoutesTimeDTOByID");
         try {
-            RoutesTimeModel model = routesTimeRepo.findRoutesTimeModelById(id);
-            return new RoutesTimeResponse(Constants.MESSAGE_ROUTES_TIME_FIND_SUCCESS, true,model);
-
+            return routesTimeService.findByID(id);
         }catch (Exception e){
             throw new BadRequestException(e.getMessage());
         }
     }
-    /* getRoutesTimeModelById
+    /* getRoutesTimeDTOById
      * end
      *  */
 
-    /* updateRoutesTimeModelById
+    /* updateRoutesTimeDTOById
      * start
      *  */
     @PutMapping("/updateRoutesTimeById")
-    public RoutesTimeResponse updateRoutesTimeModelById(@RequestBody RoutesTimeModel routesTimeModel) {
-        log.debug("Inside updateRoutesTimeModelById");
+    public RoutesTimeResponse updateRoutesTimeDTOById(@RequestBody RoutesTimeDTO routesTimeDTO) {
+        log.debug("Inside updateRoutesTimeDTOById");
         try {
-            RoutesTimeResponse response;
-            RoutesTimeModel updateModel = routesTimeRepo.findRoutesTimeModelById(routesTimeModel.getId());
-
-            if(!checkIdTimeAndRoute(routesTimeModel)){
-                response = new RoutesTimeResponse("Time or Route or Status is Invalid", false , routesTimeModel);
-            }else {
-                updateModel.setIdRoutes(routesTimeModel.getIdRoutes());
-                updateModel.setIdTime(routesTimeModel.getIdTime());
-                updateModel.setStatus(routesTimeModel.getStatus());
-                updateModel.setCreatedAt(routesTimeModel.getCreatedAt());
-                updateModel.setUpdatedAt(ZonedDateTime.now());
-                updateModel.setIdUserConfig(routesTimeModel.getIdUserConfig());
-                routesTimeRepo.save(updateModel);
-                /*thiếu userConfig*/
-                response = new RoutesTimeResponse(Constants.MESSAGE_UPDATE_ROUTES_TIME_SUCCESS, true, updateModel);
-            }
-            return response;
+            return routesTimeService.updateRoutesTime(routesTimeDTO);
 
         }catch (Exception e){
             throw new BadRequestException(e.getMessage());
         }
     }
-    /* updateRoutesTimeModelById
+    /* updateRoutesTimeDTOById
      * end
      *  */
 
 
-    /* getAllRoutesTimeModelsByStatus
+    /* getAllRoutesTimeDTOsByStatus
      * start
      *  */
     @GetMapping("/getAllRoutesTimeByStatus")
-    public RoutesTimeResponse getAllRoutesTimeModelsByStatus(@RequestParam UUID statusId) {
-        log.debug("Inside getAllRoutesTimeModelsByStatus");
+    public RoutesTimeResponse getAllRoutesTimeDTOsByStatus(@RequestParam UUID statusId) {
+        log.debug("Inside getAllRoutesTimeDTOsByStatus");
         try {
-            List<RoutesTimeModel> list = routesTimeRepo.getRoutesTimeByStatus(statusId);
-            return new RoutesTimeResponse(Constants.MESSAGE_STATUS_GET_ALL_ROUTES_TIME_SUCCESS, true, list);
+            return routesTimeService.getRoutesTimeByStatus(statusId);
         }catch (Exception e){
             throw new BadRequestException(e.getMessage());
         }
     }
-    /* getAllRoutesTimeModelsByStatus
+    /* getAllRoutesTimeDTOsByStatus
      * end
      *  */
 
@@ -159,14 +113,7 @@ public class RoutesTimeController {
     public RoutesTimeResponse getRoutesTimeByTime(@RequestParam UUID timeId){
         log.debug("Inside getRoutesTimeByTime");
         try{
-            RoutesTimeResponse response;
-            if(!timeRepository.existsById(timeId)){
-                response = new RoutesTimeResponse("Invalid ID", true);
-            }else{
-                List<RoutesTimeModel> routesTimeModelList = routesTimeRepo.getRoutesTimeByTime(timeId);
-                response = new RoutesTimeResponse("Get routes by time success",true ,routesTimeModelList);
-            }
-            return response;
+            return routesTimeService.getRoutesTimeByTime(timeId);
         }catch (Exception e){
             throw new BadRequestException(e.getMessage());
         }
@@ -176,17 +123,10 @@ public class RoutesTimeController {
 
     //    get routes time by routes start
     @GetMapping("/getRoutesTimeByRoutes")
-    public RoutesTimeResponse getRoutesTimeByRoutes(@RequestParam UUID timeId){
-        log.debug("Inside getRoutesTimeByTime");
+    public RoutesTimeResponse getRoutesTimeByRoutes(@RequestParam UUID routesId){
+        log.debug("Inside getRoutesTimeByRoutes");
         try{
-            RoutesTimeResponse response;
-            if(!routesRepo.existsById(timeId)){
-                response = new RoutesTimeResponse("Invalid ID", true);
-            }else{
-                List<RoutesTimeModel> routesTimeModelList = routesTimeRepo.getRoutesTimeByRoutes(timeId);
-                response = new RoutesTimeResponse("Get routes by routes success",true ,routesTimeModelList);
-            }
-            return response;
+            return routesTimeService.getRoutesTimeByRoutes(routesId);
         }catch (Exception e){
             throw new BadRequestException(e.getMessage());
         }
@@ -200,17 +140,10 @@ public class RoutesTimeController {
      *
      * */
     @DeleteMapping("/deleteRoutesTimeById")
-    public RoutesTimeResponse deleteRoutesTimeModel(@RequestParam UUID id) {
-        log.debug("Inside deleteRoutesTimeModel");
+    public RoutesTimeResponse deleteRoutesTimeDTO(@RequestParam UUID id) {
+        log.debug("Inside deleteRoutesTimeDTO");
         try {
-            RoutesTimeResponse response;
-            if(routesTimeRepo.existsById(id)){
-                routesTimeRepo.deleteById(id);
-                response = new RoutesTimeResponse("Delete Time Success",true );
-            }else {
-                response = new RoutesTimeResponse("Invalid ID",false );
-            }
-            return response;
+            return routesTimeService.deleteById(id);
         }catch (Exception e){
             throw new BadRequestException(e.getMessage());
         }

@@ -45,6 +45,10 @@ public class PriceModel {
     private ZonedDateTime createdAt = ZonedDateTime.now();;
     @JsonIgnore
     private ZonedDateTime updatedAt = ZonedDateTime.now();
+
+    public PriceModel(UUID id) {
+        this.id = id;
+    }
 }
 
 

@@ -3,7 +3,8 @@ package meu.booking_rebuild_ver2.response.Admin;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import meu.booking_rebuild_ver2.model.Admin.RoutesTimeModel;
+import meu.booking_rebuild_ver2.model.Admin.DTO.RoutesTimeDTO;
+
 
 import java.util.List;
 
@@ -14,20 +15,20 @@ public class RoutesTimeResponse {
     private String message;
     private Boolean success;
 
-    private List<RoutesTimeModel> routesTimeModelList;
+    private List<RoutesTimeDTO> routesTimeDTOList;
 
-    private RoutesTimeModel routesTimeModel;
+    private RoutesTimeDTO routesTimeDTO;
 
-    public RoutesTimeResponse(String message, Boolean success, RoutesTimeModel routesTimeModel) {
+    public RoutesTimeResponse(String message, Boolean success, RoutesTimeDTO routesTimeDTO) {
         this.message = message;
         this.success = success;
-        this.routesTimeModel = routesTimeModel;
+        this.routesTimeDTO = routesTimeDTO;
     }
 
-    public RoutesTimeResponse(String message, Boolean success, List<RoutesTimeModel> routesTimeModelList) {
+    public RoutesTimeResponse(String message, Boolean success, List<RoutesTimeDTO> routesTimeDTOList) {
         this.message = message;
         this.success = success;
-        this.routesTimeModelList = routesTimeModelList;
+        this.routesTimeDTOList = routesTimeDTOList;
     }
 
     public RoutesTimeResponse(String message, Boolean success) {

@@ -3,6 +3,7 @@ package meu.booking_rebuild_ver2.model.Admin.DTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import meu.booking_rebuild_ver2.model.Admin.BusTypes;
 
 
 import java.util.UUID;
@@ -19,5 +20,5 @@ public class BusSeatDTO {
 
     private int floorNumber;
 
-    private UUID idBusTypes;
+    private BusTypeDTO idBusTypes;
 }

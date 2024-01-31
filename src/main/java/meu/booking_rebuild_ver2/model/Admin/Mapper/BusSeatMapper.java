@@ -11,7 +11,7 @@ public class BusSeatMapper {
         busSeatDTO.setNameSeat(busSeat.getNameSeat());
         busSeatDTO.setAvailable(busSeat.isAvailable());
         busSeatDTO.setFloorNumber(busSeat.getFloorNumber());
-        busSeatDTO.setIdBusTypes(busSeat.getIdBusTypes().getId());
+        busSeatDTO.setIdBusTypes(BusTypeMapper.busTypeDTO(busSeat.getIdBusTypes()));
 
         return busSeatDTO;
     }
@@ -22,7 +22,7 @@ public class BusSeatMapper {
         busSeat.setNameSeat(busSeatDTO.getNameSeat());
         busSeat.setFloorNumber(busSeatDTO.getFloorNumber());
         busSeat.setAvailable(busSeatDTO.isAvailable());
-        busSeat.setIdBusTypes(new BusTypes(busSeatDTO.getIdBusTypes()));
+        busSeat.setIdBusTypes(BusTypeMapper.dtoToBusTypes(busSeatDTO.getIdBusTypes()));
 
         return busSeat;
     }

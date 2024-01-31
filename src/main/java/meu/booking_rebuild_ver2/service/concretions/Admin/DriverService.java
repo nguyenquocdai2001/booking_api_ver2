@@ -40,7 +40,7 @@ public class DriverService implements IDriverService {
             driverDTO.setIdUserConfig(userID.getUserValue().getId());
             Driver driver = DriverMapper.dtoToDriver(driverDTO);
 
-            BusTypes busTypes = busTypesRepository.findById(driverDTO.getIdBusTypes()).get();
+            BusTypes busTypes = busTypesRepository.findById(driverDTO.getIdBusTypes().getId()).get();
             driver.setIdBusTypes(busTypes);
 
             Status status = statusRepository.findStatusById(driverDTO.getIdStatus());
@@ -142,7 +142,7 @@ public class DriverService implements IDriverService {
             driverUpdated.setName(driverDTO.getName());
             driverUpdated.setPhone(driverDTO.getPhone());
             driverUpdated.setKindOfLicense(driverDTO.getKindOfLicense());
-            BusTypes busTypes = busTypesRepository.findById(driverDTO.getIdBusTypes()).get();
+            BusTypes busTypes = busTypesRepository.findById(driverDTO.getIdBusTypes().getId()).get();
             driverUpdated.setIdBusTypes(busTypes);
 
             Status status = statusRepository.findStatusById(driverDTO.getIdStatus());

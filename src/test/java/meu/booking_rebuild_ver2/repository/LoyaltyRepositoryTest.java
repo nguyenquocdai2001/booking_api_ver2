@@ -23,7 +23,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-
+/*
+author: Nguyen Minh Tam
+test for bs-2
+ */
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 public class LoyaltyRepositoryTest {
@@ -35,6 +38,7 @@ public class LoyaltyRepositoryTest {
     private StatusRepository statusRepository;
     @PersistenceContext
     private EntityManager entityManager;
+    // Function test save all and get all
     @Test
     public void LoyalRepository_SaveAll_ReturnSavedLoyalties(){
         Long databaseSize = (Long) entityManager.createQuery("SELECT COUNT(l) FROM Loyalty l").getSingleResult();
@@ -87,6 +91,7 @@ public class LoyaltyRepositoryTest {
         Long updatedDatabaseSize = (Long) entityManager.createQuery("SELECT COUNT(l) FROM Loyalty l").getSingleResult();
         assertThat(updatedDatabaseSize).isEqualTo(databaseSize + 4);
     }
+    // FUnction test delete
     @Test
     public void LoyalRepository_DeleteById(){
         Loyalty loyalty3 = Loyalty.builder()
@@ -101,6 +106,7 @@ public class LoyaltyRepositoryTest {
          model = loyaltyRepository.findById(loyalty3Saved.getId());
         assertThat(model.isEmpty());
     }
+    // FUnction test update
     @Test
     public void LoyalRepository_Update_ReturnLoyalty(){
         Status status = Status.builder().status("test").flag(true).build();
@@ -126,6 +132,7 @@ public class LoyaltyRepositoryTest {
         assertThat(model.get().getDiscount() == 30);
         assertThat(model.get().getLoyaltySpent() == 10.2);
     }
+    // Function test get all and orders by discount
     @Test
     public void LoyalRepository_GetAll_ReturnListOrderedAscByDiscount(){
         Loyalty loyalty1 = new Loyalty(UUID.randomUUID(),"gold", 20, 3.500);
@@ -148,6 +155,7 @@ public class LoyaltyRepositoryTest {
             assertThat(current.getDiscount()).isLessThanOrEqualTo(next.getDiscount());
         }
     }
+    // FUnction test get by rank
     @Test
     public void LoyalRepository_GetByRank_ReturnLoyalty(){
         Status status = Status.builder().status("test").flag(true).build();
@@ -166,6 +174,7 @@ public class LoyaltyRepositoryTest {
         assertThat(model.isPresent());
         assertThat(model.get().getRank() == "diamond");
     }
+    // Function test get by price
     @Test
     public void LoyalRepository_GetByPrice_ReturnLoyalty(){
         Status status = Status.builder().status("test").flag(true).build();
@@ -185,6 +194,7 @@ public class LoyaltyRepositoryTest {
         assertThat(model.get().getDiscount() == 50);
         assertThat(model.get().getLoyaltySpent() == 6.5);
     }
+    // FUnction get by discount
     @Test
     public void LoyaltyRepository_GetByDiscount_ReturnLoyalty(){
         Status status = Status.builder().status("test").flag(true).build();
