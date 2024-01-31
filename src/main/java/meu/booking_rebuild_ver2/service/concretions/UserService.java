@@ -39,7 +39,10 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+/*
+author: Nguyen Minh Tam
+service: The service to using for manage about authorize of admin
+ */
 @Service
 public class UserService implements IUserService {
     public static final String USERID = "USER_ID";
@@ -55,8 +58,6 @@ public class UserService implements IUserService {
     @Autowired
     private JwtUtils jwtUtils;
     @Autowired
-    private UserID userID;
-    @Autowired
     private IStatusService statusService;
     @Autowired
     private UserMapper userMapper;
@@ -67,17 +68,18 @@ public class UserService implements IUserService {
         this.userRepository = userRepository;
         this.jwtUtils = jwtUtils;
     }
+    // Function to get id by http session
     @Override
     public UUID getSessionUserId(@NotNull HttpSession session) {
 
         return (UUID) session.getAttribute(USERID);
     }
-
+    // Function to get username by http session
     @Override
     public String getSessionUserName(HttpSession session) {
         return (String) session.getAttribute(USEREMAIL);
     }
-
+    // Function to get profile of id user
     @Override
     public UserDTO getProfileMe(UUID id) throws NotFoundException{
         try{
@@ -91,7 +93,7 @@ public class UserService implements IUserService {
         }
 
     }
-
+    // Function to handle login
     @Override
     public LoginResponse loginHandle(String username, String password) {
         Optional<User> model =  userRepository.findUserByUsername(username);
@@ -116,7 +118,7 @@ public class UserService implements IUserService {
             throw new BadRequestException(Constants.MESSAGE_INVALID_PASSWORD);
         }
     }
-
+    // Function to handle register
     @Override
     public ResponseEntity<GenericResponse> registerHandle(RegisterRequest request) {
 
@@ -137,12 +139,13 @@ public class UserService implements IUserService {
             throw new BadRequestException(e.getMessage());
     }
     }
-
+    // Function to get user by id user
     @Override
     public User getUserById(UUID id) {
         return userRepository.findUserById(id);
     }
-
+    // Function to load user by username. The function will be used in order to set session and get user to
+    // get UserDetail, create token
     @Override
     public UserDetails loadUserByUsername(String username)  throws UsernameNotFoundException  {
         User user = userRepository.findUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Not found"));

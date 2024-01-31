@@ -7,7 +7,10 @@ import lombok.AccessLevel;
 import lombok.Setter;
 import meu.booking_rebuild_ver2.config.Constants;
 import meu.booking_rebuild_ver2.model.Admin.DTO.LoyaltyDTO;
-
+/*
+Author: Nguyen Minh Tam
+Response for controller of BS-2
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -5,7 +5,7 @@ public class Constants {
 
     private Constants() {
     }
-
+    // Constant to announce the status of valid token
     public static final String MESSAGE_INVALID_TOKEN = "Invalid JWT token: {}";
     public static final String MESSAGE_TOKEN_EXPIRED = "JWT token is expired: {}";
     public static final String MESSAGE_TOKEN_UNSUPPORTED = "JWT token is unsupported: {}";
@@ -95,8 +95,8 @@ public class Constants {
     public static final String MESSAGE_STATUS_GET_ALL_PRICE_SUCCESS = "Getting all prices successfully!";
     public static final String MESSAGE_PRICE_FIND_SUCCESS = "Find prices successfully!";
     public static final String MESSAGE_UPDATE_PRICE_SUCCESS = "Updating price successfully!";
+    // author: Nguyen Minh Tam. Constant to announce the succes of bs-2 and bs-3 and common announce
     public static final String MESSAGE_GET_SUCCESSFULL = "The get request has been Satisfied";
-
     public static final String MESSAGE_ADD_LOYALTY_SUCCESS = "Added a new loyalty successfully!";
     public static final String MESSAGE_ADD_RANK_FAILED = "The rank has been exit";
     public static final String MESSAGE_ADD_DISCOUNT_FAILED = "The discount has been exit";
@@ -104,18 +104,15 @@ public class Constants {
     public static final String MESSAGE_DELETED_SUCCESS = "Deleted successfully";
     public static final String MESSAGE_GET_NOT_FOUND = "NOT FOUND";
 
-
     public static final String MESSAGE_GET_LOYALTY_FAILED = ". Can not get loyalty with ";
     public static final String MESSAGE_ADD_CUSTOMER_FAILED = "The customer has been exit";
     public static final String MESSAGE_ADDED_CUSTOMER_SUCCESSFULLY = "The customer has been added successfully";
     public static final String MESSAGE_UPDATED_CUSTOMER_SUCCESSFULLY = "The customer has been updated successfully";
     public static final String MESSAGE_PHONE_FORMAT_WRONG = "Phone number format is incorrect";
     public static final String MESSAGE_DELETED_SUCCESSFULLY = "Deleted object successfully!";
-
-
     /*
-    * Payment
-    * */
+     * Payment
+     * */
     public static final String MESSAGE_GET_PAYMENT_FAILED = ". Can not get payment ";
     public static final String MESSAGE_ADD_PAYMENT_FAILED = "The customer has been exit";
     public static final String MESSAGE_ADDED_PAYMENT_SUCCESSFULLY = "The payment has been added successfully";
@@ -125,7 +122,6 @@ public class Constants {
     public static final String MESSAGE_EMPTY_LIST= "List is empty!";
     public static final String MESSAGE_INVALID_DATA = "Invalid data!";
     public static final String MESSAGE_ID_NOT_FOUND = "ID not found!";
-
     //nqd11 bs-11
     public static final String MESSAGE_DRIVER_DUPLICATE_PHONE = "Phone is exsisted!";
     public static final String MESSAGE_ADDED_DRIVER_SUCCESS = "The driver has been added successfully";
@@ -142,6 +138,7 @@ public class Constants {
     public static final String MESSAGE_LOCATION_GET_ALL_SUCCESS = "Get all locations successfully!";
     public static final String MESSAGE_LOCATION_GET_LOCATION_SUCCESS = "Get locations successfully!";
     public static final String MESSAGE_LOCATION_GET_NULL = "Not found!";
+
 
 
     public static final String MESSAGE_ADDED_PAYMENT_TYPE_SUCCESSFULLY = "The payment type has been added successfully";

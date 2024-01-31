@@ -13,6 +13,11 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
+/*
+author: Nguuyenx Minh Tm
+service: The service will create Bearer Token with userdeatil that will be created in UserService after we have
+checked successfull
+ */
 @Component
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);

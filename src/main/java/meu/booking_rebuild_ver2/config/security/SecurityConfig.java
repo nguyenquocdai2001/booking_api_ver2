@@ -21,7 +21,9 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
-
+/*
+Config of sercurity on system
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
