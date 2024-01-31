@@ -41,7 +41,7 @@ public class RoutesTimeService implements IRoutesTimeService{
         try {
             RoutesTimeResponse response;
             if(!checkIdTimeAndRoute(routesTimeDTO)){
-                response = new RoutesTimeResponse("Time or Route or Status is Invalid", false , routesTimeDTO);
+                response = new RoutesTimeResponse(Constants.MESSAGE_INVALID_DATA, false , routesTimeDTO);
             }else {
                 routesTimeDTO.setIdUserConfig(user.getUserValue().getId());
                 RoutesTimeModel model = RoutesTimeMapper.dtoToRoutesTimes(routesTimeDTO);
@@ -77,7 +77,7 @@ public class RoutesTimeService implements IRoutesTimeService{
             return new RoutesTimeResponse(Constants.MESSAGE_UPDATE_ROUTES_SUCCESS, true,routesTimeDTO);
 
         }
-        return new RoutesTimeResponse("ID not found", false);
+        return new RoutesTimeResponse(Constants.MESSAGE_ID_NOT_FOUND, false);
     }
 
     @Override
@@ -94,11 +94,11 @@ public class RoutesTimeService implements IRoutesTimeService{
     public RoutesTimeResponse deleteById(UUID id) {
         RoutesTimeResponse response;
         if(!routesTimeRepo.existsById(id)){
-            response = new RoutesTimeResponse("Invalid ID",true );
+            response = new RoutesTimeResponse(Constants.MESSAGE_ID_NOT_FOUND,true );
         }
         else{
             routesTimeRepo.deleteById(id);
-            response = new RoutesTimeResponse("Delete RoutesTime Success",true);
+            response = new RoutesTimeResponse("RoutesTime"+ Constants.MESSAGE_DELETED_SUCCESS,true);
         }
         return response;
     }
@@ -114,7 +114,7 @@ public class RoutesTimeService implements IRoutesTimeService{
                 return new RoutesTimeResponse(Constants.MESSAGE_STATUS_GET_ALL_ROUTES_SUCCESS, true, list);
             }
         }
-        return new RoutesTimeResponse("Status not found", false);
+        return new RoutesTimeResponse("Status "+Constants.MESSAGE_ID_NOT_FOUND, false);
 
     }
 
@@ -123,12 +123,12 @@ public class RoutesTimeService implements IRoutesTimeService{
         try{
             RoutesTimeResponse response;
             if(!timeRepository.existsById(id)){
-                response = new RoutesTimeResponse("Invalid ID", true);
+                response = new RoutesTimeResponse(Constants.MESSAGE_ID_NOT_FOUND, true);
             }else{
                 List<RoutesTimeDTO> routesTimeDTOList = routesTimeRepo.getRoutesTimeByTime(id)
                         .stream()
                         .map(RoutesTimeMapper::routesTimeDTO).toList();
-                response = new RoutesTimeResponse("Get routes by time success",true ,routesTimeDTOList);
+                response = new RoutesTimeResponse(Constants.MESSAGE_ROUTES_TIME_FIND_SUCCESS,true ,routesTimeDTOList);
             }
             return response;
         }catch (Exception e){
@@ -141,13 +141,13 @@ public class RoutesTimeService implements IRoutesTimeService{
         try{
             RoutesTimeResponse response;
             if(!routesRepo.existsById(id)){
-                response = new RoutesTimeResponse("Invalid ID", true);
+                response = new RoutesTimeResponse("Routes"+ Constants.MESSAGE_ID_NOT_FOUND, true);
             }else{
                 List<RoutesTimeDTO> routesTimeList = routesTimeRepo.getRoutesTimeByRoutes(id)
                         .stream()
                         .map(RoutesTimeMapper::routesTimeDTO)
                         .toList();
-                response = new RoutesTimeResponse("Get routes by routes success",true ,routesTimeList);
+                response = new RoutesTimeResponse(Constants.MESSAGE_ROUTES_TIME_FIND_SUCCESS,true ,routesTimeList);
             }
             return response;
         }catch (Exception e){
