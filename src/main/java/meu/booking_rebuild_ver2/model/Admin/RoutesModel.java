@@ -38,4 +38,8 @@ public class RoutesModel {
     private ZonedDateTime createdAt = ZonedDateTime.now();;
     @JsonIgnore
     private ZonedDateTime updatedAt = ZonedDateTime.now();
+
+    public RoutesModel(UUID id) {
+        this.id = id;
+    }
 }
