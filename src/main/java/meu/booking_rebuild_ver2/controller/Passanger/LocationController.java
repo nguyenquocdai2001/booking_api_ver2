@@ -43,7 +43,7 @@ public class LocationController {
         return locationService.getAllLocationsByProvince(province);
     }
 
-    @PostMapping(path = "updateLocation")
+    @PutMapping(path = "updateLocation")
     public LocationResponse updateLocation(@RequestBody Location location){
         return locationService.updateLocation(location);
     }

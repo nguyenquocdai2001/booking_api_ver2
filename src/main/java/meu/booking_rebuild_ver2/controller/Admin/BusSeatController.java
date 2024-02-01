@@ -53,7 +53,7 @@ public class BusSeatController {
         return busSeatService.getAllByIdBusTypes(idBusType);
     }
 
-    @PostMapping(path = "updateBusSeat")
+    @PutMapping(path = "updateBusSeat")
     public BusSeatResponse updateBusSeat(@RequestBody @Valid BusSeatDTO busSeatDTO){
         return busSeatService.updateBusSeat(busSeatDTO);
     }

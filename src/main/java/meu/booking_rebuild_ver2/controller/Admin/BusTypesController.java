@@ -57,7 +57,7 @@ public class BusTypesController {
         return busTypesService.getBusTypesByLicensePlate(licensePlate);
     }
 
-    @PostMapping(path = "updateBusType")
+    @PutMapping(path = "updateBusType")
     public BusTypesResponse updateBusType(@RequestBody @Valid BusTypeDTO busTypeDTO){
         return busTypesService.updateBusType(busTypeDTO);
     }

@@ -49,7 +49,7 @@ public class DriverController {
         return driverService.getByKindOfLicense(kindOfLicense);
     }
 
-    @PostMapping(path = "updateDriver")
+    @PutMapping(path = "updateDriver")
     public DriverResponse updateDriver(@RequestBody @Valid DriverDTO driverDTO){
         return driverService.updateDriver(driverDTO);
     }
