@@ -42,6 +42,7 @@ public class Constants {
     public static final String MESSAGE_TIME_FIND_SUCCESS = "Find time successfully!";
     public static final String MESSAGE_UPDATE_TIME_SUCCESS = "Updating time successfully!";
     public static final String MESSAGE_SOMETHING_WENT_WRONG = "Something went wrong!";
+    public static final String MESSAGE_DELETE_SUCCESS = "Delete successfully!";
 
     public static final String MESSAGE_STATUS_ADD_ROUTES_SUCCESS = "Adding routes successfully!";
     public static final String MESSAGE_STATUS_GET_ALL_ROUTES_SUCCESS = "Getting all routes successfully!";
@@ -53,7 +54,7 @@ public class Constants {
     public static final String MESSAGE_ROUTES_TIME_FIND_SUCCESS = "Find route time successfully!";
     public static final String MESSAGE_UPDATE_ROUTES_TIME_SUCCESS = "Updating route time successfully!";
 
-
+    public static final String MESSAGE_ROUTES_TIME_STILL_HAS = "Route Time still has ID, can't delete!";
 
     public static final String MESSAGE_STATUS_DELETE_STATUS_SUCCESS = "Deleting a status successfully!";
 
@@ -136,4 +137,12 @@ public class Constants {
     public static final String MESSAGE_LOCATION_GET_ALL_SUCCESS = "Get all locations successfully!";
     public static final String MESSAGE_LOCATION_GET_LOCATION_SUCCESS = "Get locations successfully!";
     public static final String MESSAGE_LOCATION_GET_NULL = "Not found!";
+
+
+
+    public static final String MESSAGE_ADDED_PAYMENT_TYPE_SUCCESSFULLY = "The payment type has been added successfully";
+    public static final String MESSAGE_UPDATED_PAYMENT_TYPE_SUCCESSFULLY = "The payment type has been updated successfully";
+    public static final String MESSAGE_DELETE_PAYMENT_TYPE_SUCCESSFULLY = "Deleted payment type successfully!";
+    public static final String MESSAGE_STATUS_GET_PAYMENT_TYPE_SUCCESS = "Getting payment type successfully!";
+
 }

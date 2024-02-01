@@ -42,7 +42,7 @@ public class PriceService implements IPriceService {
             priceRepository.save(priceModel);
             return new PriceResponse(Constants.MESSAGE_STATUS_ADD_PRICE_SUCCESS, true, priceDTO);
         }
-        return new PriceResponse("Invalid status or BusType", false);
+        return new PriceResponse(Constants.MESSAGE_INVALID_DATA+" status or BusType", false);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class PriceService implements IPriceService {
             response = new PriceResponse(Constants.MESSAGE_UPDATE_PRICE_SUCCESS, true, priceDTO);
             return response;
         }
-        response = new PriceResponse("ID not found", false);
+        response = new PriceResponse("ID "+ Constants.MESSAGE_ID_NOT_FOUND, false);
         return response;
     }
 
@@ -89,11 +89,11 @@ public class PriceService implements IPriceService {
     @Override
     public PriceResponse deleteById(UUID id) {
         if(!priceRepository.existsById(id)){
-            return new PriceResponse("Invalid ID",true );
+            return new PriceResponse(Constants.MESSAGE_ID_NOT_FOUND,true );
         }
         else{
             priceRepository.deleteById(id);
-            return new PriceResponse("Delete Price Success",true );
+            return new PriceResponse("Price "+ Constants.MESSAGE_DELETED_SUCCESS,true );
         }
 
     }
@@ -110,10 +110,10 @@ public class PriceService implements IPriceService {
                 response = new PriceResponse(Constants.MESSAGE_STATUS_GET_ALL_PRICE_SUCCESS, true, list);
                 return response;
             }
-            response = new PriceResponse("List is empty", false);
+            response = new PriceResponse(Constants.MESSAGE_EMPTY_LIST, false);
             return response;
         }
-        return new PriceResponse("Status not found", false);
+        return new PriceResponse("Status "+ Constants.MESSAGE_ID_NOT_FOUND, false);
     }
 
     @Override
@@ -128,10 +128,10 @@ public class PriceService implements IPriceService {
                 response = new PriceResponse(Constants.MESSAGE_STATUS_GET_ALL_PRICE_SUCCESS, true, list);
                 return response;
             }
-            response = new PriceResponse("List is empty", false);
+            response = new PriceResponse(Constants.MESSAGE_EMPTY_LIST, false);
             return response;
         }
-        return new PriceResponse("BusType not found", false);
+        return new PriceResponse("BusType "+ Constants.MESSAGE_ID_NOT_FOUND, false);
     }
 
     @Override
@@ -146,10 +146,10 @@ public class PriceService implements IPriceService {
                 response = new PriceResponse(Constants.MESSAGE_STATUS_GET_ALL_PRICE_SUCCESS, true, list);
                 return response;
             }
-            response = new PriceResponse("List is empty", false);
+            response = new PriceResponse(Constants.MESSAGE_EMPTY_LIST, false);
             return response;
         }
-        return new PriceResponse("RoutesTime not found", false);
+        return new PriceResponse("RoutesTime "+ Constants.MESSAGE_ID_NOT_FOUND, false);
 
     }
 
