@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,6 +32,7 @@ public class StatusService implements IStatusService {
     @Override
     public StatusResponse createStatus(Status status) {
         try {
+            status.setCreatedAt(ZonedDateTime.now());
             statusRepository.save(status);
             StatusDTO statusDTO = StatusMapper.toStatusDTO(status);
             StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_ADD_SUCCESS, true, statusDTO);
@@ -94,6 +96,7 @@ public class StatusService implements IStatusService {
             Status updatedStatus = statusRepository.findById(status.getId()).get();
             updatedStatus.setStatus(status.getStatus());
             updatedStatus.setFlag(status.isFlag());
+            updatedStatus.setUpdatedAt(ZonedDateTime.now());
             statusRepository.save(updatedStatus);
             StatusDTO statusDTO = StatusMapper.toStatusDTO(updatedStatus);
             StatusResponse response = new StatusResponse(Constants.MESSAGE_STATUS_UPDATE_STATUS_SUCCESS, true, statusDTO);

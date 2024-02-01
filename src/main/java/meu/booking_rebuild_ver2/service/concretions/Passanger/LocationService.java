@@ -22,6 +22,7 @@ public class LocationService implements ILocationService {
     @Override
     public LocationResponse createLocation(Location location) {
         try {
+            location.setCreatedAt(ZonedDateTime.now());
             Location locationSaved = locationRepository.save(location);
             LocationResponse response = new LocationResponse(Constants.MESSAGE_LOCATION_ADD_SUCCESS, true, locationSaved);
             return response;
