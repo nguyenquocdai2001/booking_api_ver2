@@ -47,8 +47,6 @@ public class CustomerService implements ICustomerService {
     private CustomerMapper customerMapper;
     @Autowired
     private ILoyaltyService loyaltyService;
-    @Autowired
-    private IUserService userService;
 
     @Autowired
     private StatusRepository statusRepository;
@@ -92,10 +90,10 @@ public class CustomerService implements ICustomerService {
         try{
             Customer model = customerRepository.findCustomerById(id);
             if(model == null){
-                throw new NotFoundException();
+                throw new NotFoundException("Can not get the customer with id: " + id);
             }
             CustomerDTO response = customerMapper.toDTO(model);
-            return new CustomerResponse(response);
+            return new CustomerResponse(Constants.MESSAGE_GET_SUCCESSFULL+"Get the customer sucessfully",true,response);
         } catch (RuntimeException e) {
             throw new BadRequestException(e.getMessage());
         }
@@ -116,7 +114,7 @@ public class CustomerService implements ICustomerService {
     public CustomerResponse getCustomerByLoyalty(UUID idLoyalty) throws NotFoundException {
         Optional<Loyalty> loyalty = loyaltyRepository.findById(idLoyalty);
         if(loyalty.isEmpty()){
-            throw new NotFoundException();
+            throw new NotFoundException("Can not get the loyalty with id: " + idLoyalty);
         }
         List<Customer> models = customerRepository.getCustomersByLoyalty_Id(idLoyalty);
         CustomerResponse listResponse = new CustomerResponse();
@@ -143,14 +141,14 @@ public class CustomerService implements ICustomerService {
         if(modelPhone != null){
             if(model != null){
                 if(modelPhone.getId() != model.getId()){
-                    throw new GenericResponseExceptionHandler(Constants.MESSAGE_ADD_CUSTOMER_FAILED);
+                    throw new GenericResponseExceptionHandler(Constants.MESSAGE_DUPLICATE_PHONE_CUSTOMER);
                 }
             }
             else{
-                throw new NotFoundException();
+                throw new NotFoundException("Can not get the customer with id: " + id);
             }
         }
-        if(model == null) throw new NotFoundException();
+        if(model == null) throw new NotFoundException("Can not get the customer with id: " + id);
         try{
             model.setName(request.getName());
             model.setPhone(request.getPhone());
@@ -161,7 +159,7 @@ public class CustomerService implements ICustomerService {
                 Status status = statusRepository.findStatusById(UUID.fromString(request.getStatus()));
                 if(status != null) model.setStatus(status);
             }
-
+            model.setCreatedAt(model.getCreatedAt());
             model.setNumberOfTrips(request.getNumberOfTrips());
             customerRepository.save(model);
             return new GenericResponse(Constants.MESSAGE_UPDATED_CUSTOMER_SUCCESSFULLY);
@@ -174,21 +172,21 @@ public class CustomerService implements ICustomerService {
     public GenericResponse updateCustomerByLoyalty(UUID id, UpdateCustomerRequest request) throws NotFoundException, GenericResponseExceptionHandler {
         boolean isSatisfied = false;
         if(phoneValid(request.getPhone())){
-            throw new GenericResponseExceptionHandler(Constants.MESSAGE_PHONE_FORMAT_WRONG);
+            throw new GenericResponseExceptionHandler(Constants.MESSAGE_PHONE_FORMAT_WRONG + "Can not update with that number phone. ");
         }
         Customer modelPhone = customerRepository.findCustomerByPhone(request.getPhone());
         Customer model = customerRepository.findCustomerById(id);
         if(modelPhone != null){
             if(model != null){
                 if(modelPhone.getId() != model.getId()){
-                    throw new GenericResponseExceptionHandler(Constants.MESSAGE_ADD_CUSTOMER_FAILED);
+                    throw new GenericResponseExceptionHandler(Constants.MESSAGE_DUPLICATE_PHONE_CUSTOMER);
                 }
             }
             else{
-                throw new NotFoundException();
+                throw new NotFoundException("Can not get the customer with id: " + id);
             }
         }
-        if(model == null) throw new NotFoundException();
+        if(model == null) throw new NotFoundException("Can not get the customer with id: " + id);
         try{
             model.setName(request.getName());
             model.setPhone(request.getPhone());
@@ -226,7 +224,6 @@ public class CustomerService implements ICustomerService {
         }
         try {
             Page<CustomerDTO> listCustomers = customerRepository.getCustomersByPhoneAsPage(phone, PageRequest.of(Math.abs(page), 10));
-            // Chuyển đổi danh sách khách hàng sang CustomerResponse
             return convertToCustomerResponse(listCustomers, page);
         } catch (RuntimeException e) {
             throw new BadRequestException(e.getMessage());
@@ -247,22 +244,34 @@ public class CustomerService implements ICustomerService {
     // Function to update customer to economy when loyalty is deleted
     @Override
     public void handleUpdateCustomerWhenLoyaltyDelete(List<CustomerDTO> customerDTOS) throws GenericResponseExceptionHandler, NotFoundException {
-        for(CustomerDTO customer : customerDTOS){
-            customer.setIdLoyalty(loyaltyService.getLoyaltyByPrice().getId());
-            Customer modelCustomer = customerMapper.toModel(customer);
-            System.out.println(modelCustomer);
-            customerRepository.save(modelCustomer);
-        }
+            customerDTOS.stream()
+                    .peek(customer -> {
+                        try {
+                            customer.setIdLoyalty(loyaltyService.getLoyaltyByPrice().getId());
+                        } catch (GenericResponseExceptionHandler e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
+                    .map(customerDTO -> {
+                        try {
+                            return customerMapper.toModel(customerDTO);
+                        } catch (NotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
+                    .peek(customerRepository::save)
+                    .forEach(System.out::println);
+
     }
     //Function to delete Customer by id customer
     @Override
     public GenericResponse deleteCustomerById(UUID id) throws NotFoundException {
         Customer model = customerRepository.findCustomerById(id);
         if(model == null){
-            throw new NotFoundException();
+            throw new NotFoundException("Can not get the customer with id: " + id);
         }
         customerRepository.delete(model);
-        return new GenericResponse(Constants.MESSAGE_DELETED_SUCCESSFULLY);
+        return new GenericResponse(Constants.MESSAGE_DELETED_SUCCESS + "The customer with id: " + id + "has been deleted successfully");
     }
     //Function to check valid phone with regex phone
     protected static boolean phoneValid(String phone){
@@ -271,7 +280,7 @@ public class CustomerService implements ICustomerService {
     }
     //Function to Covert from CustomerDTO to CustomerResponse
     private Page<CustomerResponse> convertToCustomerResponse(Page<CustomerDTO> customerDTO, int page) throws NotFoundException {
-        CustomerResponse customerResponse = new CustomerResponse(customerDTO.getContent());
+        CustomerResponse customerResponse = new CustomerResponse(Constants.MESSAGE_GET_SUCCESSFULL+"Get the list customer with pagination sucessfully", true, customerDTO.getContent());
         if(customerResponse.getListCustomer().isEmpty()){
             throw new NotFoundException(" Customer In this page");
         }

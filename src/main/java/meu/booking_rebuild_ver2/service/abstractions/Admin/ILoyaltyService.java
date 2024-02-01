@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public interface ILoyaltyService {
     LoyaltyResponse getLoyaltyByRank(String rank) throws NotFoundException, GenericResponseExceptionHandler;
-    GenericResponse addNewLoyalty(Loyalty request) throws GenericResponseExceptionHandler;
+    GenericResponse addNewLoyalty(Loyalty request, HttpSession httpSession) throws GenericResponseExceptionHandler;
     Optional<Loyalty> getLoyaltyByDiscount(int discount);
     LoyaltyResponse getAllLoyalty();
     GenericResponse updateLoyalty(UUID id, LoyaltyRequest request, HttpSession httpSession) throws NotFoundException, GenericResponseExceptionHandler;

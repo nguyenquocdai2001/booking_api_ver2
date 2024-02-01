@@ -37,8 +37,8 @@ public class LoyaltyController {
     * The model will ensure that the rank and discount are unique
      */
     @PostMapping(path = "addLoyalty")
-    public GenericResponse addNewLoyalty(@RequestBody @Valid Loyalty request) throws GenericResponseExceptionHandler {
-        return loyaltyService.addNewLoyalty(request);
+    public GenericResponse addNewLoyalty(@RequestBody @Valid Loyalty request, @NotNull HttpSession httpSession) throws GenericResponseExceptionHandler {
+        return loyaltyService.addNewLoyalty(request, httpSession);
     }
     /*
      * The function to get all rank and it's discount in table loyalty.
