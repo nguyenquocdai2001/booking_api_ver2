@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.UUID;
 
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-17
+ * */
 @RestController
 @RequestMapping(path = "/status", produces = MediaType.APPLICATION_JSON_VALUE)
 public class StatusController {

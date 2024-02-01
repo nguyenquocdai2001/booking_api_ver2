@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.UUID;
 
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-9
+ * */
 @RestController
 @RequestMapping(path = "/busTypes", produces = MediaType.APPLICATION_JSON_VALUE)
 public class BusTypesController {

@@ -8,7 +8,10 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
-
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-4
+ * */
 @RestController
 @RequestMapping(path = "/location", produces = MediaType.APPLICATION_JSON_VALUE)
 public class LocationController {

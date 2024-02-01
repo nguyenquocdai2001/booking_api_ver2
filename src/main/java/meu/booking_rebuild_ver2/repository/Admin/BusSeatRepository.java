@@ -7,7 +7,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.UUID;
-
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-8
+ * */
 @Repository
 public interface BusSeatRepository extends JpaRepository<BusSeat, UUID> {
     List<BusSeat> findAllByIsAvailable(boolean isAvailable);

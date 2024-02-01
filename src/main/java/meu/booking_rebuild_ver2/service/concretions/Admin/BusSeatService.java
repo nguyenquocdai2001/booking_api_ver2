@@ -17,6 +17,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-8
+ * */
 @Service
 public class BusSeatService implements IBusSeatService {
     private final BusSeatRepository busSeatRepository;
