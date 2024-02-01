@@ -27,6 +27,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -161,6 +162,7 @@ public class CustomerService implements ICustomerService {
             }
             model.setCreatedAt(model.getCreatedAt());
             model.setNumberOfTrips(request.getNumberOfTrips());
+            model.setUpdatedAt(Instant.now());
             customerRepository.save(model);
             return new GenericResponse(Constants.MESSAGE_UPDATED_CUSTOMER_SUCCESSFULLY);
         }catch (RuntimeException e){
@@ -195,21 +197,32 @@ public class CustomerService implements ICustomerService {
             model.setLastUpdated(true);
             if(id_loyalty != null){
                 Optional<Loyalty> loyalty = loyaltyRepository.findById(id_loyalty);
-
-                model.setLoyalty(loyalty.get());
-                isSatisfied = true;
+                if(loyalty.isPresent()){
+                    model.setLoyalty(loyalty.get());
+                    isSatisfied = true;
+                }
+                else{
+                    throw new NotFoundException("Can not get the loyalty with id: " + id + ". Can not update customer!" );
+                }
             }
-
-            else if((rank != null) && (!isSatisfied)){
+             if((rank != null) && (!isSatisfied)){
                 Optional<Loyalty> loyalty = loyaltyRepository.findByRank(rank);
-                loyalty.ifPresent(model::setLoyalty);
+                if(loyalty.isPresent()){
+                    model.setLoyalty(loyalty.get());
+                    isSatisfied = true;
+                }
+                else{
+                    throw new NotFoundException("Can not get the loyalty with rank: "+ rank + ". Can not update customer!");
+                }
+
             }
-            else{
+            if(!isSatisfied){
                 throw new GenericResponseExceptionHandler("The request is not valid");
             }
             Status status = statusRepository.findStatusById(UUID.fromString(request.getStatus()));
             if(status != null) model.setStatus(status);
             model.setNumberOfTrips(request.getNumberOfTrips());
+            model.setUpdatedAt(Instant.now());
             customerRepository.save(model);
             return new GenericResponse(Constants.MESSAGE_UPDATED_CUSTOMER_SUCCESSFULLY);
         }catch (RuntimeException e){
