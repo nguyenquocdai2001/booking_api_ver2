@@ -12,6 +12,7 @@ import meu.booking_rebuild_ver2.request.LoginRequest;
 import meu.booking_rebuild_ver2.request.RegisterRequest;
 import meu.booking_rebuild_ver2.response.GenericResponse;
 import meu.booking_rebuild_ver2.response.LoginResponse;
+import meu.booking_rebuild_ver2.response.ProfileMeResponse;
 import meu.booking_rebuild_ver2.service.abstractions.IUserService;
 import meu.booking_rebuild_ver2.service.utils.JwtUtils;
 import org.springframework.http.ResponseEntity;
@@ -84,7 +85,7 @@ public class AuthController {
         }
     }
     @GetMapping("profile/me")
-    public UserDTO getProfileMe(@RequestParam UUID id) throws NotFoundException {
+    public ProfileMeResponse getProfileMe(@RequestParam UUID id) throws NotFoundException {
         return userService.getProfileMe(id);
     }
 //    @PostMapping(path = "/login")
