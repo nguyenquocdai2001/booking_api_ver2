@@ -11,6 +11,7 @@ import meu.booking_rebuild_ver2.model.Admin.Mapper.LoyaltyMapper;
 import meu.booking_rebuild_ver2.model.User;
 import meu.booking_rebuild_ver2.model.UserID;
 import meu.booking_rebuild_ver2.repository.Admin.LoyaltyRepository;
+import meu.booking_rebuild_ver2.repository.UserRepository;
 import meu.booking_rebuild_ver2.request.LoyaltyRequest;
 import meu.booking_rebuild_ver2.response.Admin.LoyaltyResponse;
 import meu.booking_rebuild_ver2.response.GenericResponse;
@@ -28,10 +29,8 @@ import java.util.UUID;
  * BS-2
  */
 @Service
-
 public class LoyaltyService implements ILoyaltyService {
     private static LoyaltyRepository loyaltyRepository;
-    private static ModelMapper modelMapper;
     @Autowired
     private UserID userID;
     @Autowired
@@ -40,7 +39,6 @@ public class LoyaltyService implements ILoyaltyService {
     private LoyaltyMapper loyaltyMapper;
     @Autowired
     public LoyaltyService(LoyaltyRepository loyaltyRepository) {
-        this.modelMapper = new ModelMapper();
         this.loyaltyRepository = loyaltyRepository;
     }
     // Function to get loyalty by rank
@@ -50,25 +48,26 @@ public class LoyaltyService implements ILoyaltyService {
         if (response.isEmpty()) {
             throw new NotFoundException(Constants.MESSAGE_GET_LOYALTY_FAILED  + " rank : " + rank);
         } else {
-            LoyaltyResponse loyaltyResponse = new LoyaltyResponse(loyaltyMapper.toDTO(response.get()));
+            LoyaltyResponse loyaltyResponse = new LoyaltyResponse(Constants.MESSAGE_GET_SUCCESSFULL + "Get the loyalty successfully",true, loyaltyMapper.toDTO(response.get()));
             return loyaltyResponse;
         }
     }
     // Function to add new loyalty
     @Override
-    public GenericResponse addNewLoyalty(Loyalty request) throws GenericResponseExceptionHandler {
-        Optional<Loyalty> loylalty = loyaltyRepository.findByRank(request.getRank().toLowerCase());
-        if (loylalty.isEmpty() && getLoyaltyByDiscount(request.getDiscount()).isEmpty()) {
+    public GenericResponse addNewLoyalty(Loyalty request, HttpSession httpSession) throws GenericResponseExceptionHandler {
+        Optional<Loyalty> loyalty = loyaltyRepository.findByRank(request.getRank().toLowerCase());
+        if (loyalty.isEmpty() && getLoyaltyByDiscount(request.getDiscount()).isEmpty()) {
             try {
-                Loyalty loyalty = new Loyalty(request.getId(), request.getRank().toLowerCase(), request.getDiscount(), request.getLoyaltySpent(), userID.getUserValue());
-                loyaltyRepository.save(loyalty);
+                User user = userService.getUserById(userService.getSessionUserId(httpSession));
+                Loyalty loyaltyModel = new Loyalty(request.getId(), request.getRank().toLowerCase(), request.getDiscount(), request.getLoyaltySpent(), user);
+                loyaltyRepository.save(loyaltyModel);
                 GenericResponse response = new GenericResponse(Constants.MESSAGE_ADD_LOYALTY_SUCCESS);
                 System.out.print(request);
                 return response;
             } catch (RuntimeException e) {
                 throw new GenericResponseExceptionHandler(e.getMessage());
             }
-        } else if (loylalty.isPresent()) {
+        } else if (loyalty.isPresent()) {
             throw new GenericResponseExceptionHandler(Constants.MESSAGE_ADD_RANK_FAILED);
         } else {
             throw new GenericResponseExceptionHandler(Constants.MESSAGE_ADD_DISCOUNT_FAILED);
@@ -84,7 +83,7 @@ public class LoyaltyService implements ILoyaltyService {
     @Override
     public LoyaltyResponse getAllLoyalty() {
         Sort sortByDiscount = Sort.by(Sort.Direction.ASC, "discount");
-        LoyaltyResponse response = new LoyaltyResponse(loyaltyRepository.findAll(sortByDiscount));
+        LoyaltyResponse response = new LoyaltyResponse(Constants.MESSAGE_GET_SUCCESSFULL + "Get the list loyalty successfully",true, loyaltyRepository.findAll(sortByDiscount));
         return response;
     }
     // The function to update loyalty
@@ -92,7 +91,7 @@ public class LoyaltyService implements ILoyaltyService {
     public GenericResponse updateLoyalty(UUID id, LoyaltyRequest request, HttpSession httpSession) throws NotFoundException, GenericResponseExceptionHandler {
         try {
             Optional<Loyalty> model = loyaltyRepository.findById(id);
-            if (model.isEmpty())  throw new NotFoundException();
+            if (model.isEmpty())  throw new NotFoundException("Can not get the loyalty with id:" + id);
             Loyalty loyaltyModel = model.get();
             loyaltyModel.setDiscount(request.getDiscount());
             loyaltyModel.setLoyaltySpent(request.getLoyalty_spent());
@@ -111,11 +110,11 @@ public class LoyaltyService implements ILoyaltyService {
         try {
             Optional<Loyalty> model = loyaltyRepository.findById(id);
             if(model.isEmpty()){
-                throw new NotFoundException();
+                throw new NotFoundException("Can not get the loyalty with id:" + id);
             }
 
             loyaltyRepository.deleteById(model.get().getId());
-            return new GenericResponse(Constants.MESSAGE_DELETED_SUCCESS);
+            return new GenericResponse(Constants.MESSAGE_DELETED_SUCCESS + "The loyalty with id: " + id + " has been deleted successfully");
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -127,14 +126,14 @@ public class LoyaltyService implements ILoyaltyService {
             Optional<Loyalty> model = loyaltyRepository.getLoyaltyByPrice(price);
             if (model.isEmpty()) {
                 User user = userService.getUserById(userID.getUserValue().getId());
-                Loyalty setLoyalty = new Loyalty(UUID.randomUUID(), "economy", 0, 0, user);
+                Loyalty setLoyalty = new Loyalty(UUID.randomUUID(), " ", 0, 0, user);
                 loyaltyRepository.save(setLoyalty);
                 LoyaltyDTO response = new LoyaltyDTO(setLoyalty);
-                LoyaltyResponse loyaltyResponse = new LoyaltyResponse(response);
+                LoyaltyResponse loyaltyResponse = new LoyaltyResponse(Constants.MESSAGE_GET_SUCCESSFULL + "Get the loyalty successfully. ",true,response);
                 return loyaltyResponse;
             }
             LoyaltyDTO response = new LoyaltyDTO(model.get());
-            LoyaltyResponse loyaltyResponse = new LoyaltyResponse(response);
+            LoyaltyResponse loyaltyResponse = new LoyaltyResponse(Constants.MESSAGE_GET_SUCCESSFULL + "Get the loyalty successfully.",true, response);
             return loyaltyResponse;
         } catch (RuntimeException e) {
             throw new BadRequestException(e.getMessage());
@@ -146,18 +145,18 @@ public class LoyaltyService implements ILoyaltyService {
         try {
             int price = 0;
             Optional<Loyalty> model = loyaltyRepository.getLoyaltyByPrice(price);
-            if (model.isEmpty()) {
+            Loyalty loyalty = model.orElseGet(() -> {
                 User user = userService.getUserById(userID.getUserValue().getId());
-                Loyalty setLoyalty = new Loyalty(UUID.randomUUID(), "economy", 0, 0,user);
+                Loyalty setLoyalty = new Loyalty(UUID.randomUUID(), " ", 0, 0, user);
                 loyaltyRepository.save(setLoyalty);
-                return loyaltyMapper.toDTO(setLoyalty);
-            }
-            Loyalty response = model.get();
-            return loyaltyMapper.toDTO(response);
+                return setLoyalty;
+            });
+            return loyaltyMapper.toDTO(loyalty);
         } catch (RuntimeException e) {
             throw new BadRequestException(e.getMessage());
         }
     }
+
     // The function to get loyalty by id loyalty
     @Override
     public LoyaltyResponse getLoyaltyById(UUID id) throws NotFoundException {
@@ -165,7 +164,7 @@ public class LoyaltyService implements ILoyaltyService {
             Optional<Loyalty> response = loyaltyRepository.findById(id);
             if(response.isPresent()){
                 LoyaltyDTO loyaltyDTO = new LoyaltyDTO(response.get());
-                LoyaltyResponse loyaltyResponse = new LoyaltyResponse(loyaltyDTO);
+                LoyaltyResponse loyaltyResponse = new LoyaltyResponse(Constants.MESSAGE_GET_SUCCESSFULL + "Get the loyalty successfully",true, loyaltyDTO);
                 return loyaltyResponse;
             }
             else{

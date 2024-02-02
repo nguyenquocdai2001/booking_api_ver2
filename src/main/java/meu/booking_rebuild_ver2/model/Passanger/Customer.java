@@ -1,9 +1,6 @@
 package meu.booking_rebuild_ver2.model.Passanger;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -35,16 +32,16 @@ public class Customer {
     private String phone;
     @Column(name = "number_of_trip")
     private int numberOfTrips;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.REMOVE )
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "status", nullable = false)
     @JsonBackReference
-    @JoinColumn(name = "status")
-    @JsonIgnore
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // Ignore Hibernate properties to avoid serialization issues
     private Status status;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_loyalty")
-    @JsonBackReference
 
-    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = {CascadeType.MERGE})
+    @JoinColumn(name = "id_loyalty", nullable = false)
+    @JsonBackReference
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // Ignore Hibernate properties to avoid serialization issues
     private Loyalty loyalty;
     @CreationTimestamp
     @Column( name = "created_at")

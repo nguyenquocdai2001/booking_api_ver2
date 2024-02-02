@@ -16,6 +16,7 @@ import meu.booking_rebuild_ver2.repository.UserRepository;
 import meu.booking_rebuild_ver2.request.RegisterRequest;
 import meu.booking_rebuild_ver2.response.GenericResponse;
 import meu.booking_rebuild_ver2.response.LoginResponse;
+import meu.booking_rebuild_ver2.response.ProfileMeResponse;
 import meu.booking_rebuild_ver2.service.abstractions.IStatusService;
 import meu.booking_rebuild_ver2.service.abstractions.IUserService;
 import meu.booking_rebuild_ver2.service.impl.UserDetailsImplement;
@@ -81,12 +82,14 @@ public class UserService implements IUserService {
     }
     // Function to get profile of id user
     @Override
-    public UserDTO getProfileMe(UUID id) throws NotFoundException{
+    public ProfileMeResponse getProfileMe(UUID id) throws NotFoundException{
         try{
-            UserDTO response = userRepository.getUserById(id);
-            if(response == null){
-                throw new NotFoundException(Constants.MESSAGE_GET_NOT_FOUND);
+            UserDTO user  = userRepository.getUserById(id);
+
+            if(user == null){
+                throw new NotFoundException("Can not get the user with id: " + id);
             }
+            ProfileMeResponse response = new ProfileMeResponse(Constants.MESSAGE_GET_SUCCESSFULL + "Get the user successfully!", true, user);
             return response;
         }catch (RuntimeException e){
             throw new BadRequestException(e.getMessage());

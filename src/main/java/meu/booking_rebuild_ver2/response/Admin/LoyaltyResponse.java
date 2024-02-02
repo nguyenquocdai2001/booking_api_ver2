@@ -16,23 +16,23 @@ Response for controller of BS-2
 @AllArgsConstructor
 public class LoyaltyResponse {
     @Setter(AccessLevel.NONE)
-    private String message = "The request has been blocked";
+    private String message ;
 
     @Setter(AccessLevel.NONE)
-    private boolean success = false;
+    private boolean success ;
 
     private LoyaltyDTO loyaltyDTO;
     private Iterable<LoyaltyDTO> loyaltyDTOList;
 
-    public LoyaltyResponse(LoyaltyDTO loyaltyDTO) {
-        this.message = Constants.MESSAGE_GET_SUCCESSFULL;
-        this.success = true;
+    public LoyaltyResponse(String message, boolean success, LoyaltyDTO loyaltyDTO) {
+        this.message = message;
+        this.success = success;
         this.loyaltyDTO = loyaltyDTO;
     }
 
-    public LoyaltyResponse(Iterable<LoyaltyDTO> loyaltyDTOIterable) {
-        this.message = Constants.MESSAGE_GET_SUCCESSFULL;
-        this.success = true;
+    public LoyaltyResponse(String message, boolean success, Iterable<LoyaltyDTO> loyaltyDTOIterable) {
+        this.message = message;
+        this.success = success;
         this.loyaltyDTOList = loyaltyDTOIterable;
     }
 }
