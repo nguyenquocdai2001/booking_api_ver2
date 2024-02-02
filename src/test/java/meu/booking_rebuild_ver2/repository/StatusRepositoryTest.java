@@ -4,7 +4,6 @@ import meu.booking_rebuild_ver2.model.Status;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
@@ -13,6 +12,10 @@ import org.springframework.test.context.TestPropertySource;
 import java.util.List;
 import java.util.Optional;
 
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-21
+ * */
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestPropertySource(properties = {

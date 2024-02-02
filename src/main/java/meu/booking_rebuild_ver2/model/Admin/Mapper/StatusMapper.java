@@ -4,7 +4,10 @@ import meu.booking_rebuild_ver2.model.Admin.DTO.StatusDTO;
 import meu.booking_rebuild_ver2.model.Status;
 import org.springframework.stereotype.Component;
 
-
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-17
+ * */
 public class StatusMapper {
     public static StatusDTO toStatusDTO(Status status){
         StatusDTO statusDTO = new StatusDTO();

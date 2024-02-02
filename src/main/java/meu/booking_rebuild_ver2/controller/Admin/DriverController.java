@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.UUID;
-
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-11
+ * */
 @RestController
 @RequestMapping(path = "/driver", produces = MediaType.APPLICATION_JSON_VALUE)
 public class DriverController {
@@ -25,6 +28,7 @@ public class DriverController {
     public DriverResponse getAllDrivers(){
         return driverService.getAllDriver();
     }
+
     @GetMapping(path = "getDriverById")
     public DriverResponse getDriverById(@RequestParam UUID idDriver){
         return driverService.getDriverById(idDriver);
@@ -45,7 +49,7 @@ public class DriverController {
         return driverService.getByKindOfLicense(kindOfLicense);
     }
 
-    @PostMapping(path = "updateDriver")
+    @PutMapping(path = "updateDriver")
     public DriverResponse updateDriver(@RequestBody @Valid DriverDTO driverDTO){
         return driverService.updateDriver(driverDTO);
     }

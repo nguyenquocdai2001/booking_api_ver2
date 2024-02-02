@@ -11,7 +11,10 @@ import meu.booking_rebuild_ver2.model.User;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;
-
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-11
+ * */
 @Entity
 @Table(name = "driver")
 @Data
