@@ -1,8 +1,8 @@
 package meu.booking_rebuild_ver2.service.abstractions;
 
 import jakarta.servlet.http.HttpSession;
+import meu.booking_rebuild_ver2.exception.GenericResponseException;
 import meu.booking_rebuild_ver2.exception.NotFoundException;
-import meu.booking_rebuild_ver2.model.Admin.DTO.UserDTO;
 import meu.booking_rebuild_ver2.model.User;
 import meu.booking_rebuild_ver2.request.RegisterRequest;
 import meu.booking_rebuild_ver2.response.GenericResponse;
@@ -18,7 +18,7 @@ public interface IUserService {
     UUID getSessionUserId(HttpSession session);
     String getSessionUserName(HttpSession session);
     ProfileMeResponse getProfileMe(UUID id) throws NotFoundException;
-    LoginResponse loginHandle(String username, String password);
+    LoginResponse loginHandle(String username, String password) throws NotFoundException, GenericResponseException;
     ResponseEntity<GenericResponse> registerHandle(RegisterRequest user);
     User getUserById(UUID id);
 }

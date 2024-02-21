@@ -3,7 +3,7 @@ package meu.booking_rebuild_ver2.service.concretions.Admin;
 import jakarta.servlet.http.HttpSession;
 import meu.booking_rebuild_ver2.config.Constants;
 import meu.booking_rebuild_ver2.exception.BadRequestException;
-import meu.booking_rebuild_ver2.exception.GenericResponseExceptionHandler;
+import meu.booking_rebuild_ver2.exception.GenericResponseException;
 import meu.booking_rebuild_ver2.exception.NotFoundException;
 import meu.booking_rebuild_ver2.model.Admin.DTO.LoyaltyDTO;
 import meu.booking_rebuild_ver2.model.Admin.Loyalty;
@@ -11,13 +11,11 @@ import meu.booking_rebuild_ver2.model.Admin.Mapper.LoyaltyMapper;
 import meu.booking_rebuild_ver2.model.User;
 import meu.booking_rebuild_ver2.model.UserID;
 import meu.booking_rebuild_ver2.repository.Admin.LoyaltyRepository;
-import meu.booking_rebuild_ver2.repository.UserRepository;
 import meu.booking_rebuild_ver2.request.LoyaltyRequest;
 import meu.booking_rebuild_ver2.response.Admin.LoyaltyResponse;
 import meu.booking_rebuild_ver2.response.GenericResponse;
 import meu.booking_rebuild_ver2.service.abstractions.Admin.ILoyaltyService;
 import meu.booking_rebuild_ver2.service.abstractions.IUserService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -54,7 +52,7 @@ public class LoyaltyService implements ILoyaltyService {
     }
     // Function to add new loyalty
     @Override
-    public GenericResponse addNewLoyalty(Loyalty request, HttpSession httpSession) throws GenericResponseExceptionHandler {
+    public GenericResponse addNewLoyalty(Loyalty request, HttpSession httpSession) throws GenericResponseException {
         Optional<Loyalty> loyalty = loyaltyRepository.findByRank(request.getRank().toLowerCase());
         if (loyalty.isEmpty() && getLoyaltyByDiscount(request.getDiscount()).isEmpty()) {
             try {
@@ -65,12 +63,12 @@ public class LoyaltyService implements ILoyaltyService {
                 System.out.print(request);
                 return response;
             } catch (RuntimeException e) {
-                throw new GenericResponseExceptionHandler(e.getMessage());
+                throw new GenericResponseException(e.getMessage());
             }
         } else if (loyalty.isPresent()) {
-            throw new GenericResponseExceptionHandler(Constants.MESSAGE_ADD_RANK_FAILED);
+            throw new GenericResponseException(Constants.MESSAGE_ADD_RANK_FAILED);
         } else {
-            throw new GenericResponseExceptionHandler(Constants.MESSAGE_ADD_DISCOUNT_FAILED);
+            throw new GenericResponseException(Constants.MESSAGE_ADD_DISCOUNT_FAILED);
         }
     }
     // Function to get LoyaltyByDiscount to use in this service when we need to check the exits of discount
@@ -88,7 +86,7 @@ public class LoyaltyService implements ILoyaltyService {
     }
     // The function to update loyalty
     @Override
-    public GenericResponse updateLoyalty(UUID id, LoyaltyRequest request, HttpSession httpSession) throws NotFoundException, GenericResponseExceptionHandler {
+    public GenericResponse updateLoyalty(UUID id, LoyaltyRequest request, HttpSession httpSession) throws NotFoundException, GenericResponseException {
         try {
             Optional<Loyalty> model = loyaltyRepository.findById(id);
             if (model.isEmpty())  throw new NotFoundException("Can not get the loyalty with id:" + id);
@@ -101,7 +99,7 @@ public class LoyaltyService implements ILoyaltyService {
             loyaltyRepository.save(loyaltyModel);
             return new GenericResponse(Constants.MESSAGE_UPDATE_LOYALTY_SUCCESS);
         } catch (RuntimeException e) {
-            throw new GenericResponseExceptionHandler(e.getMessage());
+            throw new GenericResponseException(e.getMessage());
         }
     }
     // The function to delete loyalty by id loyalty
@@ -121,7 +119,7 @@ public class LoyaltyService implements ILoyaltyService {
     }
     // Function to get loyalty by price
     @Override
-        public LoyaltyResponse getLoyaltyByPrice(double price) throws GenericResponseExceptionHandler {
+        public LoyaltyResponse getLoyaltyByPrice(double price) throws GenericResponseException {
         try {
             Optional<Loyalty> model = loyaltyRepository.getLoyaltyByPrice(price);
             if (model.isEmpty()) {
@@ -141,7 +139,7 @@ public class LoyaltyService implements ILoyaltyService {
     }
     // Function to init the price when we create new customer
     @Override
-    public LoyaltyDTO getLoyaltyByPrice() throws GenericResponseExceptionHandler {
+    public LoyaltyDTO getLoyaltyByPrice() throws GenericResponseException {
         try {
             int price = 0;
             Optional<Loyalty> model = loyaltyRepository.getLoyaltyByPrice(price);

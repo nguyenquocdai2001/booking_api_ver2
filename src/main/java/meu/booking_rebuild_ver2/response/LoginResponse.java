@@ -1,5 +1,7 @@
 package meu.booking_rebuild_ver2.response;
 import lombok.Data;
+import meu.booking_rebuild_ver2.response.Passanger.CustomerResponse;
+
 import  java.util.List;
 import java.util.UUID;
 /*
@@ -14,7 +16,7 @@ public class LoginResponse {
     private String username;
     private String fullname;
     private List<String> roles;
-
+    private CustomerResponse customer;
     public LoginResponse(String message, Boolean success) {
         this.message = message;
         this.success = success;
@@ -41,5 +43,13 @@ public class LoginResponse {
 
     public static LoginResponse fail(String message) {
         return new LoginResponse(message, false);
+    }
+
+    public LoginResponse(String message, String token, List<String> roles, CustomerResponse customer) {
+        this.message = message;
+        this.success = true;
+        this.token = token;
+        this.roles = roles;
+        this.customer = customer;
     }
 }

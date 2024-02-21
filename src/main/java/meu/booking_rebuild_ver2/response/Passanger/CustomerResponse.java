@@ -38,4 +38,8 @@ public class CustomerResponse {
         this.success = success;
         this.listCustomer = listCustomer;
     }
+
+    public CustomerResponse(CustomerDTO customer) {
+        this.customer = customer;
+    }
 }

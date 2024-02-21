@@ -24,4 +24,7 @@ public class LoginRequest {
     @Pattern(regexp = "(^[0-9A-Za-z][\\w.\\-]+@[\\w]+\\.[\\w]\\S+\\w)$", message = "Invalid email!")
     @NotBlank
     private String email;
+    @NotBlank
+    private String phone;
+
 }

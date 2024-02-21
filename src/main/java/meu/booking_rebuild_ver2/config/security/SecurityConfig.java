@@ -74,7 +74,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**")
                         .permitAll()
 
-                        .requestMatchers("/auth/login", "/demo/**").permitAll()
+                        .requestMatchers("/auth/login","/customers/loginCustomer","/customers/addCustomer", "/demo/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/loyalty/**","/customers/getCustomer").hasAnyRole("SUPER_ADMIN","ADMIN","CUSTOMER")
+                        .requestMatchers(HttpMethod.PUT,"/customers/updateCustomerByLoyalty").hasAnyRole("SUPER_ADMIN","ADMIN","CUSTOMER")
                         .requestMatchers(HttpMethod.POST,
                                 "/busTypes/**" ,
                                 "/busSeat/**",
@@ -127,7 +129,7 @@ public class SecurityConfig {
                         .permitAll()
                         .anyRequest().authenticated())
         .exceptionHandling().authenticationEntryPoint((request, response, e) -> {
-                    ErrorResponse errorResponse = new ErrorResponse("Access Denied (403 Forbidden) ",
+                    ErrorResponse errorResponse = new ErrorResponse("Access Denied (403 Forbidden) " + e.getMessage(),
                             HttpStatus.FORBIDDEN.value());
                     response.setContentType("application/json;charset=UTF-8");
                     response.setStatus(HttpStatus.FORBIDDEN.value());

@@ -1,8 +1,9 @@
 package meu.booking_rebuild_ver2.service.concretions.Passanger;
 
+import jakarta.servlet.http.HttpSession;
 import meu.booking_rebuild_ver2.config.Constants;
 import meu.booking_rebuild_ver2.exception.BadRequestException;
-import meu.booking_rebuild_ver2.exception.GenericResponseExceptionHandler;
+import meu.booking_rebuild_ver2.exception.GenericResponseException;
 import meu.booking_rebuild_ver2.exception.NotFoundException;
 import meu.booking_rebuild_ver2.model.Admin.DTO.CustomerDTO;
 import meu.booking_rebuild_ver2.model.Admin.Loyalty;
@@ -10,22 +11,30 @@ import meu.booking_rebuild_ver2.model.Admin.Mapper.CustomerMapper;
 import meu.booking_rebuild_ver2.model.Admin.Mapper.LoyaltyMapper;
 import meu.booking_rebuild_ver2.model.Passanger.Customer;
 import meu.booking_rebuild_ver2.model.Status;
-import meu.booking_rebuild_ver2.model.Admin.DTO.LoyaltyDTO;
 import meu.booking_rebuild_ver2.repository.Admin.LoyaltyRepository;
 import meu.booking_rebuild_ver2.repository.Passanger.CustomerRepository;
 import meu.booking_rebuild_ver2.repository.StatusRepository;
+import meu.booking_rebuild_ver2.request.LoginRequest;
 import meu.booking_rebuild_ver2.request.Passanger.CustomerRequest;
 import meu.booking_rebuild_ver2.request.Passanger.UpdateCustomerRequest;
 import meu.booking_rebuild_ver2.response.GenericResponse;
+import meu.booking_rebuild_ver2.response.LoginResponse;
 import meu.booking_rebuild_ver2.response.Passanger.CustomerResponse;
 import meu.booking_rebuild_ver2.service.abstractions.Admin.ILoyaltyService;
-import meu.booking_rebuild_ver2.service.abstractions.IUserService;
 import meu.booking_rebuild_ver2.service.abstractions.Passanger.ICustomerService;
+import meu.booking_rebuild_ver2.service.impl.CustomerDetailsImplement;
+import meu.booking_rebuild_ver2.service.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.Instant;
 import java.util.*;
@@ -40,6 +49,7 @@ import java.util.regex.Pattern;
 public class CustomerService implements ICustomerService {
     @Autowired
     private CustomerRepository customerRepository;
+
     @Autowired
     private LoyaltyRepository loyaltyRepository;
     @Autowired
@@ -48,37 +58,44 @@ public class CustomerService implements ICustomerService {
     private CustomerMapper customerMapper;
     @Autowired
     private ILoyaltyService loyaltyService;
-
+    @Autowired
+    private JwtUtils jwtUtils;
+    @Autowired
+    public static final String CLIENTID = "CLIENT_ID";
     @Autowired
     private StatusRepository statusRepository;
     // The phone number regex to check phone valid
     private static final String PHONE_NUMBER_REGEX = "^(\\+?84|0)([3|5|7|8|9])+([0-9]{8})$";
     private static final Pattern pattern = Pattern.compile(PHONE_NUMBER_REGEX);
+    private final BCryptPasswordEncoder passwordEncoder;
     @Autowired
-    public CustomerService(CustomerRepository customerRepository){
+    public CustomerService(BCryptPasswordEncoder passwordEncoder,CustomerRepository customerRepository){
         this.customerRepository = customerRepository;
+        this.passwordEncoder = passwordEncoder;
     }
     // The function to add new customer
+    @Transactional
     @Override
-    public GenericResponse addCustomer(CustomerRequest request) throws GenericResponseExceptionHandler {
+    public GenericResponse addCustomer(CustomerRequest request) throws GenericResponseException {
 
         if(phoneValid(request.getPhone())){
-            throw new GenericResponseExceptionHandler(Constants.MESSAGE_PHONE_FORMAT_WRONG);
+            throw new GenericResponseException(Constants.MESSAGE_PHONE_FORMAT_WRONG);
         }
         try{
             Customer model = customerRepository.findCustomerByPhone(request.getPhone());
             if(model == null){
-                Customer requestCustomer = new Customer(request.getName(), request.getPhone());
+                Customer requestCustomer = new Customer(request.getName(), request.getPhone(), request.getPassword());
                 Loyalty loyalty = loyaltyMapper.toModel(loyaltyService.getLoyaltyByPrice());
                 requestCustomer.setLoyalty(loyalty);
                 Status status = statusRepository.findStatusById(request.getStatusId());
                 requestCustomer.setStatus(status);
                 requestCustomer.setNumberOfTrips(0);
+                requestCustomer.setPassword(passwordEncoder.encode(requestCustomer.getPassword()));
                 customerRepository.save(requestCustomer);
                 return new GenericResponse(Constants.MESSAGE_ADDED_CUSTOMER_SUCCESSFULLY);
             }
             else{
-                throw new GenericResponseExceptionHandler(Constants.MESSAGE_ADD_CUSTOMER_FAILED);
+                throw new GenericResponseException(Constants.MESSAGE_ADD_CUSTOMER_FAILED);
             }
         }
         catch (RuntimeException e){
@@ -133,16 +150,16 @@ public class CustomerService implements ICustomerService {
     }
     // Function to update customer with total paid
     @Override
-    public GenericResponse updateCustomer(UUID id, UpdateCustomerRequest request) throws NotFoundException, GenericResponseExceptionHandler {
+    public GenericResponse updateCustomer(UUID id, UpdateCustomerRequest request) throws NotFoundException, GenericResponseException {
         if(phoneValid(request.getPhone())){
-            throw new GenericResponseExceptionHandler(Constants.MESSAGE_PHONE_FORMAT_WRONG);
+            throw new GenericResponseException(Constants.MESSAGE_PHONE_FORMAT_WRONG);
         }
         Customer modelPhone = customerRepository.findCustomerByPhone(request.getPhone());
         Customer model = customerRepository.findCustomerById(id);
         if(modelPhone != null){
             if(model != null){
                 if(modelPhone.getId() != model.getId()){
-                    throw new GenericResponseExceptionHandler(Constants.MESSAGE_DUPLICATE_PHONE_CUSTOMER);
+                    throw new GenericResponseException(Constants.MESSAGE_DUPLICATE_PHONE_CUSTOMER);
                 }
             }
             else{
@@ -171,17 +188,17 @@ public class CustomerService implements ICustomerService {
     }
     // Function to update by set rank or loyalty id. It will prioritize set the loyalty by id
     @Override
-    public GenericResponse updateCustomerByLoyalty(UUID id, UpdateCustomerRequest request) throws NotFoundException, GenericResponseExceptionHandler {
+    public GenericResponse updateCustomerByLoyalty(UUID id, UpdateCustomerRequest request) throws NotFoundException, GenericResponseException {
         boolean isSatisfied = false;
         if(phoneValid(request.getPhone())){
-            throw new GenericResponseExceptionHandler(Constants.MESSAGE_PHONE_FORMAT_WRONG + "Can not update with that number phone. ");
+            throw new GenericResponseException(Constants.MESSAGE_PHONE_FORMAT_WRONG + "Can not update with that number phone. ");
         }
         Customer modelPhone = customerRepository.findCustomerByPhone(request.getPhone());
         Customer model = customerRepository.findCustomerById(id);
         if(modelPhone != null){
             if(model != null){
                 if(modelPhone.getId() != model.getId()){
-                    throw new GenericResponseExceptionHandler(Constants.MESSAGE_DUPLICATE_PHONE_CUSTOMER);
+                    throw new GenericResponseException(Constants.MESSAGE_DUPLICATE_PHONE_CUSTOMER);
                 }
             }
             else{
@@ -217,7 +234,7 @@ public class CustomerService implements ICustomerService {
 
             }
             if(!isSatisfied){
-                throw new GenericResponseExceptionHandler("The request is not valid");
+                throw new GenericResponseException("The request is not valid");
             }
             Status status = statusRepository.findStatusById(UUID.fromString(request.getStatus()));
             if(status != null) model.setStatus(status);
@@ -256,12 +273,12 @@ public class CustomerService implements ICustomerService {
     }
     // Function to update customer to economy when loyalty is deleted
     @Override
-    public void handleUpdateCustomerWhenLoyaltyDelete(List<CustomerDTO> customerDTOS) throws GenericResponseExceptionHandler, NotFoundException {
+    public void handleUpdateCustomerWhenLoyaltyDelete(List<CustomerDTO> customerDTOS) throws GenericResponseException, NotFoundException {
             customerDTOS.stream()
                     .peek(customer -> {
                         try {
                             customer.setIdLoyalty(loyaltyService.getLoyaltyByPrice().getId());
-                        } catch (GenericResponseExceptionHandler e) {
+                        } catch (GenericResponseException e) {
                             throw new RuntimeException(e);
                         }
                     })
@@ -286,6 +303,43 @@ public class CustomerService implements ICustomerService {
         customerRepository.delete(model);
         return new GenericResponse(Constants.MESSAGE_DELETED_SUCCESS + "The customer with id: " + id + "has been deleted successfully");
     }
+
+    @Override
+    public LoginResponse customerLoginHandle(String phone, String password) throws NotFoundException, GenericResponseException {
+        try{
+            Customer customer = customerRepository.findCustomerByPhone(phone);
+            if(customer == null){
+                throw new NotFoundException("Can not get the user with phone: "+ phone);
+            }
+            HttpSession session = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+                    .getRequest().getSession();
+            session.setAttribute("CLIENT_ID", customer.getId());
+            CustomerDTO  customerDTO = customerMapper.toDTO(customer);
+            CustomerResponse customerResponse = new CustomerResponse(customerDTO);
+            if(passwordEncoder.matches(password, customer.getPassword())){
+                String jwt = jwtUtils.createToken(phone, customer.getUserRole());
+                LoginResponse response = new LoginResponse(Constants.MESSAGE_LOGIN_SUCCESS, jwt,Collections.singletonList(customer.getUserRole()),customerResponse );
+                return response;
+            }
+            else{
+                throw new GenericResponseException(Constants.MESSAGE_INVALID_PASSWORD);
+            }
+        }
+        catch (RuntimeException e){
+            throw new BadRequestException(e.getMessage());
+        }
+
+    }
+
+    @Override
+    public UserDetails loadCustomerByPhone(String phone) {
+        Customer customer = customerRepository.findCustomerByPhone(phone);
+        if(customer == null){
+            throw new UsernameNotFoundException(Constants.MESSAGE_GET_NOT_FOUND);
+        }
+        return new CustomerDetailsImplement(customer);
+    }
+
     //Function to check valid phone with regex phone
     protected static boolean phoneValid(String phone){
         Matcher matcher = pattern.matcher(phone);
