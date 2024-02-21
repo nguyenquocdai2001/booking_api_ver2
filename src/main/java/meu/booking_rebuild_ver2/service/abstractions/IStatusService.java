@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-17
+ * */
 public interface IStatusService {
     StatusResponse createStatus(Status status);
     StatusResponse updateStatus(Status status);

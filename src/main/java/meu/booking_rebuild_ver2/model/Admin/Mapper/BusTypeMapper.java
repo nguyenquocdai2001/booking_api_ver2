@@ -5,6 +5,10 @@ import meu.booking_rebuild_ver2.model.Admin.DTO.BusTypeDTO;
 import meu.booking_rebuild_ver2.model.Status;
 import meu.booking_rebuild_ver2.model.User;
 
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-9
+ * */
 public class BusTypeMapper {
 
     public static BusTypeDTO busTypeDTO(BusTypes busTypes){

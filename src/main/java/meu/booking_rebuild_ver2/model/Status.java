@@ -10,6 +10,10 @@ import lombok.NoArgsConstructor;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-17
+ * */
 @Entity
 @Table(name = "status")
 @Data

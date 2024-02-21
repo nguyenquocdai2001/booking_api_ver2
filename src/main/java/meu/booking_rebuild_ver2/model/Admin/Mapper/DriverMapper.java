@@ -5,7 +5,10 @@ import meu.booking_rebuild_ver2.model.Admin.DTO.DriverDTO;
 import meu.booking_rebuild_ver2.model.Admin.Driver;
 import meu.booking_rebuild_ver2.model.Status;
 import meu.booking_rebuild_ver2.model.User;
-
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-11
+ * */
 public class DriverMapper {
     public static DriverDTO driverToDTO(Driver driver){
         DriverDTO driverDTO = new DriverDTO();

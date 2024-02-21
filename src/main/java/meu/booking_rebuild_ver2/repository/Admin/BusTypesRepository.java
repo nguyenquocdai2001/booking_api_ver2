@@ -9,6 +9,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-9
+ * */
 @Repository
 public interface BusTypesRepository extends JpaRepository<BusTypes, UUID> {
     List<BusTypes> findALlByNumberOfSeat(int numberOfSeat);

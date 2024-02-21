@@ -6,6 +6,10 @@ import lombok.NoArgsConstructor;
 import meu.booking_rebuild_ver2.model.Passanger.Location;
 
 import java.util.List;
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-4
+ * */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
