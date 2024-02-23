@@ -4,6 +4,7 @@ package meu.booking_rebuild_ver2.controller.Admin;
 import lombok.extern.slf4j.Slf4j;
 import meu.booking_rebuild_ver2.config.Constants;
 import meu.booking_rebuild_ver2.exception.BadRequestException;
+import meu.booking_rebuild_ver2.model.Admin.DTO.TimeDTO;
 import meu.booking_rebuild_ver2.model.Admin.TimeModel;
 import meu.booking_rebuild_ver2.response.Admin.TimeResponse;
 import meu.booking_rebuild_ver2.service.concretions.Admin.TimeService;
@@ -31,7 +32,7 @@ public class TimeController {
    * start
    *  */
     @PostMapping("/addTime")
-    public TimeResponse addTime(@RequestBody TimeModel model){
+    public TimeResponse addTime(@RequestBody TimeDTO model){
         log.debug("Inside addTime function()");
      try {
          return timeService.createTime(model);
@@ -82,7 +83,7 @@ public class TimeController {
      * start
      *  */
     @PutMapping("/updateTime")
-    public TimeResponse updateTimeModelById(@RequestBody TimeModel timeModel) {
+    public TimeResponse updateTimeModelById(@RequestBody TimeDTO timeModel) {
         log.debug("Inside updateTimeModelById");
         try {
             return timeService.updateTime(timeModel);

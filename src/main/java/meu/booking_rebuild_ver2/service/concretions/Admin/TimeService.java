@@ -1,7 +1,11 @@
 package meu.booking_rebuild_ver2.service.concretions.Admin;
 
 import meu.booking_rebuild_ver2.config.Constants;
+import meu.booking_rebuild_ver2.model.Admin.DTO.TimeDTO;
+import meu.booking_rebuild_ver2.model.Admin.Mapper.TimeMapper;
 import meu.booking_rebuild_ver2.model.Admin.TimeModel;
+import meu.booking_rebuild_ver2.model.Status;
+import meu.booking_rebuild_ver2.model.UserID;
 import meu.booking_rebuild_ver2.repository.Admin.RoutesTimeRepository;
 import meu.booking_rebuild_ver2.repository.Admin.TimeRepository;
 import meu.booking_rebuild_ver2.repository.StatusRepository;
@@ -24,18 +28,24 @@ public class TimeService implements ITimeService {
     RoutesTimeRepository routesTimeRepository;
     @Autowired
     StatusRepository statusRepository;
+    @Autowired
+    private UserID userID;
     @Override
-    public TimeResponse createTime(TimeModel timeModel) {
+    public TimeResponse createTime(TimeDTO timeDTO) {
         /* checkTimeInput start*/
         TimeResponse response;
-        if(checkDate(timeModel)){
-            response  = new TimeResponse(Constants.MESSAGE_INVALID_DATA,false, timeModel);
+        if(checkDate(timeDTO)){
+            response  = new TimeResponse("Date or Time is: " + Constants.MESSAGE_INVALID_DATA,false);
             return response;
         }
         /* checkTimeInput end*/
-        if(statusRepository.existsById(timeModel.getStatus().getId())){
+        if(statusRepository.existsById(timeDTO.getIdStatus())){
+            timeDTO.setIdUserConfig(userID.getUserValue().getId());
+            TimeModel timeModel = TimeMapper.dtoToTimes(timeDTO);
+            Status status = statusRepository.findStatusById(timeDTO.getIdStatus());
+            timeModel.setStatus(status);
             timeRepository.save(timeModel);
-            response = new TimeResponse(Constants.MESSAGE_STATUS_ADD_TIME_SUCCESS, true, timeModel);
+            response = new TimeResponse(Constants.MESSAGE_STATUS_ADD_TIME_SUCCESS, true, timeDTO);
             return response;
         }
         return new TimeResponse(Constants.MESSAGE_SOMETHING_WENT_WRONG, false);
@@ -43,29 +53,33 @@ public class TimeService implements ITimeService {
 
     @Override
     public TimeResponse getAllTime() {
-        List<TimeModel> list = timeRepository.findAll();
+        List<TimeDTO> list = timeRepository.findAll()
+                .stream()
+                .map(TimeMapper::timeDTO)
+                .toList();
         return new TimeResponse(Constants.MESSAGE_STATUS_GET_ALL_TIME_SUCCESS, true, list);
 
     }
 
     @Override
-    public TimeResponse updateTime(TimeModel timeModel) {
-        TimeModel updateModel = timeRepository.findTimeModelById(timeModel.getId());
+    public TimeResponse updateTime(TimeDTO timeDTO) {
+        TimeModel updateModel = timeRepository.findTimeModelById(timeDTO.getId());
         TimeResponse response;
-        if(checkDate(timeModel)){
-            response  = new TimeResponse(Constants.MESSAGE_INVALID_DATA,false, timeModel);
+        if(checkDate(timeDTO)){
+            response  = new TimeResponse("Date or Time is: " + Constants.MESSAGE_INVALID_DATA,false);
             return response;
         }
-        if(updateModel != null && statusRepository.existsById(timeModel.getStatus().getId())) {
-            updateModel.setStartTime(timeModel.getStartTime());
-            updateModel.setEndTime(timeModel.getEndTime());
-            updateModel.setStartDate(timeModel.getStartDate());
-            updateModel.setEndDate(timeModel.getEndDate());
-            updateModel.setStatus(timeModel.getStatus());
+        if(updateModel != null && statusRepository.existsById(timeDTO.getIdStatus())) {
+            updateModel.setStartTime(timeDTO.getStartTime());
+            updateModel.setEndTime(timeDTO.getEndTime());
+            updateModel.setStartDate(timeDTO.getStartDate());
+            updateModel.setEndDate(timeDTO.getEndDate());
+            Status status = statusRepository.findStatusById(timeDTO.getIdStatus());
+            updateModel.setStatus(status);
             updateModel.setUpdatedAt(ZonedDateTime.now());
-            updateModel.setIdUserConfig(timeModel.getIdUserConfig());
+            updateModel.setIdUserConfig(userID.getUserValue());
             timeRepository.save(updateModel);
-            response = new TimeResponse(Constants.MESSAGE_UPDATE_TIME_SUCCESS, true, updateModel);
+            response = new TimeResponse(Constants.MESSAGE_UPDATE_TIME_SUCCESS, true, timeDTO);
             return response;
         }
         response = new TimeResponse(Constants.MESSAGE_ID_NOT_FOUND, false);
@@ -77,7 +91,8 @@ public class TimeService implements ITimeService {
         TimeResponse response;
         if(timeRepository.existsById(id)) {
             TimeModel model = timeRepository.findTimeModelById(id);
-            response = new TimeResponse(Constants.MESSAGE_TIME_FIND_SUCCESS, true, model);
+            TimeDTO timeDTO = TimeMapper.timeDTO(model);
+            response = new TimeResponse(Constants.MESSAGE_TIME_FIND_SUCCESS, true, timeDTO);
             return response;
         }
         response = new TimeResponse(Constants.MESSAGE_SOMETHING_WENT_WRONG, false);
@@ -89,11 +104,11 @@ public class TimeService implements ITimeService {
     public TimeResponse deleteById(UUID id) {
         TimeResponse response;
         if(!timeRepository.existsById(id)){
-            response = new TimeResponse(Constants.MESSAGE_ID_NOT_FOUND,true );
+            response = new TimeResponse(Constants.MESSAGE_ID_NOT_FOUND,false );
             return response;
         }else if(!routesTimeRepository.getRoutesTimeByTime(id).isEmpty()){
             //check if routes_time data contain id
-            response = new TimeResponse(Constants.MESSAGE_ROUTES_TIME_STILL_HAS,true );
+            response = new TimeResponse(Constants.MESSAGE_ROUTES_TIME_STILL_HAS,false );
             return response;
         }
         else{
@@ -107,7 +122,10 @@ public class TimeService implements ITimeService {
     @Override
     public TimeResponse getTimeByStatus(UUID id) {
         if(statusRepository.existsById(id)) {
-            List<TimeModel> list = timeRepository.getTimeByStatus(id);
+            List<TimeDTO> list = timeRepository.getTimeByStatus(id)
+                    .stream()
+                    .map(TimeMapper::timeDTO)
+                    .toList();
             TimeResponse response;
             if (!list.isEmpty()) {
                 response = new TimeResponse(Constants.MESSAGE_STATUS_GET_ALL_TIME_SUCCESS, true, list);
@@ -117,7 +135,7 @@ public class TimeService implements ITimeService {
         }
         return new TimeResponse(Constants.MESSAGE_ID_NOT_FOUND, false);
     }
-    private boolean checkDate(TimeModel timeModel){
+    private boolean checkDate(TimeDTO timeModel){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         LocalDate currentDate = LocalDate.now();
         LocalDate specificDateStart = LocalDate.parse(timeModel.getStartDate(),formatter);
