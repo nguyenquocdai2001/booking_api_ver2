@@ -72,7 +72,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**")
                         .permitAll()
 
-                        .requestMatchers("/auth/login", "/demo/**").permitAll()
+                        .requestMatchers("/auth/login", "/demo/**","/routes/**").permitAll()
                         .requestMatchers(HttpMethod.POST,
                                 "/busTypes/**" ,
                                 "/busSeat/**",
