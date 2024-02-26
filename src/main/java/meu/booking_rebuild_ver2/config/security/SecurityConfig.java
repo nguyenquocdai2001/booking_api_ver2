@@ -74,7 +74,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**")
                         .permitAll()
 
-                        .requestMatchers("/auth/login","/customers/loginCustomer","/customers/addCustomer", "/demo/**").permitAll()
+                        .requestMatchers("/auth/login","/customers/loginCustomer","/customers/addCustomer","/customers/getCustomerByPhone", "/demo/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/loyalty/**","/customers/getCustomer").hasAnyRole("SUPER_ADMIN","ADMIN","CUSTOMER")
                         .requestMatchers(HttpMethod.PUT,"/customers/updateCustomerByLoyalty").hasAnyRole("SUPER_ADMIN","ADMIN","CUSTOMER")
                         .requestMatchers(HttpMethod.POST,

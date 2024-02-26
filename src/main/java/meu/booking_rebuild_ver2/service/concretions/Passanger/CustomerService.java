@@ -118,7 +118,7 @@ public class CustomerService implements ICustomerService {
     }
     // The function will get the list customer by phone. It has no pagination
     @Override
-    public CustomerResponse getCustomerByPhone(String phone) throws NotFoundException {
+    public CustomerResponse getCustomersByPhone(String phone) throws NotFoundException {
         CustomerResponse listResponse = new CustomerResponse();
         if(phone.length() < 5) {
             return listResponse;
@@ -139,6 +139,26 @@ public class CustomerService implements ICustomerService {
         listResponse.setListCustomer(getListResponse(models));
         return listResponse;
     }
+
+    @Override
+    public CustomerResponse getCustomerByPhone(String phone) {
+        if(phone.length()<10){
+            return new CustomerResponse("Can not get the user",false);
+        }
+        else{
+            Customer model = customerRepository.findCustomerByPhone(phone);
+            if(model != null){
+                CustomerDTO modelDTO = customerMapper.toDTO(model);
+                return new CustomerResponse("Get the user success", true, modelDTO);
+            }
+            else{
+                return new CustomerResponse("The customer has not been exit", false);
+            }
+
+        }
+
+    }
+
     // The function will return the list from Customer to CustomerDTO
     private  List<CustomerDTO> getListResponse(List<Customer> models){
         List<CustomerDTO> reponseList = new ArrayList<>();
@@ -315,10 +335,10 @@ public class CustomerService implements ICustomerService {
                     .getRequest().getSession();
             session.setAttribute("CLIENT_ID", customer.getId());
             CustomerDTO  customerDTO = customerMapper.toDTO(customer);
-            CustomerResponse customerResponse = new CustomerResponse(customerDTO);
+
             if(passwordEncoder.matches(password, customer.getPassword())){
                 String jwt = jwtUtils.createToken(phone, customer.getUserRole());
-                LoginResponse response = new LoginResponse(Constants.MESSAGE_LOGIN_SUCCESS, jwt,Collections.singletonList(customer.getUserRole()),customerResponse );
+                LoginResponse response = new LoginResponse(Constants.MESSAGE_LOGIN_SUCCESS, jwt,Collections.singletonList(customer.getUserRole()),customerDTO );
                 return response;
             }
             else{

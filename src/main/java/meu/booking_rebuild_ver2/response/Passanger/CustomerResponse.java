@@ -40,6 +40,7 @@ public class CustomerResponse {
     }
 
     public CustomerResponse(CustomerDTO customer) {
+        this.success = true;
         this.customer = customer;
     }
 }

@@ -17,8 +17,9 @@ import java.util.List;
 public interface ICustomerService {
     GenericResponse addCustomer(CustomerRequest request) throws GenericResponseException;
     CustomerResponse getCustomerById(UUID id) throws NotFoundException;
-    CustomerResponse getCustomerByPhone(String phone) throws NotFoundException;
+    CustomerResponse getCustomersByPhone(String phone) throws NotFoundException;
     CustomerResponse getCustomerByLoyalty(UUID idLoyalty) throws NotFoundException;
+    CustomerResponse getCustomerByPhone(String phone);
     GenericResponse updateCustomer(UUID id,UpdateCustomerRequest request) throws NotFoundException, GenericResponseException;
     GenericResponse updateCustomerByLoyalty(UUID id, UpdateCustomerRequest request) throws NotFoundException, GenericResponseException;
     Page<CustomerResponse> getCustomerByPhoneWithPage(String phone, Integer page) throws NotFoundException;
@@ -27,4 +28,5 @@ public interface ICustomerService {
     GenericResponse deleteCustomerById(UUID id) throws NotFoundException;
     LoginResponse customerLoginHandle(String phone, String password) throws NotFoundException, GenericResponseException;
     UserDetails loadCustomerByPhone(String phone);
+
 }

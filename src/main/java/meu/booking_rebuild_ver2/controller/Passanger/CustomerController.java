@@ -60,7 +60,7 @@ public class CustomerController {
      * The endpoint to get  customers by phone customer
      *
      * */
-    @GetMapping(path = "getCustomerByPhone")
+    @GetMapping(path = "searchCustomerByPhone")
     public Page<CustomerResponse> getCustomerByPhone(@RequestParam String phone, @RequestParam(defaultValue = "0") Integer page) throws NotFoundException {
         return  customerService.getCustomerByPhoneWithPage(phone, page);
     }
@@ -95,6 +95,10 @@ public class CustomerController {
     @DeleteMapping("deleteCustomerById")
     public GenericResponse deleteCustomer(@RequestParam UUID id) throws NotFoundException{
         return customerService.deleteCustomerById(id);
+    }
+    @GetMapping("getCustomerByPhone")
+    public CustomerResponse getCustomerByPhone(@RequestParam String phone){
+        return customerService.getCustomerByPhone(phone);
     }
 
 }

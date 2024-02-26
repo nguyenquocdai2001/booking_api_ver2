@@ -97,19 +97,19 @@ public class UserService implements IUserService {
             }
             HttpSession session = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
                     .getRequest().getSession();
-            session.setAttribute(USERID, model.get().getId());
-            session.setAttribute(USEREMAIL, model.get().getUsername());
+
             if (passwordEncoder.matches(password, model.get().getPassword())) {
                 String jwt = jwtUtils.createToken(username, model.get().getUserRole());
                 LoginResponse response = new LoginResponse(
                         Constants.MESSAGE_LOGIN_SUCCESS,
                         jwt,
                         model.get().getId(),
-                        model.get().getFullname(),
                         model.get().getUsername(),
+                        model.get().getFullname(),
                         Collections.singletonList(model.get().getUserRole())
                 );
-
+                session.setAttribute(USERID, model.get().getId());
+                session.setAttribute(USEREMAIL, model.get().getUsername());
                 return response;
             }
             else{
