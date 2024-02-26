@@ -33,4 +33,8 @@ public class BusSeat {
     private ZonedDateTime createdAt = ZonedDateTime.now();;
     @JsonIgnore
     private ZonedDateTime updatedAt = ZonedDateTime.now();
+
+    public BusSeat(UUID id) {
+        this.id = id;
+    }
 }

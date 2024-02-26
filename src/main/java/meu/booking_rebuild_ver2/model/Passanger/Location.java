@@ -39,4 +39,9 @@ public class Location {
     private ZonedDateTime createdAt = ZonedDateTime.now();;
     @JsonIgnore
     private ZonedDateTime updatedAt = ZonedDateTime.now();
+
+
+    public Location(UUID id) {
+        this.id = id;
+    }
 }

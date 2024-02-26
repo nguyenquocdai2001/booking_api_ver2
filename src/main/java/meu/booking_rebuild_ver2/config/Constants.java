@@ -134,4 +134,14 @@ public class Constants {
     public static final String MESSAGE_DELETE_PAYMENT_TYPE_SUCCESSFULLY = "Deleted payment type successfully!";
     public static final String MESSAGE_STATUS_GET_PAYMENT_TYPE_SUCCESS = "Getting payment type successfully!";
 
+
+    /*
+    * author: Quoc Dat
+    *  BS-5
+    *
+    * */
+    public static final String MESSAGE_STATUS_ADD_CUSTOMERTICKET_SUCCESS = "Adding customer ticket successfully!";
+    public static final String MESSAGE_STATUS_GET_ALL_CUSTOMERTICKET_SUCCESS = "Getting all customer ticket successfully!";
+    public static final String MESSAGE_CUSTOMERTICKET_FIND_SUCCESS = "Find customer ticket successfully!";
+    public static final String MESSAGE_UPDATE_CUSTOMERTICKET_SUCCESS = "Updating customer ticket successfully!";
 }

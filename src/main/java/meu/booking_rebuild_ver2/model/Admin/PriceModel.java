@@ -31,7 +31,6 @@ public class PriceModel {
     @ManyToOne
     @JoinColumn(name = "id_bus_type")
     private BusTypes idBusType;
-
     @ManyToOne
     @JoinColumn(name = "id_routes_time")
     private RoutesTimeModel idRoutesTime;

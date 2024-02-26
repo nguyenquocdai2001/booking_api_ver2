@@ -7,7 +7,6 @@ import meu.booking_rebuild_ver2.model.Admin.Mapper.PriceMapper;
 import meu.booking_rebuild_ver2.model.Admin.PriceModel;
 import meu.booking_rebuild_ver2.model.Admin.RoutesTimeModel;
 import meu.booking_rebuild_ver2.model.Status;
-import meu.booking_rebuild_ver2.model.User;
 import meu.booking_rebuild_ver2.model.UserID;
 import meu.booking_rebuild_ver2.repository.Admin.BusTypesRepository;
 import meu.booking_rebuild_ver2.repository.Admin.PriceRepository;
@@ -39,6 +38,8 @@ public class PriceService implements IPriceService {
         if(checkDate(priceDTO)){
             priceDTO.setIdUserConfig(userID.getUserValue().getId());
             PriceModel priceModel = PriceMapper.dtoToPrices(priceDTO);
+            Status status = statusRepository.findStatusById(priceDTO.getIdStatus());
+            priceModel.setStatus(status);
             priceRepository.save(priceModel);
             return new PriceResponse(Constants.MESSAGE_STATUS_ADD_PRICE_SUCCESS, true, priceDTO);
         }
@@ -62,7 +63,8 @@ public class PriceService implements IPriceService {
             updateModel.setPrice(priceDTO.getPrice());
             updateModel.setIdBusType(new BusTypes(priceDTO.getIdBusType()));
             updateModel.setIdRoutesTime(new RoutesTimeModel(priceDTO.getIdRoutesTime()));
-            updateModel.setStatus(new Status(priceDTO.getIdStatus()));
+            Status status = statusRepository.findStatusById(priceDTO.getIdStatus());
+            updateModel.setStatus(status);
             updateModel.setUpdatedAt(ZonedDateTime.now());
             updateModel.setIdUserConfig(userID.getUserValue());
             priceRepository.save(updateModel);

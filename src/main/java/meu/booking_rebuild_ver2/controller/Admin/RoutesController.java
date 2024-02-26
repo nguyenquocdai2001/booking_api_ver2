@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import meu.booking_rebuild_ver2.config.Constants;
 import meu.booking_rebuild_ver2.exception.BadRequestException;
+import meu.booking_rebuild_ver2.model.Admin.DTO.RoutesDTO;
 import meu.booking_rebuild_ver2.model.Admin.RoutesModel;
 import meu.booking_rebuild_ver2.model.User;
 import meu.booking_rebuild_ver2.response.Admin.RoutesResponse;
@@ -28,7 +29,7 @@ public class RoutesController {
     IRoutesService routesService;
 
     @PostMapping("/addRoutes")
-    public RoutesResponse addRoutes(@RequestBody RoutesModel model){
+    public RoutesResponse addRoutes(@RequestBody RoutesDTO model){
         log.debug("Inside addRoutes function()");
      try {
          return routesService.createRoutes(model);
@@ -58,7 +59,7 @@ public class RoutesController {
     }
 
     @PutMapping("updateRoutesById")
-    public RoutesResponse updateRoutesModelById(@RequestBody RoutesModel routesModel) {
+    public RoutesResponse updateRoutesModelById(@RequestBody RoutesDTO routesModel) {
         log.debug("Inside updateRoutesModelById");
         try {
             if(routesModel.getId() != null) {

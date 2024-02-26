@@ -74,7 +74,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**")
                         .permitAll()
 
-                        .requestMatchers("/auth/login", "/demo/**").permitAll()
+                        .requestMatchers("/auth/login", "/demo/**","/routes/**").permitAll()
                         .requestMatchers(HttpMethod.POST,
                                 "/busTypes/**" ,
                                 "/busSeat/**",
@@ -86,7 +86,8 @@ public class SecurityConfig {
                                 "/customers/**",
                                 "/routeTime/**",
                                 "/paymentType/**",
-                                "/payment/**")
+                                "/payment/**",
+                                "/customerTicket/**")
                         .hasAnyRole("SUPER_ADMIN","ADMIN")
                         .requestMatchers(HttpMethod.POST,
                                 "/auth/register" )
@@ -103,7 +104,8 @@ public class SecurityConfig {
                                 "/customers/**",
                                 "/routeTime/**",
                                 "/paymentType/**",
-                                "/payment/**")
+                                "/payment/**",
+                                "/customerTicket/**")
                         .hasAnyRole("SUPER_ADMIN","ADMIN")
                         .requestMatchers(HttpMethod.PUT,
                                 "/loyalty/**" )
@@ -119,7 +121,8 @@ public class SecurityConfig {
                                 "/customers/**",
                                 "/routeTime/**",
                                 "/paymentType/**",
-                                "/payment/**")
+                                "/payment/**",
+                                "/customerTicket/**")
                         .hasAnyRole("SUPER_ADMIN")
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**",
                                 "/swagger-ui.html",

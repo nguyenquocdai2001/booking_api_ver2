@@ -45,6 +45,8 @@ public class RoutesTimeService implements IRoutesTimeService{
             }else {
                 routesTimeDTO.setIdUserConfig(user.getUserValue().getId());
                 RoutesTimeModel model = RoutesTimeMapper.dtoToRoutesTimes(routesTimeDTO);
+                Status status = statusRepository.findStatusById(routesTimeDTO.getIdStatus());
+                model.setStatus(status);
                 routesTimeRepo.save(model);
                 response = new RoutesTimeResponse(Constants.MESSAGE_STATUS_ADD_ROUTE_TIME_SUCCESS, true, routesTimeDTO);
             }
@@ -70,7 +72,8 @@ public class RoutesTimeService implements IRoutesTimeService{
         if(updatemodel != null && checkIdTimeAndRoute(routesTimeDTO)) {
             updatemodel.setIdRoutes(new RoutesModel(routesTimeDTO.getIdRoutes().getId()));
             updatemodel.setIdTime(new TimeModel(routesTimeDTO.getIdTime().getId()));
-            updatemodel.setStatus(new Status(routesTimeDTO.getIdStatus()));
+            Status status = statusRepository.findStatusById(routesTimeDTO.getIdStatus());
+            updatemodel.setStatus(status);
             updatemodel.setUpdatedAt(ZonedDateTime.now());
             updatemodel.setIdUserConfig(user.getUserValue());
             routesTimeRepo.save(updatemodel);
