@@ -73,8 +73,7 @@ public class SecurityConfig {
 //                        .requestMatchers("/price/**").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**")
                         .permitAll()
-
-                        .requestMatchers("/auth/login","/customers/loginCustomer","/customers/addCustomer","/customers/getCustomerByPhone", "/demo/**").permitAll()
+                        .requestMatchers("/auth/login","/customers/loginCustomer","/customers/addCustomer","/customers/getCustomerByPhone","/customers/profile","/routes/**", "/demo/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/loyalty/**","/customers/getCustomer").hasAnyRole("SUPER_ADMIN","ADMIN","CUSTOMER")
                         .requestMatchers(HttpMethod.PUT,"/customers/updateCustomerByLoyalty").hasAnyRole("SUPER_ADMIN","ADMIN","CUSTOMER")
                         .requestMatchers(HttpMethod.POST,
@@ -88,7 +87,8 @@ public class SecurityConfig {
                                 "/customers/**",
                                 "/routeTime/**",
                                 "/paymentType/**",
-                                "/payment/**")
+                                "/payment/**",
+                                "/customerTicket/**")
                         .hasAnyRole("SUPER_ADMIN","ADMIN")
                         .requestMatchers(HttpMethod.POST,
                                 "/auth/register" )
@@ -105,7 +105,8 @@ public class SecurityConfig {
                                 "/customers/**",
                                 "/routeTime/**",
                                 "/paymentType/**",
-                                "/payment/**")
+                                "/payment/**",
+                                "/customerTicket/**")
                         .hasAnyRole("SUPER_ADMIN","ADMIN")
                         .requestMatchers(HttpMethod.PUT,
                                 "/loyalty/**" )
@@ -121,7 +122,8 @@ public class SecurityConfig {
                                 "/customers/**",
                                 "/routeTime/**",
                                 "/paymentType/**",
-                                "/payment/**")
+                                "/payment/**",
+                                "/customerTicket/**")
                         .hasAnyRole("SUPER_ADMIN")
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**",
                                 "/swagger-ui.html",

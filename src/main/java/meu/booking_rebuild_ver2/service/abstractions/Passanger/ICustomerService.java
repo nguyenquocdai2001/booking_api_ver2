@@ -1,5 +1,6 @@
 package meu.booking_rebuild_ver2.service.abstractions.Passanger;
 
+import jakarta.servlet.http.HttpSession;
 import meu.booking_rebuild_ver2.exception.GenericResponseException;
 import meu.booking_rebuild_ver2.exception.NotFoundException;
 import meu.booking_rebuild_ver2.model.Admin.DTO.CustomerDTO;
@@ -28,5 +29,5 @@ public interface ICustomerService {
     GenericResponse deleteCustomerById(UUID id) throws NotFoundException;
     LoginResponse customerLoginHandle(String phone, String password) throws NotFoundException, GenericResponseException;
     UserDetails loadCustomerByPhone(String phone);
-
+    CustomerResponse loadCustomerBySession(HttpSession session) throws GenericResponseException, NotFoundException;
 }

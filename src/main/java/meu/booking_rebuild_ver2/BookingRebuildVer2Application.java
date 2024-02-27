@@ -28,7 +28,7 @@ public class BookingRebuildVer2Application {
                         .allowCredentials(true)
                         .exposedHeaders("*")
                         .maxAge(3600L)
-                        .allowedOriginPatterns("http://localhost:[*]", FRONTEND_URL)
+                        .allowedOriginPatterns("http://localhost:[*]", "https://booking.dev-ver2.meu-solutions.com",FRONTEND_URL)
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
             }
 

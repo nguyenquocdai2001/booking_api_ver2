@@ -360,6 +360,22 @@ public class CustomerService implements ICustomerService {
         return new CustomerDetailsImplement(customer);
     }
 
+    @Override
+    public CustomerResponse loadCustomerBySession(HttpSession session) throws GenericResponseException, NotFoundException {
+        try{
+            UUID id = (UUID) session.getAttribute("CLIENT_ID");
+            if(id != null){
+                return getCustomerById(id);
+            }
+            else{
+                throw new GenericResponseException("ID  is not valid");
+            }
+        }
+        catch (RuntimeException e){
+            throw new GenericResponseException(e.getMessage());
+        }
+      }
+
     //Function to check valid phone with regex phone
     protected static boolean phoneValid(String phone){
         Matcher matcher = pattern.matcher(phone);

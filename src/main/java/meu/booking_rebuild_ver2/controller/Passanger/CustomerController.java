@@ -100,5 +100,8 @@ public class CustomerController {
     public CustomerResponse getCustomerByPhone(@RequestParam String phone){
         return customerService.getCustomerByPhone(phone);
     }
-
+    @GetMapping("profile")
+    public CustomerResponse getCustomerByPhone( HttpSession session) throws NotFoundException, GenericResponseException{
+        return customerService.loadCustomerBySession(session);
+    }
 }
