@@ -12,6 +12,10 @@ import meu.booking_rebuild_ver2.model.User;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-9
+ * */
 @Entity
 @Table(name = "bus_types")
 @Builder

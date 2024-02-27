@@ -11,6 +11,10 @@ import org.springframework.stereotype.Service;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-4
+ * */
 @Service
 public class LocationService implements ILocationService {
     @Autowired
@@ -18,6 +22,7 @@ public class LocationService implements ILocationService {
     @Override
     public LocationResponse createLocation(Location location) {
         try {
+            location.setCreatedAt(ZonedDateTime.now());
             Location locationSaved = locationRepository.save(location);
             LocationResponse response = new LocationResponse(Constants.MESSAGE_LOCATION_ADD_SUCCESS, true, locationSaved);
             return response;

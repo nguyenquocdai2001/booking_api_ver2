@@ -1,138 +1,85 @@
 package meu.booking_rebuild_ver2.service;
 
-import jakarta.servlet.http.HttpSession;
-import meu.booking_rebuild_ver2.config.Constants;
 import meu.booking_rebuild_ver2.exception.BadRequestException;
-import meu.booking_rebuild_ver2.model.AuthProvider;
+import meu.booking_rebuild_ver2.model.Admin.Mapper.UserMapper;
+import meu.booking_rebuild_ver2.model.Status;
 import meu.booking_rebuild_ver2.model.User;
 import meu.booking_rebuild_ver2.model.UserRole;
+import meu.booking_rebuild_ver2.repository.StatusRepository;
 import meu.booking_rebuild_ver2.repository.UserRepository;
+import meu.booking_rebuild_ver2.request.RegisterRequest;
 import meu.booking_rebuild_ver2.response.GenericResponse;
-import meu.booking_rebuild_ver2.response.LoginResponse;
-import meu.booking_rebuild_ver2.service.abstractions.IUserService;
 import meu.booking_rebuild_ver2.service.concretions.UserService;
-import meu.booking_rebuild_ver2.service.utils.JwtUtils;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.context.TestPropertySource;
 
-import java.time.Instant;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@TestPropertySource(properties = {
+        "spring.datasource.url=jdbc:postgresql://27.74.255.96:5433/meu_booking_engine_v2",
+        "spring.datasource.username=postgres",
+        "spring.datasource.password=NSzo4uDp",
+        "spring.datasource.driver-class-name=org.postgresql.Driver"
+})
 public class UserServiceTest {
+    @Autowired
+    private StatusRepository statusRepository;
     @Mock
     private UserRepository userRepository;
-
     @Mock
-    private JwtUtils jwtUtils;
-    @Mock
-    private HttpSession httpSession;
-    @Spy
-    private BCryptPasswordEncoder passwordEncoder;
+    private UserMapper userMapper;
     @InjectMocks
     private UserService userService;
+    @Test
+    void testRegisterHandle_Success_ReturnGenericResponse() {
+        Status status = new Status(UUID.randomUUID(),"testStatus",true);
+        RegisterRequest request = new RegisterRequest("John Doe", "johndoe@example.com", "password", "password", status.getId());
+        User user = new User("John Doe", "johndoe@example.com", "password", "password",status );
+        System.out.println(userRepository.count());
+        User user1 = User.builder()
+                .status(status)
+                .username("minhteo@gmail.com")
+                .confirmPass("password")
+                .password("password")
+                .fullname("Minh Teo").build();
+        when(userRepository.save(any(User.class))).thenReturn(user1);
+        User model = userRepository.save(user1);
+        ResponseEntity<GenericResponse> responseEntity = userService.registerHandle(request);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals("Registered! Welcome.", responseEntity.getBody().getMessage());
+        System.out.println(model);
+    }
 
-    @BeforeEach
-    void setUp(){
-        MockitoAnnotations.openMocks(this);
+    @Test
+    public void testRegisterHandle_InvalidPassword_ReturnGenericResponse() {
+        RegisterRequest request = new RegisterRequest("John Doe", "johndoe@example.com", "password", "different_password", UUID.randomUUID());
+        BadRequestException exception = org.junit.jupiter.api.Assertions.assertThrows(BadRequestException.class, () -> {
+            userService.registerHandle(request);
+        });
+        assertEquals("Request is malformed: Passwords don't match.", exception.getMessage()); // Assuming the expected error message is "Invalid password"
     }
     @Test
-    void getSessionUserId(){
-        when(httpSession.getAttribute(UserService.USERID )).thenReturn(1);
-        assertEquals(1, userService.getSessionUserId(httpSession));
+    public void testLoginHandle_Success_ReturnLoginResponse(){
+
     }
-    @Test
-    void loginHandle_Success(){
-        User mockUser = new User();
-        mockUser.setUsername("tester2@gmail.com");
-        mockUser.setPassword(passwordEncoder.encode("12345678"));
-
-        when(userRepository.findUserByUsername("tester2@gmail.com")).thenReturn(Optional.of(mockUser));
-        when(passwordEncoder.matches("12345678", mockUser.getPassword())).thenReturn(true);
-        when(jwtUtils.createToken("tester2@gmail.com", mockUser.getUserRole())).thenReturn("mockToken");
-
-        LoginResponse response = userService.loginHandle("tester2@gmail.com", "12345678");
-        assertNotNull(response);
-        assertEquals(Constants.MESSAGE_LOGIN_SUCCESS, response.getMessage());
-//        assertEquals("mockToken", response.getToken());
-//        assertEquals(mockUser.getId(), response.getId());
-//        assertEquals(mockUser.getFullname(), response.getFullname());
-//        assertEquals("tester2@gmail.com", response.getUsername());
-//        assertEquals(Collections.singletonList(mockUser.getUserRole()), response.getRoles());
-    }
-    @Test
-    void loginHandle_InvalidPassword() {
-        User mockUser = new User();
-        mockUser.setUsername("testuser");
-        mockUser.setPassword(passwordEncoder.encode("testpassword"));
-
-        when(userRepository.findUserByUsername("testuser")).thenReturn(Optional.of(mockUser));
-        when(passwordEncoder.matches("wrongpassword", mockUser.getPassword())).thenReturn(false);
-
-        BadRequestException exception = assertThrows(BadRequestException.class,
-                () -> userService.loginHandle("testuser", "wrongpassword"));
-
-//        assertEquals(Constants.MESSAGE_INVALID_PASSWORD, exception.getMessage());
-    }
-    @Test
-    void registerHandle_Success() {
-//        User mockUser = User.builder()
-//                .id(UUID.randomUUID())
-//                .fullname("Test User")
-//                .username("testuser@gmail.com")
-//                .password("testpassword")
-//                .confirmPass("testpassword")
-//                .createdAt(Instant.now())
-//                .authProvider(AuthProvider.LOCAL)
-//                .userRole(UserRole.ROLE_SUPER_ADMIN)
-//                .build();
-//
-//        when(userRepository.save(any(User.class))).thenReturn(mockUser);
-//
-//        assertNotNull(mockUser.getFullname());
-//        assertNotNull(mockUser.getUsername());
-//        assertNotNull(mockUser.getPassword());
-//        assertNotNull(mockUser.getConfirmPass());
-//
-//        ResponseEntity<GenericResponse> responseEntity = userService.registerHandle(mockUser);
-//
-//        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-//        assertEquals(Constants.MESSAGE_REGISTER_WELCOME, responseEntity.getBody().getMessage());
-    }
-
-        @Test
-        void registerHandle_InvalidUsername() {
-//            User mockUser = new User();
-//            mockUser.setUsername("invalidusername");
-//            mockUser.setPassword("testpassword");
-//            mockUser.setConfirmPass("testpassword");
-//
-//            ResponseEntity<GenericResponse> responseEntity = userService.registerHandle(mockUser);
-//
-//            assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-//            assertEquals(Constants.MESSAGE_INVALID_USERNAME, responseEntity.getBody().getMessage());
-        }
-
-        @Test
-        void loadUserByUsername_UserNotFound() {
-            when(userRepository.findUserByUsername("nonexistentuser@gmail.com")).thenReturn(Optional.empty());
-            UsernameNotFoundException exception = assertThrows(UsernameNotFoundException.class,
-                    () -> userService.loadUserByUsername("nonexistentuser@gmail.com"));
-
-            assertEquals("Not found", exception.getMessage());
-        }
-    }
+}

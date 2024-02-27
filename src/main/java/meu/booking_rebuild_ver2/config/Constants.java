@@ -5,7 +5,7 @@ public class Constants {
 
     private Constants() {
     }
-
+    // Constant to announce the status of valid token
     public static final String MESSAGE_INVALID_TOKEN = "Invalid JWT token: {}";
     public static final String MESSAGE_TOKEN_EXPIRED = "JWT token is expired: {}";
     public static final String MESSAGE_TOKEN_UNSUPPORTED = "JWT token is unsupported: {}";
@@ -22,18 +22,15 @@ public class Constants {
     public static final String MESSAGE_THANK_YOU_REVIEW = "Thanks for your review!";
     public static final String MESSAGE_CANNOT_ADD_REVIEW = "Could not add review : ";
     public static final String MESSAGE_CANNOT_EDIT_REVIEW = "Could not edit review : ";
-
     public static final String MESSAGE_CAN_NOT_SAVE_OBJECTIVE = "Could not save new objectives";
 
+    //nqd11 bs-17
     public static final String MESSAGE_STATUS_ADD_SUCCESS = "Adding a status successfully!";
-
     public static final String MESSAGE_STATUS_FIND_ALL_SUCCESS = "Find all status successfully!";
-
     public static final String MESSAGE_STATUS_FIND_STATUS_SUCCESS = "Find status successfully!";
-
     public static final String MESSAGE_STATUS_FIND_STATUS_FAILED = "Status Null";
-
     public static final String MESSAGE_STATUS_UPDATE_STATUS_SUCCESS = "Updating a status successfully!";
+    public static final String MESSAGE_STATUS_DELETE_STATUS_SUCCESS = "Deleting a status successfully!";
 
 
     //dqdat
@@ -56,38 +53,24 @@ public class Constants {
 
     public static final String MESSAGE_ROUTES_TIME_STILL_HAS = "Route Time still has ID, can't delete!";
 
-    public static final String MESSAGE_STATUS_DELETE_STATUS_SUCCESS = "Deleting a status successfully!";
-
+    //ndq11 bs-9
     public static final String MESSAGE_BUS_TYPES_ADD_SUCCESS = "Adding a bus type successfully!";
-
     public static final String MESSAGE_BUS_TYPES_DUPLICATE_LICENSE_PLATE = "Duplicate License Plate!";
-
     public static final String MESSAGE_BUS_TYPES_FIND_ALL_SUCCESS = "Find all bus types successfully!";
-
     public static final String MESSAGE_BUS_TYPES_FIND_ALL_FAILED = "Find all bus types failed!";
-
     public static final String MESSAGE_BUS_TYPE_FIND_SUCCESS = "Find bus type successfully!";
-
     public static final String MESSAGE_BUS_TYPE_FIND_FAILED = "Find bus type failed!";
-
     public static final String MESSAGE_FIND_BUS_TYPE_FAILED = "Bus type Null";
-
     public static final String MESSAGE_BUS_TYPES_UPDATE_SUCCESS = "Updating a bus type successfully!";
-
     public static final String MESSAGE_DELETE_BUS_TYPE_SUCCESS = "Deleting a bus type successfully!";
 
+    //nqd11 bs-8
     public static final String MESSAGE_BUS_SEAT_ADD_SUCCESS = "Adding a bus seat successfully!";
-
     public static final String MESSAGE_BUS_SEATS_FIND_ALL_SUCCESS = "Find all bus seats successfully!";
-
     public static final String MESSAGE_BUS_SEAT_FIND_SUCCESS = "Find bus seat successfully!";
-
     public static final String MESSAGE_BUS_SEAT_FIND_FAILED = "Find bus seat failed!";
-
     public static final String MESSAGE_BUS_SEAT_UPDATE_SUCCESS = "Updating a bus seat successfully!";
-
     public static final String MESSAGE_DELETE_BUS_SEAT_SUCCESS = "Deleting a bus seat successfully!";
-
 
 
     //dqdat BS-10
@@ -95,8 +78,10 @@ public class Constants {
     public static final String MESSAGE_STATUS_GET_ALL_PRICE_SUCCESS = "Getting all prices successfully!";
     public static final String MESSAGE_PRICE_FIND_SUCCESS = "Find prices successfully!";
     public static final String MESSAGE_UPDATE_PRICE_SUCCESS = "Updating price successfully!";
-    public static final String MESSAGE_GET_SUCCESSFULL = "The get request has been Satisfied";
 
+    // author: Nguyen Minh Tam. Constant to announce the succes of bs-2 and bs-3 and common announce
+
+    public static final String MESSAGE_GET_SUCCESSFULL = "The get request has been Satisfied";
     public static final String MESSAGE_ADD_LOYALTY_SUCCESS = "Added a new loyalty successfully!";
     public static final String MESSAGE_ADD_RANK_FAILED = "The rank has been exit";
     public static final String MESSAGE_ADD_DISCOUNT_FAILED = "The discount has been exit";
@@ -104,18 +89,16 @@ public class Constants {
     public static final String MESSAGE_DELETED_SUCCESS = "Deleted successfully";
     public static final String MESSAGE_GET_NOT_FOUND = "NOT FOUND";
 
-
     public static final String MESSAGE_GET_LOYALTY_FAILED = ". Can not get loyalty with ";
-    public static final String MESSAGE_ADD_CUSTOMER_FAILED = "The customer has been exit";
-    public static final String MESSAGE_ADDED_CUSTOMER_SUCCESSFULLY = "The customer has been added successfully";
-    public static final String MESSAGE_UPDATED_CUSTOMER_SUCCESSFULLY = "The customer has been updated successfully";
-    public static final String MESSAGE_PHONE_FORMAT_WRONG = "Phone number format is incorrect";
-    public static final String MESSAGE_DELETED_SUCCESSFULLY = "Deleted object successfully!";
-
-
+    public static final String MESSAGE_ADD_CUSTOMER_FAILED = "The customer has been exit! ";
+    public static final String MESSAGE_DUPLICATE_PHONE_CUSTOMER = "The phone number of customer has been exit! ";
+    public static final String MESSAGE_ADDED_CUSTOMER_SUCCESSFULLY = "The customer has been added successfully! ";
+    public static final String MESSAGE_UPDATED_CUSTOMER_SUCCESSFULLY = "The customer has been updated successfully! ";
+    public static final String MESSAGE_PHONE_FORMAT_WRONG = "Phone number format is incorrect! ";
+    public static final String MESSAGE_DELETED_SUCCESSFULLY = "Deleted object successfully! ";
     /*
-    * Payment
-    * */
+     * Payment
+     * */
     public static final String MESSAGE_GET_PAYMENT_FAILED = ". Can not get payment ";
     public static final String MESSAGE_ADD_PAYMENT_FAILED = "The customer has been exit";
     public static final String MESSAGE_ADDED_PAYMENT_SUCCESSFULLY = "The payment has been added successfully";
@@ -135,6 +118,7 @@ public class Constants {
     public static final String MESSAGE_GET_DRIVER_FAILED = "Get drivers failed";
     public static final String MESSAGE_GET_DRIVER_SUCCESS = "Get drivers successfully";
     public static final String MESSAGE_DRIVER_NULL= "Driver null";
+
     //nqd11 bs-4
     public static final String MESSAGE_LOCATION_ADD_SUCCESS = "Adding a location successfully!";
     public static final String MESSAGE_LOCATION_UPDATE_SUCCESS = "Updating a location successfully!";
@@ -142,6 +126,7 @@ public class Constants {
     public static final String MESSAGE_LOCATION_GET_ALL_SUCCESS = "Get all locations successfully!";
     public static final String MESSAGE_LOCATION_GET_LOCATION_SUCCESS = "Get locations successfully!";
     public static final String MESSAGE_LOCATION_GET_NULL = "Not found!";
+
 
 
     public static final String MESSAGE_ADDED_PAYMENT_TYPE_SUCCESSFULLY = "The payment type has been added successfully";

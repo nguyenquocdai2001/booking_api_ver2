@@ -7,7 +7,10 @@ import meu.booking_rebuild_ver2.model.Status;
 import meu.booking_rebuild_ver2.response.Admin.BusSeatResponse;
 
 import java.util.UUID;
-
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-8
+ * */
 public interface IBusSeatService {
     BusSeatResponse createBusSeat(BusSeatDTO busSeatDTO);
     BusSeatResponse getAllBusSeat();

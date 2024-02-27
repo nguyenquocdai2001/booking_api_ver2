@@ -7,7 +7,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.UUID;
-
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-4
+ * */
 @Repository
 public interface LocationRepository extends JpaRepository<Location, UUID> {
     @Query("SELECT lc FROM Location lc WHERE lc.isDestination = :isDestination")

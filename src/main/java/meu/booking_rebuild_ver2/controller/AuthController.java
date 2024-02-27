@@ -1,17 +1,16 @@
 package meu.booking_rebuild_ver2.controller;
 
 import jakarta.servlet.http.HttpSession;
-import lombok.Getter;
 import meu.booking_rebuild_ver2.exception.BadRequestException;
+import meu.booking_rebuild_ver2.exception.GenericResponseException;
 import meu.booking_rebuild_ver2.exception.NotFoundException;
-import meu.booking_rebuild_ver2.model.Admin.DTO.UserDTO;
-import meu.booking_rebuild_ver2.model.User;
 import meu.booking_rebuild_ver2.model.UserID;
 import meu.booking_rebuild_ver2.repository.UserRepository;
 import meu.booking_rebuild_ver2.request.LoginRequest;
 import meu.booking_rebuild_ver2.request.RegisterRequest;
 import meu.booking_rebuild_ver2.response.GenericResponse;
 import meu.booking_rebuild_ver2.response.LoginResponse;
+import meu.booking_rebuild_ver2.response.ProfileMeResponse;
 import meu.booking_rebuild_ver2.service.abstractions.IUserService;
 import meu.booking_rebuild_ver2.service.utils.JwtUtils;
 import org.springframework.http.ResponseEntity;
@@ -65,10 +64,8 @@ public class AuthController {
     }
 
     @PostMapping(path = "/login")
-    public LoginResponse loginHandle(@RequestBody LoginRequest loginRequest, HttpSession session){
-        try{
+    public LoginResponse loginHandle(@RequestBody LoginRequest loginRequest, HttpSession session) throws NotFoundException, GenericResponseException {
             LoginResponse response;
-
             String password = loginRequest.getPassword();
             String email = loginRequest.getEmail();
             response = userService.loginHandle(email, password);
@@ -77,14 +74,9 @@ public class AuthController {
                 return response;
             }
             return new LoginResponse("Login Fail", false);
-        }
-
-        catch (Exception ex) {
-            throw new BadRequestException(ex.getMessage());
-        }
     }
     @GetMapping("profile/me")
-    public UserDTO getProfileMe(@RequestParam UUID id) throws NotFoundException {
+    public ProfileMeResponse getProfileMe(@RequestParam UUID id) throws NotFoundException {
         return userService.getProfileMe(id);
     }
 //    @PostMapping(path = "/login")

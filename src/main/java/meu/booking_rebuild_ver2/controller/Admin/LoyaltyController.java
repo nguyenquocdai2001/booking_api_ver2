@@ -1,16 +1,13 @@
 package meu.booking_rebuild_ver2.controller.Admin;
 
 import jakarta.servlet.http.HttpSession;
-import meu.booking_rebuild_ver2.config.Constants;
-import meu.booking_rebuild_ver2.exception.GenericResponseExceptionHandler;
+import meu.booking_rebuild_ver2.exception.GenericResponseException;
 import meu.booking_rebuild_ver2.exception.NotFoundException;
-import meu.booking_rebuild_ver2.model.Admin.DTO.LoyaltyDTO;
 import meu.booking_rebuild_ver2.model.Admin.Loyalty;
 import meu.booking_rebuild_ver2.request.LoyaltyRequest;
 import meu.booking_rebuild_ver2.response.Admin.LoyaltyResponse;
 import meu.booking_rebuild_ver2.response.GenericResponse;
 import meu.booking_rebuild_ver2.service.abstractions.Admin.ILoyaltyService;
-import meu.booking_rebuild_ver2.service.abstractions.IUserService;
 import meu.booking_rebuild_ver2.service.abstractions.Passanger.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -18,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.Optional;
 import java.util.UUID;
 
 /*
@@ -37,8 +33,8 @@ public class LoyaltyController {
     * The model will ensure that the rank and discount are unique
      */
     @PostMapping(path = "addLoyalty")
-    public GenericResponse addNewLoyalty(@RequestBody @Valid Loyalty request) throws GenericResponseExceptionHandler {
-        return loyaltyService.addNewLoyalty(request);
+    public GenericResponse addNewLoyalty(@RequestBody @Valid Loyalty request, @NotNull HttpSession httpSession) throws GenericResponseException {
+        return loyaltyService.addNewLoyalty(request, httpSession);
     }
     /*
      * The function to get all rank and it's discount in table loyalty.
@@ -51,35 +47,35 @@ public class LoyaltyController {
     /*
      * The function to get the detail of rank. With the rank is input from user
      */
-    public LoyaltyResponse getLoyalty(@RequestBody LoyaltyRequest request) throws NotFoundException, GenericResponseExceptionHandler {
+    public LoyaltyResponse getLoyalty(@RequestBody LoyaltyRequest request) throws NotFoundException, GenericResponseException {
         return  loyaltyService.getLoyaltyByRank(request.getRank());
     }
     /*
      * The function used to get the rank with price will be the norm according to loyalty_spent
      */
     @GetMapping(path = "getLoyaltyByPrice")
-    public LoyaltyResponse getLoyaltyByPrice(@RequestParam double price) throws GenericResponseExceptionHandler{
+    public LoyaltyResponse getLoyaltyByPrice(@RequestParam double price) throws GenericResponseException {
         return loyaltyService.getLoyaltyByPrice(price);
     }
     /*
      * The function used to get the rank with price will be the norm according to id loyalty
      */
     @GetMapping(path = "getLoyaltyById")
-    public LoyaltyResponse getLoyaltyById(@RequestParam UUID id) throws GenericResponseExceptionHandler, NotFoundException {
+    public LoyaltyResponse getLoyaltyById(@RequestParam UUID id) throws GenericResponseException, NotFoundException {
         return loyaltyService.getLoyaltyById(id);
     }
     /*
      * The function to update the loyalty from id and dto
      */
     @PutMapping(path = "updateLoyalty")
-    public GenericResponse updateLoyalty(@RequestParam UUID id, @RequestBody LoyaltyRequest request, @NotNull HttpSession httpSession) throws NotFoundException, GenericResponseExceptionHandler {
+    public GenericResponse updateLoyalty(@RequestParam UUID id, @RequestBody LoyaltyRequest request, @NotNull HttpSession httpSession) throws NotFoundException, GenericResponseException {
         return loyaltyService.updateLoyalty(id, request, httpSession);
     }
     /*
      * The function to delete the loyalty form id
      */
     @DeleteMapping(path = "deleteLoyalty")
-    public GenericResponse deleteLoyalty(@RequestParam UUID id) throws NotFoundException, GenericResponseExceptionHandler {
+    public GenericResponse deleteLoyalty(@RequestParam UUID id) throws NotFoundException, GenericResponseException {
         System.out.println(customerService.getCustomerByLoyalty(id).getListCustomer());
          customerService.handleUpdateCustomerWhenLoyaltyDelete(customerService.getCustomerByLoyalty(id).getListCustomer());
         return loyaltyService.deleteLoyalty(id);

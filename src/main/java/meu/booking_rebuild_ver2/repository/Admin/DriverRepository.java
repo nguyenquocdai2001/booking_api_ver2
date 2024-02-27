@@ -7,6 +7,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.UUID;
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-11
+ * */
 @Repository
 public interface DriverRepository extends JpaRepository<Driver, UUID> {
     @Query("SELECT dr FROM Driver dr WHERE dr.idBusTypes.id = :idBusType")
