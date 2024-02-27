@@ -3,15 +3,11 @@ package meu.booking_rebuild_ver2.service.concretions;
 import jakarta.servlet.http.HttpSession;
 import meu.booking_rebuild_ver2.config.Constants;
 import meu.booking_rebuild_ver2.exception.BadRequestException;
-import meu.booking_rebuild_ver2.exception.GenericResponseExceptionHandler;
+import meu.booking_rebuild_ver2.exception.GenericResponseException;
 import meu.booking_rebuild_ver2.exception.NotFoundException;
-import meu.booking_rebuild_ver2.model.Admin.DTO.StatusDTO;
 import meu.booking_rebuild_ver2.model.Admin.DTO.UserDTO;
-import meu.booking_rebuild_ver2.model.Admin.Mapper.StatusMapper;
 import meu.booking_rebuild_ver2.model.Admin.Mapper.UserMapper;
-import meu.booking_rebuild_ver2.model.Status;
 import meu.booking_rebuild_ver2.model.User;
-import meu.booking_rebuild_ver2.model.UserID;
 import meu.booking_rebuild_ver2.repository.UserRepository;
 import meu.booking_rebuild_ver2.request.RegisterRequest;
 import meu.booking_rebuild_ver2.response.GenericResponse;
@@ -21,7 +17,6 @@ import meu.booking_rebuild_ver2.service.abstractions.IStatusService;
 import meu.booking_rebuild_ver2.service.abstractions.IUserService;
 import meu.booking_rebuild_ver2.service.impl.UserDetailsImplement;
 import meu.booking_rebuild_ver2.service.utils.JwtUtils;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
@@ -34,7 +29,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.validation.constraints.NotNull;
-import java.time.Instant;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
@@ -53,9 +47,8 @@ public class UserService implements IUserService {
 
     private static final Pattern pattern = Pattern.compile(EMAIL_REGEX);
     public static final String USER_EMAIL = "USER_EMAIL";
-    private final ModelMapper modelMapper;
     private final BCryptPasswordEncoder passwordEncoder;
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
     @Autowired
     private JwtUtils jwtUtils;
     @Autowired
@@ -64,7 +57,6 @@ public class UserService implements IUserService {
     private UserMapper userMapper;
     @Autowired
     public UserService(BCryptPasswordEncoder passwordEncoder, UserRepository userRepository, JwtUtils jwtUtils) {
-        this.modelMapper = new ModelMapper();
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.jwtUtils = jwtUtils;
@@ -98,29 +90,33 @@ public class UserService implements IUserService {
     }
     // Function to handle login
     @Override
-    public LoginResponse loginHandle(String username, String password) {
-        Optional<User> model =  userRepository.findUserByUsername(username);
-        HttpSession session = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
-                .getRequest().getSession();
-        session.setAttribute(USERID, model.get().getId());
-        session.setAttribute(USEREMAIL, model.get().getUsername());
-        if (passwordEncoder.matches(password, model.get().getPassword())) {
-            String jwt = jwtUtils.createToken(username, model.get().getUserRole());
-            LoginResponse response = new LoginResponse(
-                    Constants.MESSAGE_LOGIN_SUCCESS,
-                    jwt,
-                    model.get().getId(),
-                    model.get().getFullname(),
-                    model.get().getUsername(),
-                    Collections.singletonList(model.get().getUserRole())
-            );
+    public LoginResponse loginHandle(String username, String password) throws NotFoundException, GenericResponseException {
+            Optional<User> model =  userRepository.findUserByUsername(username);
+            if(model.isEmpty()){
+                throw new NotFoundException("Can not get the user with email: " + username);
+            }
+            HttpSession session = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+                    .getRequest().getSession();
 
-            return response;
+            if (passwordEncoder.matches(password, model.get().getPassword())) {
+                String jwt = jwtUtils.createToken(username, model.get().getUserRole());
+                LoginResponse response = new LoginResponse(
+                        Constants.MESSAGE_LOGIN_SUCCESS,
+                        jwt,
+                        model.get().getId(),
+                        model.get().getUsername(),
+                        model.get().getFullname(),
+                        Collections.singletonList(model.get().getUserRole())
+                );
+                session.setAttribute(USERID, model.get().getId());
+                session.setAttribute(USEREMAIL, model.get().getUsername());
+                return response;
+            }
+            else{
+                throw new GenericResponseException(Constants.MESSAGE_INVALID_PASSWORD);
+            }
         }
-        else{
-            throw new BadRequestException(Constants.MESSAGE_INVALID_PASSWORD);
-        }
-    }
+
     // Function to handle register
     @Override
     public ResponseEntity<GenericResponse> registerHandle(RegisterRequest request) {
@@ -134,6 +130,7 @@ public class UserService implements IUserService {
         }
         try{
             User user = userMapper.RegisterRequestToModel(request);
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
             GenericResponse response = new GenericResponse(Constants.MESSAGE_REGISTER_WELCOME);
             return new ResponseEntity<GenericResponse>(response,HttpStatus.OK);

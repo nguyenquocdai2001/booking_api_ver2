@@ -34,4 +34,10 @@ public class Status {
     public Status(UUID id) {
         this.id = id;
     }
+
+    public Status(UUID id, String status, boolean flag) {
+        this.id = id;
+        this.status = status;
+        this.flag = flag;
+    }
 }

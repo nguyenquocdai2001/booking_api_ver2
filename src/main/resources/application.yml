@@ -1,6 +1,7 @@
 frontend:
   root:
     url: http://localhost:4200/
+    domain: https://booking.dev-ver2.meu-solutions.com
 server:
   port: 5051
   error:

@@ -73,8 +73,9 @@ public class SecurityConfig {
 //                        .requestMatchers("/price/**").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**")
                         .permitAll()
-
-                        .requestMatchers("/auth/login", "/demo/**","/routes/**").permitAll()
+                        .requestMatchers("/auth/login","/customers/loginCustomer","/customers/addCustomer","/customers/getCustomerByPhone","/customers/profile","/routes/**", "/demo/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/loyalty/**","/customers/getCustomer").hasAnyRole("SUPER_ADMIN","ADMIN","CUSTOMER")
+                        .requestMatchers(HttpMethod.PUT,"/customers/updateCustomerByLoyalty").hasAnyRole("SUPER_ADMIN","ADMIN","CUSTOMER")
                         .requestMatchers(HttpMethod.POST,
                                 "/busTypes/**" ,
                                 "/busSeat/**",
@@ -86,6 +87,7 @@ public class SecurityConfig {
                                 "/customers/**",
                                 "/routeTime/**",
                                 "/paymentType/**",
+                                "/routes-bus-type/**",
                                 "/payment/**",
                                 "/customerTicket/**")
                         .hasAnyRole("SUPER_ADMIN","ADMIN")
@@ -103,18 +105,33 @@ public class SecurityConfig {
                                 "/price/**" ,
                                 "/customers/**",
                                 "/routeTime/**",
+                                "/routes-bus-type/**",
                                 "/paymentType/**",
                                 "/payment/**",
                                 "/customerTicket/**")
                         .hasAnyRole("SUPER_ADMIN","ADMIN")
                         .requestMatchers(HttpMethod.PUT,
-                                "/loyalty/**" )
+                                "/busTypes/**" ,
+                                "/auth/profile/me",
+                                "/busSeat/**",
+                                "/routes/**",
+                                "/time/**",
+                                "/loyalty",
+                                "/routeTime/**",
+                                "/price/**" ,
+                                "/customers/**",
+                                "/routeTime/**",
+                                "/routes-bus-type/**",
+                                "/paymentType/**",
+                                "/payment/**",
+                                "/customerTicket/**" )
                         .hasAnyRole("SUPER_ADMIN","ADMIN")
                         .requestMatchers(HttpMethod.DELETE,
                                 "/busTypes/**" ,
                                 "/busSeat/**",
                                 "/routes/**",
                                 "/time/**",
+                                "/routes-bus-type/**",
                                 "/loyalty",
                                 "/routeTime/**" ,
                                 "/price/**",
@@ -130,7 +147,7 @@ public class SecurityConfig {
                         .permitAll()
                         .anyRequest().authenticated())
         .exceptionHandling().authenticationEntryPoint((request, response, e) -> {
-                    ErrorResponse errorResponse = new ErrorResponse("Access Denied (403 Forbidden) ",
+                    ErrorResponse errorResponse = new ErrorResponse("Access Denied (403 Forbidden) " + e.getMessage(),
                             HttpStatus.FORBIDDEN.value());
                     response.setContentType("application/json;charset=UTF-8");
                     response.setStatus(HttpStatus.FORBIDDEN.value());
