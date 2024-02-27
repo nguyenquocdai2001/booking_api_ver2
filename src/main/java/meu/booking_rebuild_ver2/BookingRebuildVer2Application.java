@@ -14,7 +14,8 @@ import javax.validation.constraints.NotNull;
 public class BookingRebuildVer2Application {
     @Value(value = "${frontend.root.url}")
     private String FRONTEND_URL;
-
+    @Value(value =  "${frontend.root.domain}")
+    private String API_DOMAIN ;
     public static void main(String[] args) {
         SpringApplication.run(BookingRebuildVer2Application.class, args);
     }
@@ -28,7 +29,7 @@ public class BookingRebuildVer2Application {
                         .allowCredentials(true)
                         .exposedHeaders("*")
                         .maxAge(3600L)
-                        .allowedOriginPatterns("http://localhost:[*]", "https://booking.dev-ver2.meu-solutions.com",FRONTEND_URL)
+                        .allowedOriginPatterns("http://localhost:[*]", API_DOMAIN,FRONTEND_URL)
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
             }
 

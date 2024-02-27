@@ -87,6 +87,7 @@ public class SecurityConfig {
                                 "/customers/**",
                                 "/routeTime/**",
                                 "/paymentType/**",
+                                "/routes-bus-type/**",
                                 "/payment/**",
                                 "/customerTicket/**")
                         .hasAnyRole("SUPER_ADMIN","ADMIN")
@@ -104,18 +105,33 @@ public class SecurityConfig {
                                 "/price/**" ,
                                 "/customers/**",
                                 "/routeTime/**",
+                                "/routes-bus-type/**",
                                 "/paymentType/**",
                                 "/payment/**",
                                 "/customerTicket/**")
                         .hasAnyRole("SUPER_ADMIN","ADMIN")
                         .requestMatchers(HttpMethod.PUT,
-                                "/loyalty/**" )
+                                "/busTypes/**" ,
+                                "/auth/profile/me",
+                                "/busSeat/**",
+                                "/routes/**",
+                                "/time/**",
+                                "/loyalty",
+                                "/routeTime/**",
+                                "/price/**" ,
+                                "/customers/**",
+                                "/routeTime/**",
+                                "/routes-bus-type/**",
+                                "/paymentType/**",
+                                "/payment/**",
+                                "/customerTicket/**" )
                         .hasAnyRole("SUPER_ADMIN","ADMIN")
                         .requestMatchers(HttpMethod.DELETE,
                                 "/busTypes/**" ,
                                 "/busSeat/**",
                                 "/routes/**",
                                 "/time/**",
+                                "/routes-bus-type/**",
                                 "/loyalty",
                                 "/routeTime/**" ,
                                 "/price/**",
