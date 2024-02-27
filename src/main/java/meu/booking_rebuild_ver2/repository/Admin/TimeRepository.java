@@ -21,5 +21,8 @@ public interface TimeRepository extends JpaRepository<TimeModel, UUID> {
 
     @Query(value = "SELECT T FROM TimeModel T WHERE T.status.id = :statusId")
     List<TimeModel> getTimeByStatus(@Param("statusId") UUID statusId);
+
+    @Query(value = "SELECT T FROM TimeModel T WHERE T.startDate = :date")
+   TimeModel getTimeByDate(@Param("date") String date);
 }
 

@@ -7,6 +7,7 @@ import meu.booking_rebuild_ver2.response.Admin.TimeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,4 +18,5 @@ public interface ITimeService {
     TimeResponse findByID(UUID id);
     TimeResponse deleteById(UUID id);
     TimeResponse getTimeByStatus(UUID id);
+    TimeResponse getTimeByDate(String date);
 }
