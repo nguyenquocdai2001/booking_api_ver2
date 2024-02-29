@@ -4,19 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import meu.booking_rebuild_ver2.model.Admin.DTO.DriverDTO;
-import meu.booking_rebuild_ver2.model.Admin.Driver;
-
 import java.util.List;
 
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-11
+ * */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class DriverResponse {
     private String message;
     private Boolean success;
-
     private List<DriverDTO> driverDTOList;
-
     private DriverDTO driverDTO;
 
     public DriverResponse(String message, Boolean success){

@@ -39,7 +39,9 @@ public class RoutesTimeModel {
     private ZonedDateTime createdAt = ZonedDateTime.now();
     @JsonIgnore
     private ZonedDateTime updatedAt = ZonedDateTime.now();
-
+    @OneToOne(cascade = {CascadeType.MERGE})
+    @JoinColumn(name = "id_bus_type" )
+    private BusTypes idBusType;
     public RoutesTimeModel(UUID id) {
         this.id = id;
     }

@@ -15,7 +15,10 @@ import org.springframework.test.context.TestPropertySource;
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.List;
-
+/*
+author: Nguyen Minh Tam
+test repo for bs-3
+ */
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestPropertySource(properties = {
@@ -31,6 +34,7 @@ public class  CustomerRepositoryTest {
     private LoyaltyRepository loyaltyRepository;
     @Autowired
     private StatusRepository statusRepository;
+    // Function test to save
     @Test
     public void CustomerRepository_SavedAll_ReturnSavedCustomers() {
         int countPrev = (int) customerRepository.count();
@@ -71,6 +75,7 @@ public class  CustomerRepositoryTest {
         Assertions.assertEquals("tesstasv", customerSaved1.getName());
         Assertions.assertEquals(countPrev + 2, customerRepository.count());
     }
+    // Function test save all and get all
     @Test
     public void CustomerRepository_SaveAllAndGetAll_ReturnListCustomer() {
         int countPrev = (int) customerRepository.count();
@@ -107,6 +112,7 @@ public class  CustomerRepositoryTest {
         Assertions.assertEquals(countPrev + 2, listCustomers.size());
         Assertions.assertNotEquals(listCustomers.get(0).getId(), listCustomers.get(1).getId());
     }
+    // Function test delete
     @Test
     public void CustomerRepository_Delete_ReturnCustomer() {
 
@@ -144,7 +150,7 @@ public class  CustomerRepositoryTest {
 
         Assertions.assertEquals(countPrev, listCustomers.size());
     }
-
+    // FUnction test update
     @Test
     public void CustomerRepository_Update_ReturnCustomer(){
         Loyalty loyalty = Loyalty.builder()
@@ -188,9 +194,9 @@ public class  CustomerRepositoryTest {
         Assertions.assertEquals(1, modelUpdated.getNumberOfTrips());
         Assertions.assertEquals("TestLoyaltyUpdate", modelUpdated.getLoyalty().getRank());
     }
+    // FUnction test get by phone
     @Test
     public void CustomerRepository_GetByPhone_ReturnCustomer() {
-        // Tạo một hội viên mới
         Loyalty loyalty = Loyalty.builder()
                 .rank("TestLoyalty")
                 .discount(70)
@@ -215,10 +221,9 @@ public class  CustomerRepositoryTest {
         Assertions.assertNotNull(foundCustomer);
         Assertions.assertEquals(customerToFind.getId(), foundCustomer.getId());
     }
-
+    // Function test get customer by loyalty
     @Test
     public void CustomerRepository_GetByLoyaltyId_ReturnCustomer() {
-        // Tạo một hội viên mới
         Loyalty loyaltyToFind = Loyalty.builder()
                 .rank("TestLoyaltyToFind")
                 .discount(50)

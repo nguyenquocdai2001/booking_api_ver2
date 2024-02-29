@@ -13,10 +13,15 @@ import meu.booking_rebuild_ver2.service.abstractions.Admin.IBusSeatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-8
+ * */
 @Service
 public class BusSeatService implements IBusSeatService {
     private final BusSeatRepository busSeatRepository;
@@ -32,6 +37,7 @@ public class BusSeatService implements IBusSeatService {
     public BusSeatResponse createBusSeat(BusSeatDTO busSeatDTO) {
         try {
             BusSeat busSeat = BusSeatMapper.dtoToBusSeat(busSeatDTO);
+            busSeat.setCreatedAt(ZonedDateTime.now());
 
             BusTypes busTypes = busTypesRepository.findById(busSeatDTO.getIdBusTypes().getId()).get();
             busSeat.setIdBusTypes(busTypes);
@@ -124,6 +130,7 @@ public class BusSeatService implements IBusSeatService {
             updatedBusSeat.setNameSeat(busSeatDTO.getNameSeat());
             updatedBusSeat.setFloorNumber(busSeatDTO.getFloorNumber());
             updatedBusSeat.setAvailable(busSeatDTO.isAvailable());
+            updatedBusSeat.setUpdatedAt(ZonedDateTime.now());
 
             BusTypes busTypes = busTypesRepository.findById(busSeatDTO.getIdBusTypes().getId()).get();
             updatedBusSeat.setIdBusTypes(busTypes);

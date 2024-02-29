@@ -21,7 +21,7 @@ public class RoutesTimeMapper {
                 routesTimeModel.getIdTime().getEndDate()));
         routesTimeDTO.setIdStatus(routesTimeModel.getStatus().getId());
         routesTimeDTO.setIdUserConfig(routesTimeModel.getIdUserConfig().getId());
-
+        routesTimeDTO.setIdBusType(routesTimeModel.getIdBusType().getId());
         return routesTimeDTO;
     }
 
@@ -32,6 +32,7 @@ public class RoutesTimeMapper {
         routesTime.setIdTime(new TimeModel(routesTimeDTO.getIdTime().getId()));
         routesTime.setStatus(new Status(routesTimeDTO.getIdStatus()));
         routesTime.setIdUserConfig(new User(routesTimeDTO.getIdUserConfig()));
+        routesTime.setIdBusType(new BusTypes(routesTimeDTO.getIdBusType()));
         return routesTime;
     }
 }

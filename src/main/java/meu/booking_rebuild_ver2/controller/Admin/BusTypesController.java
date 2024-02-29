@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.UUID;
 
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-9
+ * */
 @RestController
 @RequestMapping(path = "/busTypes", produces = MediaType.APPLICATION_JSON_VALUE)
 public class BusTypesController {
@@ -53,7 +57,7 @@ public class BusTypesController {
         return busTypesService.getBusTypesByLicensePlate(licensePlate);
     }
 
-    @PostMapping(path = "updateBusType")
+    @PutMapping(path = "updateBusType")
     public BusTypesResponse updateBusType(@RequestBody @Valid BusTypeDTO busTypeDTO){
         return busTypesService.updateBusType(busTypeDTO);
     }

@@ -7,7 +7,10 @@ import meu.booking_rebuild_ver2.model.Admin.DTO.LoyaltyDTO;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
+/*
+author: nguyen minh tam
+form for update customer
+ */
 @Data
 @Setter
 @AllArgsConstructor

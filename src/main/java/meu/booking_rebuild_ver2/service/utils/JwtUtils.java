@@ -13,6 +13,11 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
+/*
+author: Nguuyenx Minh Tm
+service: The service will create Bearer Token with userdeatil that will be created in UserService after we have
+checked successfull
+ */
 @Component
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
@@ -23,19 +28,19 @@ public class JwtUtils {
     private Key key(){
         return Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(jwtSecret));
     }
-    public String generateJwtToken(Authentication authentication){
-        UserDetailsImplement userDetails = (UserDetailsImplement) authentication.getPrincipal();
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + expirationTime);
-        return Jwts.builder()
-                .claim("name", userDetails.getFullname())
-                .claim("email", userDetails.getEmail())
-                .setSubject((userDetails.getEmail()))
-                .setIssuedAt(now)
-                .setExpiration(expiryDate)
-                .signWith(key(), SignatureAlgorithm.HS256)
-                .compact();
-    }
+//    public String generateJwtToken(Authentication authentication){
+//        UserDetailsImplement userDetails = (UserDetailsImplement) authentication.getPrincipal();
+//        Date now = new Date();
+//        Date expiryDate = new Date(now.getTime() + expirationTime);
+//        return Jwts.builder()
+//                .claim("name", userDetails.getFullname())
+//                .claim("email", userDetails.getEmail())
+//                .setSubject((userDetails.getEmail()))
+//                .setIssuedAt(now)
+//                .setExpiration(expiryDate)
+//                .signWith(key(), SignatureAlgorithm.HS256)
+//                .compact();
+//    }
     public String getUserNameFromJwtToken(String token){
         return Jwts.parserBuilder().setSigningKey(key()).build().parseClaimsJws(token).getBody().getSubject();
     }
@@ -67,21 +72,21 @@ public class JwtUtils {
                 .compact();
 
     }
-    public void validateToken(String token) throws Exception {
-        if(token.startsWith("Bearer ")){
-            token = token.substring(7);
-        }
-        try{
-            Jwts.parserBuilder()
-                    .setSigningKey(key())
-                    .build()
-                    .parseClaimsJws(token);
-        }
-        catch (ExpiredJwtException e){
-            throw new Exception("Expired token") ;
-        }
-        catch(JwtException | IllegalArgumentException e){
-            throw new Exception("Token is not valid") ;
-        }
-    }
+//    public void validateToken(String token) throws Exception {
+//        if(token.startsWith("Bearer ")){
+//            token = token.substring(7);
+//        }
+//        try{
+//            Jwts.parserBuilder()
+//                    .setSigningKey(key())
+//                    .build()
+//                    .parseClaimsJws(token);
+//        }
+//        catch (ExpiredJwtException e){
+//            throw new Exception("Expired token") ;
+//        }
+//        catch(JwtException | IllegalArgumentException e){
+//            throw new Exception("Token is not valid") ;
+//        }
+//    }
 }

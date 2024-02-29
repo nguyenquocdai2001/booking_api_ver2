@@ -1,10 +1,8 @@
 package meu.booking_rebuild_ver2.model.Passanger;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import meu.booking_rebuild_ver2.model.Admin.Loyalty;
 import meu.booking_rebuild_ver2.model.Status;
+import meu.booking_rebuild_ver2.model.UserRole;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -35,16 +34,23 @@ public class Customer {
     private String phone;
     @Column(name = "number_of_trip")
     private int numberOfTrips;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.REMOVE )
+    @Column(length = 100)
+    @javax.validation.constraints.Size(min = 8)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String password;
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "status", nullable = false)
     @JsonBackReference
-    @JoinColumn(name = "status")
-    @JsonIgnore
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // Ignore Hibernate properties to avoid serialization issues
     private Status status;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_loyalty")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "user_role")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private UserRole userRole = UserRole.ROLE_CUSTOMER ;
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = {CascadeType.MERGE})
+    @JoinColumn(name = "id_loyalty", nullable = false)
     @JsonBackReference
-
-    @JsonIgnore
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // Ignore Hibernate properties to avoid serialization issues
     private Loyalty loyalty;
     @CreationTimestamp
     @Column( name = "created_at")
@@ -59,6 +65,9 @@ public class Customer {
     @Column(name = "last_updated")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private boolean lastUpdated = false;
+    public String getUserRole() {
+        return String.valueOf(userRole);
+    }
     public Customer(String name, String phone) {
         this.name = name;
         this.phone = phone;
@@ -66,5 +75,11 @@ public class Customer {
 
     public Customer(UUID id) {
         this.id = id;
+    }
+
+    public Customer(String name, String phone, String password) {
+        this.name = name;
+        this.phone = phone;
+        this.password = password;
     }
 }

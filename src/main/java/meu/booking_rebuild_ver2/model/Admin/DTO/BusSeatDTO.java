@@ -7,7 +7,10 @@ import meu.booking_rebuild_ver2.model.Admin.BusTypes;
 
 
 import java.util.UUID;
-
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-8
+ * */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

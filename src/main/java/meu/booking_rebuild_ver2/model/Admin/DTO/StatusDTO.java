@@ -6,6 +6,10 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-17
+ * */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

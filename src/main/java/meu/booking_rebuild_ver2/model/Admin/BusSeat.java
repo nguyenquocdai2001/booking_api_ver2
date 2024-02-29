@@ -6,7 +6,10 @@ import lombok.*;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;
-
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-8
+ * */
 @Entity
 @Table(name = "bus_seat")
 @Data

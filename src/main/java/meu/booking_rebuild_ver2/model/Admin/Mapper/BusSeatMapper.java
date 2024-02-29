@@ -1,9 +1,12 @@
 package meu.booking_rebuild_ver2.model.Admin.Mapper;
 
 import meu.booking_rebuild_ver2.model.Admin.BusSeat;
-import meu.booking_rebuild_ver2.model.Admin.BusTypes;
 import meu.booking_rebuild_ver2.model.Admin.DTO.BusSeatDTO;
 
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-8
+ * */
 public class BusSeatMapper {
     public static BusSeatDTO busSeatToDTO(BusSeat busSeat){
         BusSeatDTO busSeatDTO = new BusSeatDTO();

@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.UUID;
 
+/*
+ * author: Nguyen Quoc Dai
+ * ticket: BS-17
+ * */
 @RestController
 @RequestMapping(path = "/status", produces = MediaType.APPLICATION_JSON_VALUE)
 public class StatusController {
@@ -45,7 +49,7 @@ public class StatusController {
         return statusService.getStatusById(id);
     }
 
-    @PostMapping(path = "updateStatus")
+    @PutMapping(path = "updateStatus")
     public StatusResponse updateStatus(@RequestBody @Valid Status status){
        return statusService.updateStatus(status);
     }
