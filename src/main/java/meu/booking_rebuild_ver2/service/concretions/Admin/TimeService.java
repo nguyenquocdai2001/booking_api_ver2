@@ -135,6 +135,20 @@ public class TimeService implements ITimeService {
         }
         return new TimeResponse(Constants.MESSAGE_ID_NOT_FOUND, false);
     }
+
+    @Override
+    public TimeResponse getTimeByDate(String date) {
+        TimeResponse response;
+            TimeModel model = timeRepository.getTimeByDate(date);
+            if(model != null) {
+                TimeDTO timeDTO = TimeMapper.timeDTO(model);
+                response = new TimeResponse(Constants.MESSAGE_TIME_FIND_SUCCESS, true, timeDTO);
+                return response;
+            }
+        response = new TimeResponse(Constants.MESSAGE_SOMETHING_WENT_WRONG, false);
+        return response;
+    }
+
     private boolean checkDate(TimeDTO timeModel){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         LocalDate currentDate = LocalDate.now();

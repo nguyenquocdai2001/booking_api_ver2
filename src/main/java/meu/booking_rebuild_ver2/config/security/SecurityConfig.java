@@ -73,7 +73,7 @@ public class SecurityConfig {
 //                        .requestMatchers("/price/**").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**")
                         .permitAll()
-                        .requestMatchers("/auth/login","/customers/loginCustomer","/customers/addCustomer","/customers/getCustomerByPhone","/customers/profile","/routes/**", "/demo/**").permitAll()
+                        .requestMatchers("/auth/login","/customers/loginCustomer","/customers/addCustomer","/customers/getCustomerByPhone","/customers/profile","/routes/**", "/demo/**","/routeTime/**", "/routes-bus-type/**","/busSeat/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/loyalty/**","/customers/getCustomer").hasAnyRole("SUPER_ADMIN","ADMIN","CUSTOMER")
                         .requestMatchers(HttpMethod.PUT,"/customers/updateCustomerByLoyalty").hasAnyRole("SUPER_ADMIN","ADMIN","CUSTOMER")
                         .requestMatchers(HttpMethod.POST,

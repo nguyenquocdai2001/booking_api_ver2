@@ -15,4 +15,5 @@ public class RoutesTimeDTO {
     private RoutesDTO idRoutes;
     private UUID idStatus;
     private UUID idUserConfig;
+    private UUID idBusType;
 }

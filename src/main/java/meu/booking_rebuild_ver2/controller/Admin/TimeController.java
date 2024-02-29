@@ -2,10 +2,8 @@
 package meu.booking_rebuild_ver2.controller.Admin;
 
 import lombok.extern.slf4j.Slf4j;
-import meu.booking_rebuild_ver2.config.Constants;
 import meu.booking_rebuild_ver2.exception.BadRequestException;
 import meu.booking_rebuild_ver2.model.Admin.DTO.TimeDTO;
-import meu.booking_rebuild_ver2.model.Admin.TimeModel;
 import meu.booking_rebuild_ver2.response.Admin.TimeResponse;
 import meu.booking_rebuild_ver2.service.concretions.Admin.TimeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +12,6 @@ import org.springframework.http.MediaType;
 
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 /*
@@ -125,6 +122,22 @@ public class TimeController {
             throw new BadRequestException(e.getMessage());
         }
     }
+
+    /* getTimeByDate
+     * start
+     *  */
+    @GetMapping("/getTimeByDate")
+    public TimeResponse getTimeByDate(@RequestParam String date) {
+        log.debug("Inside getTimeModelByID");
+        try {
+            return timeService.getTimeByDate(date);
+        }catch (Exception e){
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+    /* getTimeByDate
+     * end
+     *  */
 }
 
 

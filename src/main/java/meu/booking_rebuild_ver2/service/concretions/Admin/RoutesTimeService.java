@@ -2,6 +2,7 @@ package meu.booking_rebuild_ver2.service.concretions.Admin;
 
 import meu.booking_rebuild_ver2.config.Constants;
 import meu.booking_rebuild_ver2.exception.BadRequestException;
+import meu.booking_rebuild_ver2.model.Admin.BusTypes;
 import meu.booking_rebuild_ver2.model.Admin.DTO.RoutesTimeDTO;
 import meu.booking_rebuild_ver2.model.Admin.Mapper.RoutesTimeMapper;
 import meu.booking_rebuild_ver2.model.Admin.RoutesModel;
@@ -9,6 +10,7 @@ import meu.booking_rebuild_ver2.model.Admin.RoutesTimeModel;
 import meu.booking_rebuild_ver2.model.Admin.TimeModel;
 import meu.booking_rebuild_ver2.model.Status;
 import meu.booking_rebuild_ver2.model.UserID;
+import meu.booking_rebuild_ver2.repository.Admin.BusTypesRepository;
 import meu.booking_rebuild_ver2.repository.Admin.RoutesRepository;
 import meu.booking_rebuild_ver2.repository.Admin.RoutesTimeRepository;
 import meu.booking_rebuild_ver2.repository.Admin.TimeRepository;
@@ -33,6 +35,8 @@ public class RoutesTimeService implements IRoutesTimeService{
     RoutesRepository routesRepo;
     @Autowired
     TimeRepository timeRepository;
+    @Autowired
+    BusTypesRepository busTypesRepository;
     @Autowired
     private UserID user ;
 
@@ -72,6 +76,7 @@ public class RoutesTimeService implements IRoutesTimeService{
         if(updatemodel != null && checkIdTimeAndRoute(routesTimeDTO)) {
             updatemodel.setIdRoutes(new RoutesModel(routesTimeDTO.getIdRoutes().getId()));
             updatemodel.setIdTime(new TimeModel(routesTimeDTO.getIdTime().getId()));
+            updatemodel.setIdBusType(new BusTypes(routesTimeDTO.getIdBusType()));
             Status status = statusRepository.findStatusById(routesTimeDTO.getIdStatus());
             updatemodel.setStatus(status);
             updatemodel.setUpdatedAt(ZonedDateTime.now());
@@ -160,7 +165,8 @@ public class RoutesTimeService implements IRoutesTimeService{
     private boolean checkIdTimeAndRoute(RoutesTimeDTO model){
         return timeRepository.existsById(model.getIdTime().getId())
                 && routesRepo.existsById(model.getIdRoutes().getId())
-                && statusRepository.existsById(model.getIdStatus());
+                && statusRepository.existsById(model.getIdStatus())
+                && busTypesRepository.existsById(model.getIdBusType());
     }
 
 }
